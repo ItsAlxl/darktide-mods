@@ -2,6 +2,7 @@ local mod = get_mod("WhichMissions")
 
 local num_objective_types = 7
 local num_difficulties = 5
+local num_difficulties_class = 3
 
 local function _convert_class(s)
 	if s == "zealot" or s == "preacher" then
@@ -61,11 +62,11 @@ local function _is_difficulty_finished(flag_pfx, difficulty, achievements_data)
 	return true
 end
 
-local function _get_needed_objectives(flag_pfx, difficulty, achievements_data)
+local function _get_needed_objectives(flag_pfx, difficulty, max_difficulty, achievements_data)
 	local needed_objectives = {}
 	if difficulty < 1 then
 		difficulty = 1
-		while difficulty < num_difficulties and _is_difficulty_finished(flag_pfx, difficulty, achievements_data) do
+		while difficulty < max_difficulty and _is_difficulty_finished(flag_pfx, difficulty, achievements_data) do
 			difficulty = difficulty + 1
 		end
 	end
@@ -92,8 +93,8 @@ local function _get_objective_readout(needed_objectives)
 	return readout, num_objs
 end
 
-local function _get_needed_readout(filter_str, difficulty_filter, achievements_data)
-	local needed_objectives, dfcl = _get_needed_objectives(filter_str, difficulty_filter, achievements_data)
+local function _get_needed_readout(flag_pfx, difficulty, max_difficulty, achievements_data)
+	local needed_objectives, dfcl = _get_needed_objectives(flag_pfx, difficulty, max_difficulty, achievements_data)
 	local readout, num_objs = _get_objective_readout(needed_objectives)
 	return readout, num_objs, dfcl
 end
@@ -103,7 +104,7 @@ local function _get_class_needs(difficulty_filter, class_filter)
 		class_filter = _convert_class(class_filter)
 		difficulty_filter = _convert_class_difficulty(difficulty_filter)
 
-		local readout, num_objs, dfcl = _get_needed_readout("_mission_" .. class_filter, difficulty_filter, achievements_data)
+		local readout, num_objs, dfcl = _get_needed_readout("_mission_" .. class_filter, difficulty_filter, num_difficulties_class, achievements_data)
 		local dfcl_localized = mod:localize("difficulty_class_" .. dfcl)
 		local class_localized = mod:localize("class_" .. class_filter)
 		if num_objs == 0 then
@@ -121,7 +122,7 @@ local function _get_account_needs(difficulty_filter)
 	Managers.data_service.account:pull_achievement_data():next(function (achievements_data)
 		difficulty_filter = _convert_account_difficulty(difficulty_filter)
 		
-		local readout, num_objs, dfcl = _get_needed_readout("_mission_difficulty", difficulty_filter, achievements_data)
+		local readout, num_objs, dfcl = _get_needed_readout("_mission_difficulty", difficulty_filter, num_difficulties, achievements_data)
 		local dfcl_localized = mod:localize("difficulty_account_" .. dfcl)
 		if num_objs == 0 then
 			mod:echo(mod:localize("account_finished", dfcl_localized))
