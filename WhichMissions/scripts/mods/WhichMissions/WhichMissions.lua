@@ -30,7 +30,7 @@ local function _convert_account_difficulty(s)
 	end
 	s = tonumber(s)
 	if s then
-		return s
+		return math.min(s, num_difficulties)
 	end
 	return -1
 end
