@@ -15,10 +15,10 @@ return {
 		en = "WhichMissions you need for a difficulty"
 	},
 	account_needs = {
-		en = "You need %s more on %s:\n%s"
+		en = "You need %s more on %s (account-wide):\n%s"
 	},
 	account_finished = {
-		en = "Congratulations! You have finished the penance for %s."
+		en = "Congratulations! You have finished the account penance for %s."
 	},
 	class_needs = {
 		en = "Your %s needs %s more on %s:\n%s"
