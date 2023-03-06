@@ -16,35 +16,36 @@ local function _convert_class(s)
 	return Managers.player:local_player(1)._profile.specialization
 end
 
-local function _convert_class_difficulty(s)
-	if s == "malice" then
-		return 2
-	elseif s == "heresy" then
-		return 3
-	end
-	s = tonumber(s)
-	if s then
-		if s > 3 then
-			return 3
-		elseif s > 2 then
-			return 2
-		end
-		return 1
-	end
-	return -1
-end
-
 local function _convert_account_difficulty(s)
-	if s == "malice" then
+	if s == "sedition" then
+		return 1
+	elseif s == "uprising" then
+		return 2
+	elseif s == "malice" then
 		return 3
 	elseif s == "heresy" then
 		return 4
+	elseif s == "damnation" then
+		return 5
 	end
 	s = tonumber(s)
 	if s then
 		return s
 	end
 	return -1
+end
+
+local function _convert_class_difficulty(s)
+	s = _convert_account_difficulty(s)
+	if s > 3 then
+		return 3
+	elseif s > 2 then
+		return 2
+	elseif s > 0 then
+		return 1
+	else
+		return -1
+	end
 end
 
 local function _get_flag_value(pfx, difficulty, objective, achievements_data)
