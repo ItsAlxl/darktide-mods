@@ -26,6 +26,18 @@ return {
 	class_finished = {
 		en = "Congratulations! Your %s has finished the penance for %s."
 	},
+	class_ogryn_2 = {
+		en = "Ogryn"
+	},
+	class_zealot_2 = {
+		en = "Zealot"
+	},
+	class_psyker_2 = {
+		en = "Psyker"
+	},
+	class_veteran_2 = {
+		en = "Veteran"
+	},
 	mission_type_1 = {
 		en = "Raid"
 	},
