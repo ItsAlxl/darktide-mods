@@ -28,71 +28,70 @@ mod.on_setting_changed = function(id)
     end
 end
 
-mod:hook_require("scripts/ui/hud/elements/blocking/hud_element_blocking", function(instance)
-    mod:hook(instance, "_update_visibility", function(func, self, dt)
-        if vis_behavior > 0 then
-            self._alpha_multiplier = 1.0
-        elseif vis_behavior < 0 then
-            self._alpha_multiplier = 0.0
-        else
-            local draw = false
-            local parent = self._parent
-            local player_extensions = parent:player_extensions()
+mod:hook("HudElementBlocking", "_update_visibility", function(func, self, dt)
+    if vis_behavior > 0 then
+        self._alpha_multiplier = 1.0
+    elseif vis_behavior < 0 then
+        self._alpha_multiplier = 0.0
+    else
+        -- modified from "scripts/ui/hud/elements/blocking/hud_element_blocking"
+        local draw = false
+        local parent = self._parent
+        local player_extensions = parent:player_extensions()
 
-            if player_extensions then
-                local player_unit_data = player_extensions.unit_data
+        if player_extensions then
+            local player_unit_data = player_extensions.unit_data
 
-                if player_unit_data then
-                    local block_component = player_unit_data:read_component("block")
-                    local sprint_component = player_unit_data:read_component("sprint_character_state")
-                    local stamina_component = player_unit_data:read_component("stamina")
+            if player_unit_data then
+                local block_component = player_unit_data:read_component("block")
+                local sprint_component = player_unit_data:read_component("sprint_character_state")
+                local stamina_component = player_unit_data:read_component("stamina")
 
-                    if block_component and block_component.is_blocking or sprint_component and sprint_component.is_sprinting or stamina_component and stamina_component.current_fraction < 1 then
-                        draw = true
-                    end
+                if block_component and block_component.is_blocking or sprint_component and sprint_component.is_sprinting or stamina_component and stamina_component.current_fraction < 1 then
+                    draw = true
                 end
             end
-
-            if draw ~= prev_instruction then
-                if draw then
-                    appear_timeout = appear_delay
-                    vanish_timeout = 0.0
-                else
-                    vanish_timeout = vanish_delay
-                    appear_timeout = 0.0
-                end
-            end
-            prev_instruction = draw
-            
-            if vanish_timeout > 0.0 then
-                vanish_timeout = vanish_timeout - dt
-            end
-            if appear_timeout > 0.0 then
-                appear_timeout = appear_timeout - dt
-            end
-
-            local appear = draw
-            if vanish_timeout <= 0.0 and appear_timeout > 0.0 then
-                appear = false
-            elseif appear_timeout <= 0.0 and vanish_timeout > 0.0 then
-                appear = true
-            end
-
-            local alpha_multiplier = self._alpha_multiplier or 0.0
-            if appear then
-                if appear_speed > 0.0 then
-                    alpha_multiplier = math.min(alpha_multiplier + dt * appear_speed, 1.0)
-                else
-                    alpha_multiplier = 1.0
-                end
-            else
-                if vanish_speed > 0.0 then
-                    alpha_multiplier = math.max(alpha_multiplier - dt * vanish_speed, 0.0)
-                else
-                    alpha_multiplier = 0.0
-                end
-            end
-            self._alpha_multiplier = alpha_multiplier
         end
-    end)
+
+        if draw ~= prev_instruction then
+            if draw then
+                appear_timeout = appear_delay
+                vanish_timeout = 0.0
+            else
+                vanish_timeout = vanish_delay
+                appear_timeout = 0.0
+            end
+        end
+        prev_instruction = draw
+
+        if vanish_timeout > 0.0 then
+            vanish_timeout = vanish_timeout - dt
+        end
+        if appear_timeout > 0.0 then
+            appear_timeout = appear_timeout - dt
+        end
+
+        local appear = draw
+        if vanish_timeout <= 0.0 and appear_timeout > 0.0 then
+            appear = false
+        elseif appear_timeout <= 0.0 and vanish_timeout > 0.0 then
+            appear = true
+        end
+
+        local alpha_multiplier = self._alpha_multiplier or 0.0
+        if appear then
+            if appear_speed > 0.0 then
+                alpha_multiplier = math.min(alpha_multiplier + dt * appear_speed, 1.0)
+            else
+                alpha_multiplier = 1.0
+            end
+        else
+            if vanish_speed > 0.0 then
+                alpha_multiplier = math.max(alpha_multiplier - dt * vanish_speed, 0.0)
+            else
+                alpha_multiplier = 0.0
+            end
+        end
+        self._alpha_multiplier = alpha_multiplier
+    end
 end)
