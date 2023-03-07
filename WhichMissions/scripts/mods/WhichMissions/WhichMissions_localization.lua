@@ -19,6 +19,9 @@ return {
 		en = "WhichMissions you need for a difficulty",
 		["zh-cn"] = "查看指定难度的全职业任务苦修状态",
 	},
+	error_fetch_failed = {
+		en = "Achievement data fetch failed",
+	},
 	account_needs = {
 		en = "Your account needs %s more on %s:\n%s",
 		["zh-cn"] = "你还需要做%s类任务达成%s的全职业任务苦修：\n%s",
