@@ -21,6 +21,7 @@ return {
 	},
 	error_fetch_failed = {
 		en = "Achievement data fetch failed",
+		["zh-cn"] = "成就数据获取失败",
 	},
 	account_needs = {
 		en = "Your account needs %s more on %s:\n%s",
