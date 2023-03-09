@@ -15,9 +15,7 @@ local function _convert_class(s)
 	elseif s == "ogryn" or s == "skullbreaker" then
 		return "ogryn_2"
 	end
-
-	local profile = Managers.player:local_player(1)._profile
-	return profile.specialization, profile.archetype.archetype_title
+	return Managers.player:local_player(1)._profile.specialization
 end
 
 local function _localize_class(c)
@@ -59,9 +57,8 @@ local function _convert_class_difficulty(s)
 		return 2
 	elseif s >= 1 then
 		return 1
-	else
-		return -1
 	end
+	return -1
 end
 
 local function _localize_difficulty(d)
@@ -137,7 +134,7 @@ local function _get_needed_readout(flag_pfx, difficulty, max_difficulty, achieve
 end
 
 local function _get_class_needs(difficulty_filter, class_filter)
-	Managers.data_service.account:pull_achievement_data():next(function (achievements_data)
+	Managers.data_service.account:pull_achievement_data():next(function(achievements_data)
 		class_filter = _convert_class(class_filter)
 		difficulty_filter = _convert_class_difficulty(difficulty_filter)
 
@@ -150,15 +147,15 @@ local function _get_class_needs(difficulty_filter, class_filter)
 			mod:echo(mod:localize("class_needs", class_localized, num_objs, dfcl_localized, readout))
 		end
 	end,
-	function ()
+	function()
 		mod:error(mod:localize("error_fetch_failed"))
 	end)
 end
 
 local function _get_account_needs(difficulty_filter)
-	Managers.data_service.account:pull_achievement_data():next(function (achievements_data)
+	Managers.data_service.account:pull_achievement_data():next(function(achievements_data)
 		difficulty_filter = _convert_account_difficulty(difficulty_filter)
-		
+
 		local readout, num_objs, dfcl = _get_needed_readout("_mission_difficulty", difficulty_filter, num_difficulties, achievements_data)
 		local dfcl_localized = _localize_difficulty(dfcl)
 		if num_objs == 0 then
@@ -167,7 +164,7 @@ local function _get_account_needs(difficulty_filter)
 			mod:echo(mod:localize("account_needs", num_objs, dfcl_localized, readout))
 		end
 	end,
-	function (ad)
+	function()
 		mod:error(mod:localize("error_fetch_failed"))
 	end)
 end
