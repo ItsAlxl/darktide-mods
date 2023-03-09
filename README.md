@@ -23,6 +23,11 @@ Toggle aim-down-sights (and other ranged weapon alt-fires). Perhaps more configu
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/60).
 
+## TruePeril
+Removes the interpolation/decay of the value on the Psyker's peril gauge.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/63).
+
 ## WhichMissions
 Adds chat commands to list which mission types you need for the "complete one of each mission type..." penances.
 
