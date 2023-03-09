@@ -6,16 +6,25 @@ return {
 		en = "Untoggle Actions"
 	},
 	action_reload = {
-		en = Localize("loc_ingame_weapon_reload")
+		en = "Reload"
+	},
+	action_start_reload = {
+		en = "One-At-a-Time Reload"
 	},
 	action_vent = {
-		en = Localize("loc_weapon_special_weapon_vent")
+		en = "Vent Heat"
+	},
+	action_sprint = {
+		en = "Sprint"
+	},
+	action_lunge = {
+		en = "Charge (Ogryn/Zealot Ability)"
 	},
 	action_shoot_charged = {
-		en = Localize("loc_weapon_keyword_charged_attack") .. " (Plasma/Staff)"
+		en = "Charged Shot (Plasma/Staff)"
 	},
 	action_shoot_braced = {
-		en = Localize("loc_weapon_stats_display_braced") .. " (Flamer)"
+		en = "Braced Burst (Flamer)"
 	},
 	optgroup_weps = {
 		en = "Ranged Weapon Alt-Fire Toggles"

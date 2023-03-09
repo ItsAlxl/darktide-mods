@@ -16,7 +16,22 @@ return {
 						default_value = false,
 					},
 					{
+						setting_id    = "action_start_reload",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
 						setting_id    = "action_vent",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "action_lunge",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "action_sprint",
 						type          = "checkbox",
 						default_value = true,
 					},
