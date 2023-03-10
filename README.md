@@ -3,6 +3,11 @@ I generally make mods based on requests in the Darktide Modding Discord that see
 
 All code is dual-licensed under the Unlicense (public domain) and the MIT License (permissive); see [LICENSE](LICENSE)
 
+## CharWallets aka Character Screen Wallets
+Adds your characters' currencies to the character select screen.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/67).
+
 ## FriendlyNPCs aka Friendly Vendors
 Force all vendors to like you. Or to dislike you, if you're into that.
 
