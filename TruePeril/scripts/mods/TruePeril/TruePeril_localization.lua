@@ -1,5 +1,11 @@
 return {
 	mod_description = {
-		en = "Removes the interpolation/animation of the value on the Psyker's peril gauge.",
+		en = "Makes the Psyker peril gauge more accurate.",
+	},
+	skip_lerp = {
+		en = "Remove the value interpolation/decay",
+	},
+	num_decimals = {
+		en = "Number of decimal digits",
 	},
 }

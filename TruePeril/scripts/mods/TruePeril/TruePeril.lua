@@ -1,6 +1,18 @@
 local mod = get_mod("TruePeril")
 local EPSILON = 0.00392156862745098
 
+local display_str = ""
+local skip_lerp = mod:get("skip_lerp")
+
+mod.on_setting_changed = function(id)
+    if id == "num_decimals" then
+        display_str = "%." .. mod:get(id) .. "f%%"
+    elseif id == "skip_lerp" then
+        skip_lerp = mod:get(id)
+    end
+end
+mod.on_setting_changed("num_decimals")
+
 -- modified from "scripts/ui/hud/elements/overcharge/hud_element_overcharge.lua"
 mod:hook("HudElementOvercharge", "_update_overcharge", function(func, self, dt)
     local warp_charge_level = 0
@@ -29,11 +41,9 @@ mod:hook("HudElementOvercharge", "_update_overcharge", function(func, self, dt)
         return
     end
 
-    --[[ Simply don't lerp. That's the whole mod.
-    if warp_charge_level < self._warp_charge_level - EPSILON then
+    if not skip_lerp and warp_charge_level < self._warp_charge_level - EPSILON then
         warp_charge_level = math.lerp(self._warp_charge_level, warp_charge_level, dt * 2)
     end
-    --]]
 
     local previous_anim_progress = widget.content.anim_progress
     local animate_in = warp_charge_level > 0.75
@@ -46,7 +56,7 @@ mod:hook("HudElementOvercharge", "_update_overcharge", function(func, self, dt)
     self:_animate_widget_warnings(widget, warp_charge_level, dt)
 
     local old_warning_text = widget.content.warning_text
-    local new_warning_text = "" .. string.format("%.0f%%", warp_charge_level * 100)
+    local new_warning_text = "" .. string.format(display_str, warp_charge_level * 100)
     widget.content.warning_text = new_warning_text
 
     if old_warning_text ~= new_warning_text then
