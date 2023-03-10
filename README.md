@@ -8,6 +8,11 @@ Force all vendors to like you. Or to dislike you, if you're into that.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/59).
 
+## PickForMe aka Loadout Randomizer
+Easily randomize your current loadout.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/66).
+
 ## StaminaVis aka Stamina Visibility
 Allows you to tweak the stamina bar's visibility behavior.
 
