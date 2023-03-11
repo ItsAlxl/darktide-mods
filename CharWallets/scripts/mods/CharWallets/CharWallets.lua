@@ -3,6 +3,7 @@ local WalletSettings = require("scripts/settings/wallet_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 
+local ICON_PACKAGE = "packages/ui/views/end_player_view/end_player_view"
 local BASE_WIDTH = 400
 local BASE_OFFSET = 168
 local CURRENCY_ORDER = {
@@ -110,9 +111,15 @@ mod:hook_require("scripts/ui/pass_templates/character_select_pass_templates", fu
     _apply_extra_passes(instance.character_select)
 end)
 
--- load in the icons (h/t raindish)
+-- load the icons (h/t raindish)
+local _load_package = function(p)
+    if not Managers.package:is_loading(p) and not Managers.package:has_loaded(p) then
+		Managers.package:load(p, mod.name, nil, true)
+	end
+end
+
 function mod.on_all_mods_loaded()
-    mod:load_package("packages/ui/views/end_player_view/end_player_view")
+    _load_package(ICON_PACKAGE)
 end
 
 mod:hook("MainMenuView", "_set_player_profile_information", function(func, self, profile, widget)
