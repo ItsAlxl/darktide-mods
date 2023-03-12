@@ -30,6 +30,11 @@ return {
 						type          = "checkbox",
 						default_value = true,
 					},
+					{
+						setting_id    = "show_contracts",
+						type          = "checkbox",
+						default_value = true,
+					},
 				}
 			},
 			{
@@ -47,6 +52,12 @@ return {
 						type          = "numeric",
 						default_value = 0,
 						range         = { -50, 50 },
+					},
+					{
+						setting_id    = "contracts_x",
+						type          = "numeric",
+						default_value = 0,
+						range         = { -25, 25 },
 					},
 				}
 			},

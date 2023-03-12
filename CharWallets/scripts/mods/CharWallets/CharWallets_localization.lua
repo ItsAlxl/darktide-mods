@@ -19,6 +19,9 @@ return {
 	show_diamantine = {
 		en = Localize("loc_currency_name_diamantine"),
 	},
+	show_contracts = {
+		en = Localize("loc_contracts_list_title"),
+	},
 	options_spacing = {
 		en = "Spacing",
 		["zh-cn"] = "界面布局",
@@ -30,5 +33,8 @@ return {
 	size_x = {
 		en = "Stretch",
 		["zh-cn"] = "拉伸",
+	},
+	contracts_x = {
+		en = "Contracts Offset",
 	},
 }
