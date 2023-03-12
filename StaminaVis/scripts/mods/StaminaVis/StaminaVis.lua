@@ -9,11 +9,14 @@ local appear_delay = mod:get("appear_delay")
 local appear_speed = mod:get("appear_speed")
 
 local vis_behavior = mod:get("vis_behavior")
+local upd_component_style = true
 
 local prev_instruction = nil
 
 mod.on_setting_changed = function(id)
-    if id == "vis_behavior" then
+    if id == "vis_components" or id == "label_vis" or id == "label_flipped" then
+        upd_component_style = true
+    elseif id == "vis_behavior" then
         vis_behavior = mod:get(id)
     elseif id == "vanish_speed" then
         vanish_speed = mod:get(id)
@@ -27,6 +30,36 @@ mod.on_setting_changed = function(id)
         appear_delay = mod:get(id)
     end
 end
+
+mod:hook_safe("HudElementBlocking", "init", function(...)
+    upd_component_style = true
+end)
+
+mod:hook_safe("HudElementBlocking", "update", function(self, ...)
+    if upd_component_style then
+        upd_component_style = false
+        local gauge_widget = self._widgets_by_name.gauge
+        
+        local comp_mode = mod:get("vis_components")
+        gauge_widget.style.warning.visible = comp_mode == 0 or comp_mode == 1
+        self._shield_widget.visible = gauge_widget.style.warning.visible
+        gauge_widget.style.value_text.visible = comp_mode == 0 or comp_mode == 2
+
+        gauge_widget.style.name_text.visible = mod:get("label_vis")
+
+        if mod:get("label_flipped") then
+            gauge_widget.style.name_text.text_horizontal_alignment = "left"
+            gauge_widget.style.name_text.horizontal_alignment = "left"
+            gauge_widget.style.value_text.text_horizontal_alignment = "right"
+            gauge_widget.style.value_text.horizontal_alignment = "right"
+        else
+            gauge_widget.style.value_text.text_horizontal_alignment = "left"
+            gauge_widget.style.value_text.horizontal_alignment = "left"
+            gauge_widget.style.name_text.text_horizontal_alignment = "right"
+            gauge_widget.style.name_text.horizontal_alignment = "right"
+        end
+    end
+end)
 
 mod:hook("HudElementBlocking", "_update_visibility", function(func, self, dt)
     if vis_behavior > 0 then
