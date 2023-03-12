@@ -12,28 +12,67 @@ return {
 				sub_widgets = {
 					{
 						setting_id    = "show_credits",
+						title         = "currency_credits",
 						type          = "checkbox",
 						default_value = true,
 					},
 					{
 						setting_id    = "show_marks",
+						title         = "currency_marks",
 						type          = "checkbox",
 						default_value = true,
 					},
 					{
 						setting_id    = "show_plasteel",
+						title         = "currency_plasteel",
 						type          = "checkbox",
 						default_value = true,
 					},
 					{
 						setting_id    = "show_diamantine",
+						title         = "currency_diamantine",
 						type          = "checkbox",
 						default_value = true,
 					},
 					{
 						setting_id    = "show_contracts",
+						title         = "currency_contracts",
 						type          = "checkbox",
 						default_value = true,
+					},
+				}
+			},
+			{
+				setting_id  = "options_order",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "order_credits",
+						title          = "currency_credits",
+						type          = "numeric",
+						default_value = 1,
+						range         = { 1, 4 },
+					},
+					{
+						setting_id    = "order_marks",
+						title          = "currency_marks",
+						type          = "numeric",
+						default_value = 2,
+						range         = { 1, 4 },
+					},
+					{
+						setting_id    = "order_plasteel",
+						title          = "currency_plasteel",
+						type          = "numeric",
+						default_value = 3,
+						range         = { 1, 4 },
+					},
+					{
+						setting_id    = "order_diamantine",
+						title          = "currency_diamantine",
+						type          = "numeric",
+						default_value = 4,
+						range         = { 1, 4 },
 					},
 				}
 			},

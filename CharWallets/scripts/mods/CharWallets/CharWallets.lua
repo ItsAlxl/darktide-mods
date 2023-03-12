@@ -6,12 +6,13 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local ICON_PACKAGE = "packages/ui/views/end_player_view/end_player_view"
 local BASE_WIDTH = 400
 local BASE_OFFSET = 168
-local CURRENCY_ORDER = {
+local DEFAULT_CURRENCY_ORDER = {
     "credits",
     "marks",
     "plasteel",
     "diamantine",
 }
+local currency_order = {}
 
 local currency_icon_style = {
     size = { 24, 17 },
@@ -33,6 +34,42 @@ local contracts_text_style = table.clone(currency_text_style)
 contracts_text_style.text_horizontal_alignment = "right"
 contracts_text_style.offset = { 380, -8, 10 }
 
+local _sort_custom_order = function(a, b)
+    if a.idx == b.idx then
+        return a.def_idx < b.def_idx
+    end
+    return a.idx < b.idx
+end
+
+local _build_currency_order = function()
+    local order_builder = {}
+    for default_idx, currency in pairs(DEFAULT_CURRENCY_ORDER) do
+        table.insert(order_builder, {
+            currency = currency,
+            idx = mod:get("order_" .. currency),
+            def_idx = default_idx
+        })
+    end
+    table.sort(order_builder, _sort_custom_order)
+
+    table.clear(currency_order)
+    for _, sorter in pairs(order_builder) do
+        table.insert(currency_order, sorter.currency)
+    end
+end
+
+local _ensure_order = function()
+    if #currency_order == 0 then
+        _build_currency_order()
+    end
+end
+
+mod.on_setting_changed = function(setting_id)
+    if setting_id:find("^order_") then
+        _build_currency_order()
+    end
+end
+
 local _get_contracts_string = function(num_completed, num_tasks, finished, bonus_rewarded)
     local s = num_completed .. "/" .. num_tasks .. ""
     if finished then
@@ -53,7 +90,8 @@ local _get_style_update = function()
     local num_display = 0
     local currency_to_idx = {}
 
-    for _, currency in pairs(CURRENCY_ORDER) do
+    _ensure_order()
+    for _, currency in pairs(currency_order) do
         if mod:get("show_" .. currency) then
             num_display = num_display + 1
             currency_to_idx[currency] = num_display
@@ -70,7 +108,7 @@ local _get_style_update = function()
     local adjusted_width = (BASE_WIDTH + mod:get("size_x")) / num_display
 
     local style_overrides = {}
-    for _, currency in pairs(CURRENCY_ORDER) do
+    for _, currency in pairs(currency_order) do
         local offset = adjusted_width * (currency_to_idx[currency] - 1)
         style_overrides[currency .. "_icon"] = {
             visible = _is_currency_displayed(currency),
@@ -110,7 +148,8 @@ local _text_color_change = function(content, style)
 end
 
 local _apply_extra_passes = function(onto)
-    for _, currency in pairs(CURRENCY_ORDER) do
+    _ensure_order()
+    for _, currency in pairs(currency_order) do
         _insert_pass_if_absent(onto, {
             value_id = currency .. "_icon",
             style_id = currency .. "_icon",
@@ -155,9 +194,11 @@ function mod.on_all_mods_loaded()
 end
 
 mod:hook_safe("MainMenuView", "_set_player_profile_information", function(self, profile, widget)
+    _ensure_order()
+    
     local character_id = profile.character_id
     Managers.backend.interfaces.wallet:combined_wallets(character_id):next(function(wallets)
-        for _, currency in pairs(CURRENCY_ORDER) do
+        for _, currency in pairs(currency_order) do
             local wallet = wallets:by_type(currency)
             if wallet then
                 local label = currency .. "_text"
