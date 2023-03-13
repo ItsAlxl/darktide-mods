@@ -3,6 +3,11 @@ I generally make mods based on requests in the Darktide Modding Discord that see
 
 All code is dual-licensed under the Unlicense (public domain) and the MIT License (permissive); see [LICENSE](LICENSE)
 
+## BetterMelk
+Automatically accept new contracts and collect the weekly completion bonus.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/71).
+
 ## CharWallets aka Character Screen Wallets
 Adds your characters' currencies to the character select screen.
 
