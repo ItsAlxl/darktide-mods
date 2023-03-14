@@ -23,6 +23,11 @@ Easily randomize your current loadout.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/66).
 
+## ReorderChars aka Reorder Characters
+Allows you to reorder your characters on the character select screen.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/75).
+
 ## StaminaVis aka Stamina Visibility
 Allows you to tweak the stamina bar's visibility behavior.
 
