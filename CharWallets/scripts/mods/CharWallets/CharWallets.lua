@@ -92,7 +92,7 @@ local _get_style_update = function()
 
     _ensure_order()
     for _, currency in pairs(currency_order) do
-        if mod:get("show_" .. currency) then
+        if _is_currency_displayed(currency) then
             num_display = num_display + 1
             currency_to_idx[currency] = num_display
         else
@@ -109,13 +109,14 @@ local _get_style_update = function()
 
     local style_overrides = {}
     for _, currency in pairs(currency_order) do
-        local offset = adjusted_width * (currency_to_idx[currency] - 1)
+        local idx = currency_to_idx[currency]
+        local offset = adjusted_width * (idx - 1)
         style_overrides[currency .. "_icon"] = {
-            visible = _is_currency_displayed(currency),
+            visible = idx > 0,
             offset = { adjusted_offset + offset, 86, 100 }
         }
         style_overrides[currency .. "_text"] = {
-            visible = _is_currency_displayed(currency),
+            visible = idx > 0,
             offset = { adjusted_offset + offset + currency_icon_style.size[1], 40, 100 }
         }
     end
