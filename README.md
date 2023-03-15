@@ -38,6 +38,11 @@ Changes 'Toggle Sprint' to only toggle on, i.e. pressing the sprint key while sp
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/62).
 
+## TagKeys
+Bind the tagging wheel options to individual keys.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/79).
+
 ## Tap2Dodge
 Double-tap movement keys to dodge.
 
