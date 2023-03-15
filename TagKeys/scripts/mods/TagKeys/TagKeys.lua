@@ -27,6 +27,11 @@ local _force_tag = function(display_name)
         return
     end
 
+    -- prevent usage while chat is open
+    if Managers.input:cursor_active() then
+        return
+    end
+
     local option = _find_wheel_option(display_name)
     if not option then
         return
