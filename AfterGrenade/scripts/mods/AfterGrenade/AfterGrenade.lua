@@ -5,7 +5,7 @@ local request = nil
 local after_request_type = nil
 
 local _update_request_type = function()
-    if Managers and Managers.player then
+    if Managers and Managers.player and Network and Network:peer_id() then
         local player = Managers.player:local_player(1)
         if player and player._profile and player._profile.specialization then
             local plr_class = player._profile.specialization
@@ -54,6 +54,3 @@ end)
 mod.on_setting_changed = function(id)
     _update_request_type()
 end
-
--- in case of a reload
-_update_request_type()
