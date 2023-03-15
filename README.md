@@ -33,6 +33,11 @@ Allows you to tweak the stamina bar's visibility behavior.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/57).
 
+## Tap2Dodge
+Double-tap movement keys to dodge.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/78).
+
 ## StickySprint
 Changes 'Toggle Sprint' to only toggle on, i.e. pressing the sprint key while sprinting doesn't stop sprinting.
 
