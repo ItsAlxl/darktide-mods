@@ -13,6 +13,7 @@ return {
 	},
 	msg_invalid = {
 		en = "Message on invalid use",
+		["zh-cn"] = "用法错误时发送消息",
 	},
 	bad_circumstance = {
 		en = "You can't use PickForMe during a mission",
@@ -24,6 +25,7 @@ return {
 	},
 	random_character = {
 		en = "Select random character",
+		["zh-cn"] = "选择随机角色",
 	},
 	quick_randomize = {
 		en = "Quick Randomize",
@@ -47,5 +49,6 @@ return {
 	},
 	random_talents = {
 		en = "Randomizes talents",
+		["zh-cn"] = "随机技能",
 	},
 }
