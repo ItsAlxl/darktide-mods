@@ -7,6 +7,16 @@ return {
 	options = {
 		widgets = {
 			{
+				setting_id    = "msg_invalid",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
+				setting_id    = "random_character",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
 				setting_id  = "quick_randomize",
 				type        = "group",
 				sub_widgets = {
@@ -34,8 +44,13 @@ return {
 						type          = "checkbox",
 						default_value = false,
 					},
+					{
+						setting_id    = "random_talents",
+						type          = "checkbox",
+						default_value = false,
+					},
 				}
-			}
+			},
 		}
 	}
 }

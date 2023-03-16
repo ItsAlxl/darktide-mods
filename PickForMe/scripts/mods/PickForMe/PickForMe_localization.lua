@@ -8,16 +8,22 @@ return {
 		["zh-cn"] = "随机选择当前配装",
 	},
 	cmd_help = {
-		en = "/pickforme [args...]\nArgs can include 'weapons', 'primary', 'secondary', 'curios', or 'all'. For example, '/pickforme secondary curios' will randomize your secondary weapon and curios. '/pickforme' without arguments is equivalent to the Quick Randomize configured in the mod settings.",
-		["zh-cn"] = "/pickforme [参数...]\n参数可以是 'weapons', 'primary', 'secondary', 'curios' 或者 'all'。例如，'/pickforme secondary curios' 会随机选择副武器和珍品。不带任何参数的 '/pickforme' 命令效果等同于模组选项中设置的快速随机。",
+		en = "/pickforme [args...]\nArgs can include 'gear', 'weapons', 'primary', 'secondary', 'curios', 'talents', or 'all'. For example, '/pickforme secondary curios' will randomize your secondary weapon and curios. '/pickforme' without arguments is equivalent to the Quick Randomize configured in the mod settings.",
+		["zh-cn"] = "/pickforme [参数...]\n参数可以是 'gear', 'weapons', 'primary', 'secondary', 'curios', 'talents' 或者 'all'。例如，'/pickforme secondary curios' 会随机选择副武器和珍品。不带任何参数的 '/pickforme' 命令效果等同于模组选项中设置的快速随机。",
 	},
-	only_use_in_hub = {
+	msg_invalid = {
+		en = "Message on invalid use",
+	},
+	bad_circumstance = {
 		en = "You can't use PickForMe during a mission",
 		["zh-cn"] = "你不能在任务中随机配装",
 	},
 	catch_error = {
 		en = "Loadout randomization failed",
 		["zh-cn"] = "配装随机失败",
+	},
+	random_character = {
+		en = "Select random character",
 	},
 	quick_randomize = {
 		en = "Quick Randomize",
@@ -38,5 +44,8 @@ return {
 	random_curios = {
 		en = "Randomizes curios",
 		["zh-cn"] = "随机珍品",
+	},
+	random_talents = {
+		en = "Randomizes talents",
 	},
 }
