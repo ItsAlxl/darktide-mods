@@ -1,7 +1,8 @@
 local mod = get_mod("CharWallets")
-local WalletSettings = require("scripts/settings/wallet_settings")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local WalletSettings = require("scripts/settings/wallet_settings")
 
 local ICON_PACKAGE = "packages/ui/views/end_player_view/end_player_view"
 local BASE_WIDTH = 400
@@ -196,7 +197,7 @@ end
 
 mod:hook_safe("MainMenuView", "_set_player_profile_information", function(self, profile, widget)
     _ensure_order()
-    
+
     local character_id = profile.character_id
     Managers.backend.interfaces.wallet:combined_wallets(character_id):next(function(wallets)
         for _, currency in pairs(currency_order) do
@@ -210,21 +211,26 @@ mod:hook_safe("MainMenuView", "_set_player_profile_information", function(self, 
         end
     end)
 
-    Managers.backend.interfaces.contracts:get_current_contract(character_id):next(function(contract_data)
-        local contract_tasks = contract_data.tasks
-        local num_tasks_completed = 0
-        local num_tasks = #contract_tasks
-        for _, task in pairs(contract_tasks) do
-            if task.fulfilled then
-                num_tasks_completed = num_tasks_completed + 1
-            end
-        end
 
-        local contracts_lbl = "contracts_text"
-        if widget.content[contracts_lbl] then
-            widget.content[contracts_lbl] = _get_contracts_string(num_tasks_completed, num_tasks, contract_data.fulfilled, contract_data.rewarded)
-        end
-    end)
+    local contracts_lbl = "contracts_text"
+    if profile.current_level >= PlayerProgressionUnlocks.contracts then
+        Managers.backend.interfaces.contracts:get_current_contract(character_id):next(function(contract_data)
+            local contract_tasks = contract_data.tasks
+            local num_tasks_completed = 0
+            local num_tasks = #contract_tasks
+            for _, task in pairs(contract_tasks) do
+                if task.fulfilled then
+                    num_tasks_completed = num_tasks_completed + 1
+                end
+            end
+
+            if widget.content[contracts_lbl] then
+                widget.content[contracts_lbl] = _get_contracts_string(num_tasks_completed, num_tasks, contract_data.fulfilled, contract_data.rewarded)
+            end
+        end)
+    else
+        widget.content[contracts_lbl] = ""
+    end
 
     for style_id, style in pairs(_get_style_update()) do
         table.merge_recursive(widget.style[style_id], style)
