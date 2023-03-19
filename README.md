@@ -18,6 +18,11 @@ Adds your characters' currencies to the character select screen.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/67).
 
+## Click2Play
+Adds your characters' currencies to the character select screen.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/86).
+
 ## FriendlyNPCs aka Friendly Vendors
 Force all vendors to like you. Or to dislike you, if you're into that.
 
