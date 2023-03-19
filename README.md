@@ -33,6 +33,11 @@ Make all possible ranged weapons fully automatic.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/87).
 
+## KeepSwinging
+Adds keybinds to spam light melee attacks for you.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/88).
+
 ## PickForMe aka Loadout Randomizer
 Easily randomize your current loadout.
 
