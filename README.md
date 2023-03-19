@@ -28,6 +28,11 @@ Force all vendors to like you. Or to dislike you, if you're into that.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/59).
 
+## FullAuto
+Make all possible ranged weapons fully automatic.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/87).
+
 ## PickForMe aka Loadout Randomizer
 Easily randomize your current loadout.
 
