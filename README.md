@@ -19,7 +19,7 @@ Adds your characters' currencies to the character select screen.
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/67).
 
 ## Click2Play
-Adds your characters' currencies to the character select screen.
+In the character select screen, simply re-select your currently-selected character to start playing as them.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/86).
 
