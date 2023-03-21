@@ -16,6 +16,16 @@ local UNTOGGLE_STATES = {
     interacting = true,
     sprinting = true,
 }
+local MELEE_EXTRAS = {
+    "push",
+    "action_push",
+    "action_normal_push",
+    "action_psyker_push",
+    "action_stab_start",
+    "action_slash_start",
+    "action_bash_start",
+    "action_pistol_whip",
+}
 
 local untoggle_actions = {
     action_shoot_braced = mod:get("action_shoot_braced"),
@@ -26,6 +36,9 @@ local untoggle_actions = {
     action_start_reload = mod:get("action_start_reload"),
     action_lunge = mod:get("action_lunge"),
 }
+for _, act in pairs(MELEE_EXTRAS) do
+    untoggle_actions[act] = mod:get("action_melee_extra")
+end
 
 local toggleable_weapon_categories = {
     autogun = mod:get("autogun"),
@@ -46,11 +59,17 @@ local toggleable_weapon_categories = {
 }
 
 mod.on_setting_changed = function(id)
+    local val = mod:get(id)
     if toggleable_weapon_categories[id] ~= nil then
-        toggleable_weapon_categories[id] = mod:get(id)
+        toggleable_weapon_categories[id] = val
     end
-    if untoggle_actions[id] ~= nil then
-        untoggle_actions[id] = mod:get(id)
+
+    if id == "action_melee_extra" then
+        for _, act in pairs(MELEE_EXTRAS) do
+            untoggle_actions[act] = val
+        end
+    elseif untoggle_actions[id] ~= nil then
+        untoggle_actions[id] = val
     end
 end
 

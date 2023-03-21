@@ -35,6 +35,9 @@ return {
 		en = "Braced Burst (Flamer)",
 		["zh-cn"] = "持续射击（火焰喷射器）",
 	},
+	action_melee_extra = {
+		en = "Melee Extra",
+	},
 	optgroup_weps = {
 		en = "Ranged Weapon Alt-Fire Toggles",
 		["zh-cn"] = "远程武器次要动作切换",

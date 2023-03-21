@@ -36,6 +36,11 @@ return {
 						default_value = true,
 					},
 					{
+						setting_id    = "action_melee_extra",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
 						setting_id    = "action_shoot_charged",
 						type          = "checkbox",
 						default_value = false,
