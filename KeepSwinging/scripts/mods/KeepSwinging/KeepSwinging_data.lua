@@ -30,24 +30,35 @@ return {
 				default_value = false,
 			},
 			{
-				setting_id    = "disable_after_action_one",
+				setting_id    = "wield_default",
 				type          = "checkbox",
 				default_value = false,
 			},
 			{
-				setting_id    = "disable_after_action_two",
-				type          = "checkbox",
-				default_value = false,
-			},
-			{
-				setting_id    = "disable_after_weapon_reload",
-				type          = "checkbox",
-				default_value = true,
-			},
-			{
-				setting_id    = "disable_after_weapon_extra",
-				type          = "checkbox",
-				default_value = false,
+				setting_id  = "group_disable_acts",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "disable_after_action_one",
+						type          = "checkbox",
+						default_value = false,
+					},
+					{
+						setting_id    = "disable_after_action_two",
+						type          = "checkbox",
+						default_value = false,
+					},
+					{
+						setting_id    = "disable_after_weapon_reload",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "disable_after_weapon_extra",
+						type          = "checkbox",
+						default_value = false,
+					},
+				}
 			},
 		}
 	}

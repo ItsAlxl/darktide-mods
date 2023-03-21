@@ -18,6 +18,8 @@ local disable_actions = {
 local allow_autoswing = false
 local is_swinging = false
 local as_modifier = mod:get("as_modifier")
+local wield_default = mod:get("wield_default")
+
 local swing_delay = 1
 local release_delay = 1
 local request_repress = false
@@ -25,6 +27,8 @@ local request_repress = false
 mod.on_setting_changed = function(id)
     if id == "as_modifier" then
         as_modifier = mod:get(id)
+    elseif id == "wield_default" then
+        wield_default = mod:get(id)
     elseif id == "disable_after_action_one" then
         disable_actions.action_one_pressed = mod:get(id)
     elseif id == "disable_after_action_two" then
@@ -38,7 +42,7 @@ end
 
 local function _allow_autoswing(a)
     allow_autoswing = a
-    is_swinging = false
+    is_swinging = a and wield_default
 end
 
 local function _start_attack_request(include_press)

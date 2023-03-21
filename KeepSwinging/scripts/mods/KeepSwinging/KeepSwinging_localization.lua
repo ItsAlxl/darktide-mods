@@ -14,16 +14,25 @@ return {
 	as_modifier_description = {
 		en = "If ON, Auto-Swing won't perform light attacks for you, but instead will modify your normal attack button to spam light attacks instead of performing heavy attacks.",
 	},
+	wield_default = {
+		en = "Wield Enables Auto-Swing",
+	},
+	wield_default_description = {
+		en = "If ON, Auto-Swing will be enabled when you switch to a melee weapon.",
+	},
+	group_disable_acts = {
+		en = "Manual Actions Disable Auto-Swing",
+	},
 	disable_after_action_one = {
-		en = "Manual Attack Disables Auto-Swing",
+		en = "Attack",
 	},
 	disable_after_action_two = {
-		en = "Manual Block Disables Auto-Swing",
+		en = "Block",
 	},
 	disable_after_weapon_reload = {
-		en = "Manual Reload/Vent Disables Auto-Swing",
+		en = "Reload/Vent",
 	},
 	disable_after_weapon_extra = {
-		en = "Manual Extra Disables Auto-Swing",
+		en = "Weapon Extra",
 	},
 }
