@@ -24,6 +24,31 @@ return {
 				keybind_type    = "function_call",
 				function_name   = "_toggle_swinging",
 			},
+			{
+				setting_id    = "as_modifier",
+				type          = "checkbox",
+				default_value = false,
+			},
+			{
+				setting_id    = "disable_after_action_one",
+				type          = "checkbox",
+				default_value = false,
+			},
+			{
+				setting_id    = "disable_after_action_two",
+				type          = "checkbox",
+				default_value = false,
+			},
+			{
+				setting_id    = "disable_after_weapon_reload",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
+				setting_id    = "disable_after_weapon_extra",
+				type          = "checkbox",
+				default_value = false,
+			},
 		}
 	}
 }
