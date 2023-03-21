@@ -39,24 +39,29 @@ return {
 				type        = "group",
 				sub_widgets = {
 					{
-						setting_id    = "disable_after_action_one",
-						type          = "checkbox",
-						default_value = false,
-					},
-					{
-						setting_id    = "disable_after_action_two",
-						type          = "checkbox",
-						default_value = false,
-					},
-					{
-						setting_id    = "disable_after_weapon_reload",
+						setting_id    = "persist_after_disable",
 						type          = "checkbox",
 						default_value = true,
 					},
 					{
-						setting_id    = "disable_after_weapon_extra",
+						setting_id    = "disable_action_one_hold",
 						type          = "checkbox",
 						default_value = false,
+					},
+					{
+						setting_id    = "disable_action_two_hold",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "disable_weapon_reload_hold",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "disable_weapon_extra_hold",
+						type          = "checkbox",
+						default_value = true,
 					},
 				}
 			},

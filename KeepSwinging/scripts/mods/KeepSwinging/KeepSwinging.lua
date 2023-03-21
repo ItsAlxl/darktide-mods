@@ -9,34 +9,56 @@ local attack_action_requests = {
     action_one_release = false,
 }
 local disable_actions = {
-    action_one_pressed = mod:get("disable_after_action_one"),
-    action_two_pressed = mod:get("disable_after_action_two"),
-    weapon_reload = mod:get("disable_after_weapon_reload"),
-    weapon_extra_pressed = mod:get("disable_after_weapon_extra"),
+    action_one_hold = {},
+    action_two_hold = {},
+    weapon_reload_hold = {},
+    weapon_extra_hold = {},
 }
+for act, _ in pairs(disable_actions) do
+    disable_actions[act] = {
+        enabled = mod:get("disable_" .. act),
+        active = false,
+    }
+end
 
 local allow_autoswing = false
 local is_swinging = false
+
+local held_interrupted = false
+local holding_action_one = false
+
 local as_modifier = mod:get("as_modifier")
 local wield_default = mod:get("wield_default")
+local persist_after_disable = mod:get("persist_after_disable")
 
 local swing_delay = 1
 local release_delay = 1
 local request_repress = false
+
+local function _is_interrupted()
+    for _, t in pairs(disable_actions) do
+        if t.active and t.enabled then
+            return true
+        end
+    end
+    return false
+end
 
 mod.on_setting_changed = function(id)
     if id == "as_modifier" then
         as_modifier = mod:get(id)
     elseif id == "wield_default" then
         wield_default = mod:get(id)
-    elseif id == "disable_after_action_one" then
-        disable_actions.action_one_pressed = mod:get(id)
-    elseif id == "disable_after_action_two" then
-        disable_actions.action_two_pressed = mod:get(id)
-    elseif id == "disable_after_weapon_extra" then
-        disable_actions.weapon_extra_pressed = mod:get(id)
-    elseif id == "disable_after_weapon_reload" then
-        disable_actions.weapon_reload = mod:get(id)
+    elseif id == "persist_after_disable" then
+        persist_after_disable = mod:get(id)
+    elseif id == "disable_action_one_hold" then
+        disable_actions.action_one_hold.enabled = mod:get(id)
+    elseif id == "disable_action_two_hold" then
+        disable_actions.action_two_hold.enabled = mod:get(id)
+    elseif id == "disable_weapon_reload_hold" then
+        disable_actions.weapon_reload_hold.enabled = mod:get(id)
+    elseif id == "disable_weapon_extra_hold" then
+        disable_actions.weapon_extra_hold.enabled = mod:get(id)
     end
 end
 
@@ -45,8 +67,8 @@ local function _allow_autoswing(a)
     is_swinging = a and wield_default
 end
 
-local function _start_attack_request(include_press)
-    if include_press then
+local function _start_attack_request()
+    if as_modifier or not holding_action_one then
         attack_action_requests.action_one_pressed = true
     end
     attack_action_requests.action_one_hold = true
@@ -61,11 +83,21 @@ mod:hook_safe("PlayerUnitWeaponExtension", "on_slot_wielded", function(self, slo
 end)
 
 mod._toggle_swinging = function(held)
+    if held == false and held_interrupted then
+        held_interrupted = false
+        return
+    end
+
     is_swinging = not is_swinging
-    if is_swinging then
-        swing_delay = 1
-    else
-        request_repress = as_modifier
+    if allow_autoswing then
+        if is_swinging then
+            swing_delay = 1
+        else
+            request_repress = as_modifier and holding_action_one
+            for act, _ in pairs(disable_actions) do
+                disable_actions[act].active = false
+            end
+        end
     end
 end
 
@@ -81,42 +113,55 @@ mod:hook("InputService", "get", function(func, self, action_name)
     local val = func(self, action_name)
 
     if allow_autoswing and is_swinging then
-        if val and disable_actions[action_name] and (not as_modifier or action_name ~= "action_one_pressed") then
-            mod._toggle_swinging()
+        if disable_actions[action_name] and disable_actions[action_name].enabled and (not as_modifier or action_name ~= "action_one_hold") then
+            disable_actions[action_name].active = val
         end
 
-        if action_name == "action_one_hold" then
-            if as_modifier == val then
-                local request = _consume_action_request(action_name)
-
-                if swing_delay > 0 then
-                    swing_delay = swing_delay - 1
-
-                    if swing_delay == 0 then
-                        _start_attack_request(as_modifier or not val)
-                        swing_delay = SWING_DELAY_FRAMES
-                    end
-                end
-
-                if release_delay > 0 then
-                    release_delay = release_delay - 1
-                    if release_delay == 0 then
-                        _finish_attack_request()
-                    end
-                end
-
-                if request then
-                    release_delay = RELEASE_DELAY_FRAMES
-                    return true
-                end
-                return release_delay > 0
+        local skip = false
+        if _is_interrupted() then
+            if persist_after_disable then
+                skip = true
             else
-                return val
+                held_interrupted = true
+                mod._toggle_swinging()
             end
         end
 
-        if attack_action_requests[action_name] then
-            return _consume_action_request(action_name)
+        if not skip then
+            if action_name == "action_one_hold" then
+                holding_action_one = val
+                if as_modifier == val then
+                    local request = _consume_action_request(action_name)
+
+                    if swing_delay > 0 then
+                        swing_delay = swing_delay - 1
+
+                        if swing_delay == 0 then
+                            _start_attack_request()
+                            swing_delay = SWING_DELAY_FRAMES
+                        end
+                    end
+
+                    if release_delay > 0 then
+                        release_delay = release_delay - 1
+                        if release_delay == 0 then
+                            _finish_attack_request()
+                        end
+                    end
+
+                    if request then
+                        release_delay = RELEASE_DELAY_FRAMES
+                        return true
+                    end
+                    return release_delay > 0
+                else
+                    return val
+                end
+            end
+
+            if attack_action_requests[action_name] then
+                return _consume_action_request(action_name)
+            end
         end
     end
 
