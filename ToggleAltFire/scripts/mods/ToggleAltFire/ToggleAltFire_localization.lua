@@ -37,6 +37,7 @@ return {
 	},
 	action_melee_extra = {
 		en = "Melee Extra",
+		["zh-cn"] = "近战武器特殊攻击",
 	},
 	optgroup_weps = {
 		en = "Ranged Weapon Alt-Fire Toggles",
