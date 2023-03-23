@@ -195,11 +195,28 @@ function mod.on_all_mods_loaded()
     _load_package(ICON_PACKAGE)
 end
 
+local _get_character_wallet = function(character_id)
+    local wallets_promise = nil
+    local store_service = Managers.data_service.store
+
+    if store_service._wallets_cache then
+        wallets_promise = store_service._wallets_cache:get_data(character_id, function()
+            return store_service._backend_interface.wallet:character_wallets(character_id)
+        end)
+    else
+        wallets_promise = store_service._backend_interface.wallet:character_wallets(character_id)
+    end
+
+    return wallets_promise:next(function(wallets)
+        return store_service:_decorate_wallets(wallets)
+    end)
+end
+
 mod:hook_safe("MainMenuView", "_set_player_profile_information", function(self, profile, widget)
     _ensure_order()
 
     local character_id = profile.character_id
-    Managers.backend.interfaces.wallet:combined_wallets(character_id):next(function(wallets)
+    _get_character_wallet(character_id):next(function(wallets)
         for _, currency in pairs(currency_order) do
             local wallet = wallets:by_type(currency)
             if wallet then
@@ -210,7 +227,6 @@ mod:hook_safe("MainMenuView", "_set_player_profile_information", function(self, 
             end
         end
     end)
-
 
     local contracts_lbl = "contracts_text"
     if profile.current_level >= PlayerProgressionUnlocks.contracts then
