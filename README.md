@@ -13,6 +13,11 @@ Automatically accept new contracts and collect the weekly completion bonus.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/71).
 
+## BornReady
+Automatically readies up when joining a lobby.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/96).
+
 ## CharWallets aka Character Screen Wallets
 Adds your characters' currencies to the character select screen.
 
