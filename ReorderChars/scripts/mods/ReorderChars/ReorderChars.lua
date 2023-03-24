@@ -1,7 +1,27 @@
 local mod = get_mod("ReorderChars")
 
 -- maps character_id->custom_idx
-local custom_order = mod:persistent_table("custom_order")
+local custom_order = {}
+local allow_reordering = Managers.ui and Managers.ui:has_active_view("main_menu_view")
+
+local _save_order = function()
+    for p_id, idx in pairs(custom_order) do
+        mod:set(p_id, idx)
+    end
+end
+
+mod.on_unload = function(quitting)
+    _save_order()
+end
+
+mod:hook_safe("MainMenuView", "on_enter", function(...)
+    allow_reordering = true
+end)
+
+mod:hook_safe("MainMenuView", "on_exit", function(...)
+    allow_reordering = false
+    _save_order()
+end)
 
 local _sort_profiles = function(a, b)
     local a_id = a.character_id
@@ -52,7 +72,7 @@ local _shift_idx = function(from, to)
 end
 
 local _move_current = function(up, id)
-    if not Managers.ui or not Managers.ui:has_active_view("main_menu_view") then
+    if not allow_reordering then
         return
     end
     if not id and Managers.player and Managers.player:local_player(1) then
@@ -64,6 +84,10 @@ local _move_current = function(up, id)
     end
 
     local base = custom_order[id]
+    if not base then
+        return
+    end
+
     if up then
         if base > 1 then
             _shift_idx(base - 1, base)
@@ -91,10 +115,4 @@ end
 
 mod.move_current_down = function()
     _move_current(false)
-end
-
-mod.on_unload = function(quitting)
-    for p_id, idx in pairs(custom_order) do
-        mod:set(p_id, idx)
-    end
 end
