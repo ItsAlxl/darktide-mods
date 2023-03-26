@@ -29,7 +29,7 @@ In the character select screen, simply re-select your currently-selected charact
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/86).
 
 ## ConstantFov
-Disables all FoV-changing effects.
+Tweak or disable FOV-changing effects.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/91).
 
