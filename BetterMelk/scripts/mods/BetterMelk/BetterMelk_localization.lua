@@ -2,7 +2,7 @@ return {
 	mod_description = {
 		en = "Automatically accept new contracts and collect the weekly completion bonus.",
 		["zh-cn"] = "自动接受新协议并收集每周协议额外奖励。",
-		ru = "Автоматически принимайте новые контракты и получайте еженедельный бонус за выполнение.",
+		ru = "Автоматически принимайте новые контракты и получайте еженедельный бонус за их выполнение.",
 	},
 	notify_new = {
 		en = "New Contracts Message",
