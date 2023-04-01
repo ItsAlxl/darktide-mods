@@ -7,26 +7,6 @@ return {
 	options = {
 		widgets = {
 			{
-				setting_id = "vis_components",
-				type = "dropdown",
-				default_value = 0,
-				options = {
-					{ text = "comp_all",  value = 0 },
-					{ text = "comp_bar",  value = 1 },
-					{ text = "comp_perc", value = 2 },
-				},
-			},
-			{
-				setting_id    = "label_vis",
-				type          = "checkbox",
-				default_value = true,
-			},
-			{
-				setting_id    = "label_flipped",
-				type          = "checkbox",
-				default_value = true,
-			},
-			{
 				setting_id = "vis_behavior",
 				type = "dropdown",
 				default_value = 0,
@@ -63,6 +43,85 @@ return {
 						default_value = 0,
 						range = { 0, 10 },
 						decimals_number = 1,
+					},
+				}
+			},
+			{
+				setting_id  = "group_base_comps",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "comp_base_bar",
+						type          = "checkbox",
+						title         = "comp_bar",
+						default_value = true,
+					},
+					{
+						setting_id    = "comp_base_bracket",
+						type          = "checkbox",
+						title         = "comp_bracket",
+						default_value = true,
+					},
+					{
+						setting_id    = "comp_base_lbl",
+						type          = "checkbox",
+						title         = "comp_lbl",
+						default_value = true,
+					},
+					{
+						setting_id    = "comp_base_perc",
+						type          = "checkbox",
+						title         = "comp_perc",
+						default_value = true,
+					},
+					{
+						setting_id    = "comp_base_flip",
+						type          = "checkbox",
+						title         = "comp_flip",
+						default_value = false,
+					},
+				}
+			},
+			{
+				setting_id  = "group_melee_comps",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "use_melee_override",
+						type          = "checkbox",
+						default_value = false,
+						sub_widgets   = {
+							{
+								setting_id    = "comp_melee_bar",
+								type          = "checkbox",
+								title         = "comp_bar",
+								default_value = true,
+							},
+							{
+								setting_id    = "comp_melee_bracket",
+								type          = "checkbox",
+								title         = "comp_bracket",
+								default_value = true,
+							},
+							{
+								setting_id    = "comp_melee_lbl",
+								type          = "checkbox",
+								title         = "comp_lbl",
+								default_value = true,
+							},
+							{
+								setting_id    = "comp_melee_perc",
+								type          = "checkbox",
+								title         = "comp_perc",
+								default_value = true,
+							},
+							{
+								setting_id    = "comp_melee_flip",
+								type          = "checkbox",
+								title         = "comp_flip",
+								default_value = false,
+							},
+						}
 					},
 				}
 			},

@@ -1,5 +1,8 @@
 local mod = get_mod("StaminaVis")
 
+local COMP_BASE_PREFIX = "^comp_base_"
+local COMP_MELEE_PREFIX = "^comp_melee_"
+
 local vanish_timeout = 0.0
 local vanish_delay = mod:get("vanish_delay")
 local vanish_speed = mod:get("vanish_speed")
@@ -9,13 +12,42 @@ local appear_delay = mod:get("appear_delay")
 local appear_speed = mod:get("appear_speed")
 
 local vis_behavior = mod:get("vis_behavior")
+
+local base_components = {
+    lbl = mod:get("comp_base_lbl"),
+    perc = mod:get("comp_base_perc"),
+    bar = mod:get("comp_base_bar"),
+    bracket = mod:get("comp_base_bracket"),
+    flip = mod:get("comp_base_flip"),
+}
+local melee_components = {
+    lbl = mod:get("comp_melee_lbl"),
+    perc = mod:get("comp_melee_perc"),
+    bar = mod:get("comp_melee_bar"),
+    bracket = mod:get("comp_melee_bracket"),
+    flip = mod:get("comp_melee_flip"),
+}
+local use_melee_comps = mod:get("use_melee_override")
+local using_melee = false
+
+local prev_fade_instruction = nil
 local upd_component_style = true
 
-local prev_instruction = nil
-
 mod.on_setting_changed = function(id)
-    if id == "vis_components" or id == "label_vis" or id == "label_flipped" then
-        upd_component_style = true
+    if string.find(id, COMP_BASE_PREFIX) then
+        local key = string.sub(id, string.len(COMP_BASE_PREFIX))
+        base_components[key] = mod:get(id)
+        if not (use_melee_comps and using_melee) then
+            upd_component_style = true
+        end
+    elseif string.find(id, COMP_MELEE_PREFIX) then
+        local key = string.sub(id, string.len(COMP_MELEE_PREFIX))
+        melee_components[key] = mod:get(id)
+        if use_melee_comps and using_melee then
+            upd_component_style = true
+        end
+    elseif id == "use_melee_override" then
+        use_melee_comps = mod:get(id)
     elseif id == "vis_behavior" then
         vis_behavior = mod:get(id)
     elseif id == "vanish_speed" then
@@ -31,23 +63,34 @@ mod.on_setting_changed = function(id)
     end
 end
 
-mod:hook_safe("HudElementBlocking", "init", function(...)
+mod:hook_safe(CLASS.HudElementBlocking, "init", function(...)
     upd_component_style = true
 end)
 
-mod:hook_safe("HudElementBlocking", "update", function(self, ...)
+mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
+    using_melee = slot_name == "slot_primary"
+    if use_melee_comps then
+        upd_component_style = true
+    end
+end)
+
+mod:hook_safe(CLASS.HudElementBlocking, "update", function(self, ...)
     if upd_component_style then
         upd_component_style = false
+
+        local comps = base_components
+        if use_melee_comps and using_melee then
+            comps = melee_components
+        end
+
         local gauge_widget = self._widgets_by_name.gauge
-        
-        local comp_mode = mod:get("vis_components")
-        gauge_widget.style.warning.visible = comp_mode == 0 or comp_mode == 1
-        self._shield_widget.visible = gauge_widget.style.warning.visible
-        gauge_widget.style.value_text.visible = comp_mode == 0 or comp_mode == 2
 
-        gauge_widget.style.name_text.visible = mod:get("label_vis")
+        self._shield_widget.visible = comps.bar
+        gauge_widget.style.warning.visible = comps.bracket
+        gauge_widget.style.value_text.visible = comps.perc
+        gauge_widget.style.name_text.visible = comps.lbl
 
-        if mod:get("label_flipped") then
+        if comps.flip then
             gauge_widget.style.name_text.text_horizontal_alignment = "left"
             gauge_widget.style.name_text.horizontal_alignment = "left"
             gauge_widget.style.value_text.text_horizontal_alignment = "right"
@@ -61,7 +104,7 @@ mod:hook_safe("HudElementBlocking", "update", function(self, ...)
     end
 end)
 
-mod:hook("HudElementBlocking", "_update_visibility", function(func, self, dt)
+mod:hook(CLASS.HudElementBlocking, "_update_visibility", function(func, self, dt)
     if vis_behavior > 0 then
         self._alpha_multiplier = 1.0
     elseif vis_behavior < 0 then
@@ -86,7 +129,7 @@ mod:hook("HudElementBlocking", "_update_visibility", function(func, self, dt)
             end
         end
 
-        if draw ~= prev_instruction then
+        if draw ~= prev_fade_instruction then
             if draw then
                 appear_timeout = appear_delay
                 vanish_timeout = 0.0
@@ -95,7 +138,7 @@ mod:hook("HudElementBlocking", "_update_visibility", function(func, self, dt)
                 appear_timeout = 0.0
             end
         end
-        prev_instruction = draw
+        prev_fade_instruction = draw
 
         if vanish_timeout > 0.0 then
             vanish_timeout = vanish_timeout - dt

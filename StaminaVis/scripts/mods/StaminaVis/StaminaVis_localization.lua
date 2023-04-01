@@ -3,27 +3,32 @@ return {
 		en = "Tweak how the stamina bar appears and disappears on the HUD.",
 		["zh-cn"] = "设置体力条何时在 HUD 上显示和隐藏",
 	},
-	vis_components = {
+	group_base_comps = {
 		en = "Stamina Components",
 		["zh-cn"] = "体力显示组件",
 	},
-	comp_all = {
-		en = "Bar and Percentage",
-		["zh-cn"] = "体力条和百分比",
+	group_melee_comps = {
+		en = "Stamina Components (Melee)",
+	},
+	use_melee_override = {
+		en = "Separate Melee Settings",
 	},
 	comp_bar = {
-		en = "Bar Only",
-		["zh-cn"] = "仅体力条",
+		en = "Bar",
+		["zh-cn"] = "体力条",
+	},
+	comp_bracket = {
+		en = "Bar Bracket",
 	},
 	comp_perc = {
-		en = "Percentage Only",
-		["zh-cn"] = "仅百分比",
+		en = "Percentage",
+		["zh-cn"] = "百分比",
 	},
-	label_vis = {
-		en = "Label Visible",
-		["zh-cn"] = "文字标签可见性",
+	comp_lbl = {
+		en = "Label",
+		["zh-cn"] = "文字标签",
 	},
-	label_flipped = {
+	comp_flip = {
 		en = "Label/Percentage Flipped",
 		["zh-cn"] = "交换文字标签和百分比",
 	},
