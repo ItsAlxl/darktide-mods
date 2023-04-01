@@ -58,6 +58,11 @@ Allows you to reorder your characters on the character select screen.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/75).
 
+## SortBrunt
+Sorts Brunt's Armory to keep similar items together.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/109).
+
 ## StaminaVis aka Stamina Visibility
 Allows you to tweak the stamina bar's visibility behavior.
 
