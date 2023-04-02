@@ -33,6 +33,11 @@ Tweak or disable FOV-changing effects.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/91).
 
+## DynamicCrosshair
+Changes your crosshair's color when aiming over an enemy, ally, or barrel.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/110).
+
 ## FriendlyNPCs aka Friendly Vendors
 Force all vendors to like you. Or to dislike you, if you're into that.
 
