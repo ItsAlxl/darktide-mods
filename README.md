@@ -53,6 +53,11 @@ Adds keybinds to spam light melee attacks for you.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/88).
 
+## Perspectives
+Switch between first and third person perspectives.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/111).
+
 ## PickForMe aka Loadout Randomizer
 Easily randomize your current loadout.
 
