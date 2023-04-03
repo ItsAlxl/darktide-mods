@@ -5,8 +5,10 @@ return {
 	},
 	default_autofire = {
 		en = "Default to Automatic Firemode",
+		["zh-cn"] = "默认为全自动开火模式",
 	},
 	toggle_keybind = {
 		en = "Toggle Automatic Firemode",
+		["zh-cn"] = "开关全自动开火模式",
 	},
 }

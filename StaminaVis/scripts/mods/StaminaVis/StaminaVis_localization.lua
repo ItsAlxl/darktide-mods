@@ -9,9 +9,11 @@ return {
 	},
 	group_melee_comps = {
 		en = "Stamina Components (Melee)",
+		["zh-cn"] = "体力显示组件（近战）",
 	},
 	use_melee_override = {
 		en = "Separate Melee Settings",
+		["zh-cn"] = "单独的近战设置",
 	},
 	comp_bar = {
 		en = "Bar",
@@ -19,6 +21,7 @@ return {
 	},
 	comp_bracket = {
 		en = "Bar Bracket",
+		["zh-cn"] = "体力条边框",
 	},
 	comp_perc = {
 		en = "Percentage",
