@@ -22,7 +22,7 @@ local CROSSHAIR_COMPONENTS = {
     "charge_mask_right",
 }
 
-local MAX_DISTANCE = 40
+local MAX_DISTANCE = 50
 local HIT_IDX_DISTANCE = 2
 local HIT_IDX_ACTOR = 4
 
@@ -83,6 +83,10 @@ mod.on_setting_changed = function(id)
     end
 end
 
+local _crosshair_raycast = function(physics_world, shoot_position, shoot_direction)
+    return PhysicsWorld.raycast(physics_world, shoot_position, shoot_direction, MAX_DISTANCE, "all", "collision_filter", "filter_debug_unit_selector")
+end
+
 mod:hook(CLASS.HudElementCrosshair, "_crosshair_position", function(func, self, dt, t, ui_renderer)
     -- modified from scripts/ui/hud/elements/crosshair/hud_element_crosshair
     local target_x = 0
@@ -109,10 +113,10 @@ mod:hook(CLASS.HudElementCrosshair, "_crosshair_position", function(func, self, 
         local shoot_direction = Quaternion.forward(shoot_rotation)
         local range = MAX_DISTANCE
 
-        local physics_world = player_extensions.weapon._physics_world
-        local raycast_hits = PhysicsWorld.raycast(physics_world, shoot_position, shoot_direction, 50, "all", "collision_filter", "filter_debug_unit_selector")
+        -- This crashes sometimes for reasons I can't figure out, so let's just pcall it
+        local raycast_success, raycast_hits = pcall(_crosshair_raycast, player_extensions.interactor._physics_world, shoot_position, shoot_direction)
         local color_type = nil
-        if raycast_hits then
+        if raycast_success and raycast_hits then
             local closest_hit = nil
             local num_hits = #raycast_hits
             for i = 1, num_hits do
