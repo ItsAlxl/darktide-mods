@@ -1,17 +1,22 @@
 local mod = get_mod("Perspectives")
 
 local autoswitch_options = {
-	{ text = "autoswitch_none",  value = 0 },
-	{ text = "autoswitch_first", value = 1 },
-	{ text = "autoswitch_third", value = 2 },
+	{ text = "autoswitch_to_none",  value = 0 },
+	{ text = "autoswitch_to_first", value = 1 },
+	{ text = "autoswitch_to_third", value = 2 },
 }
 
 return {
 	name = "Perspectives",
 	description = mod:localize("mod_description"),
-	is_togglable = true,
+	is_togglable = false,
 	options = {
 		widgets = {
+			{
+				setting_id    = "allow_switching",
+				type          = "checkbox",
+				default_value = true,
+			},
 			{
 				setting_id      = "third_person_toggle",
 				type            = "keybind",
@@ -47,11 +52,6 @@ return {
 					{ text = "defper_always_first", value = 1 },
 					{ text = "defper_always_third", value = 2 },
 				},
-			},
-			{
-				setting_id    = "third_person_spectate",
-				type          = "checkbox",
-				default_value = false,
 			},
 			{
 				setting_id  = "group_3p_behavior",
@@ -118,6 +118,12 @@ return {
 				type        = "group",
 				sub_widgets = {
 					{
+						setting_id    = "autoswitch_spectate",
+						type          = "dropdown",
+						default_value = 0,
+						options       = autoswitch_options,
+					},
+					{
 						setting_id    = "autoswitch_slot_primary",
 						type          = "dropdown",
 						default_value = 0,
@@ -143,6 +149,36 @@ return {
 					},
 					{
 						setting_id    = "autoswitch_slot_luggable",
+						type          = "dropdown",
+						default_value = 0,
+						options       = table.clone(autoswitch_options),
+					},
+					{
+						setting_id    = "autoswitch_sprint",
+						type          = "dropdown",
+						default_value = 0,
+						options       = table.clone(autoswitch_options),
+					},
+					{
+						setting_id    = "autoswitch_lunge_ogryn",
+						type          = "dropdown",
+						default_value = 0,
+						options       = table.clone(autoswitch_options),
+					},
+					{
+						setting_id    = "autoswitch_lunge_human",
+						type          = "dropdown",
+						default_value = 0,
+						options       = table.clone(autoswitch_options),
+					},
+					{
+						setting_id    = "autoswitch_act2_primary",
+						type          = "dropdown",
+						default_value = 0,
+						options       = table.clone(autoswitch_options),
+					},
+					{
+						setting_id    = "autoswitch_act2_secondary",
 						type          = "dropdown",
 						default_value = 0,
 						options       = table.clone(autoswitch_options),

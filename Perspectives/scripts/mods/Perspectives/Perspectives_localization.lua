@@ -3,6 +3,12 @@ return {
 		en = "Switch between first and third person perspectives.",
 		["zh-cn"] = "在第一人称和第三人称视角之间切换。",
 	},
+	allow_switching = {
+		en = "Allow Perspective Switching",
+	},
+	allow_switching_description = {
+		en = "Turn off to effectively disable the mod.",
+	},
 	third_person_toggle = {
 		en = "Switch Perspective (Toggle)",
 	},
@@ -49,9 +55,6 @@ return {
 		en = "Perspective Transition Time",
 		["zh-cn"] = "视角切换时间",
 	},
-	third_person_spectate = {
-		en = "Force 3rd Person as Spectator",
-	},
 	use_lookaround_node = {
 		en = "[LookAround] 3rd Person Inspect",
 	},
@@ -82,30 +85,55 @@ return {
 		en = "3rd Person Behavior",
 	},
 	group_autoswitch = {
-		en = "Auto-switch Perspectives On Wield",
+		en = "Auto-switch Perspectives",
+	},
+	autoswitch_spectate = {
+		en = "Spectating",
 	},
 	autoswitch_slot_primary = {
-		en = Localize("loc_inventory_title_slot_primary")
+		en = Localize("loc_ingame_wield_1")
 	},
 	autoswitch_slot_secondary = {
-		en = Localize("loc_inventory_title_slot_secondary")
+		en = Localize("loc_ingame_wield_2")
 	},
 	autoswitch_slot_grenade_ability = {
-		en = Localize("loc_pickup_consumable_small_grenade_01")
+		en = Localize("loc_ingame_grenade_ability")
+	},
+	autoswitch_slot_grenade_ability_description = {
+		en = Localize("loc_pickup_consumable_small_grenade_01") .. " / " .. Localize("loc_ability_psyker_smite")
 	},
 	autoswitch_slot_pocketable = {
-		en = Localize("loc_item_type_pocketable")
+		en = Localize("loc_ingame_wield_3")
 	},
 	autoswitch_slot_luggable = {
 		en = Localize("loc_item_type_luggable")
 	},
-	autoswitch_none = {
+	autoswitch_slot_luggable_description = {
+		en = Localize("loc_pickup_luggable_battery_01") .. " / " .. Localize("loc_pickup_luggable_control_rod_01")
+	},
+	autoswitch_sprint = {
+		en = "Sprinting",
+		["zh-cn"] = "疾跑",
+	},
+	autoswitch_lunge_ogryn = {
+		en = "Charge (Ogryn)",
+	},
+	autoswitch_lunge_human = {
+		en = "Charge (Zealot)",
+	},
+	autoswitch_act2_primary = {
+		en = Localize("loc_ingame_action_two") .. " - " .. Localize("loc_inventory_title_slot_primary")
+	},
+	autoswitch_act2_secondary = {
+		en = Localize("loc_ingame_action_two") .. " - " .. Localize("loc_inventory_title_slot_secondary")
+	},
+	autoswitch_to_none = {
 		en = "Don't Switch",
 	},
-	autoswitch_first = {
-		en = "Force 1st Person",
+	autoswitch_to_first = {
+		en = "1st Person",
 	},
-	autoswitch_third = {
-		en = "Force 3rd Person",
+	autoswitch_to_third = {
+		en = "3rd Person",
 	},
 }

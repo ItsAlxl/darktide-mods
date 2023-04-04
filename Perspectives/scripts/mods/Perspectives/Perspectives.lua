@@ -14,6 +14,16 @@ local cycle_includes_center = mod:get("cycle_includes_center")
 local center_to_1p_human = mod:get("center_to_1p_human")
 local center_to_1p_ogryn = mod:get("center_to_1p_ogryn")
 
+local enable_reasons = {}
+local disable_reasons = {}
+local autoswitch_events = {
+    slot_device = 1 -- 1 means "go to 1st person"
+}
+
+local use_3p_freelook_node = false
+local holding_primary = false
+local holding_secondary = false
+
 local _get_followed_unit = function()
     local camera_handler = mod.get_camera_handler()
     return camera_handler and camera_handler:camera_follow_unit()
@@ -61,13 +71,6 @@ mod.kb_cycle_shoulder = function()
     end
 end
 
-local use_3p_freelook_node = false
-local third_person_spectate = mod:get("third_person_spectate")
-
-local enable_reasons = {}
-local disable_reasons = {}
-local autoswitch_events = {}
-
 mod.on_all_mods_loaded = function()
     local freeflight_mod = get_mod("camera_freeflight")
     if freeflight_mod then
@@ -83,45 +86,6 @@ mod.on_all_mods_loaded = function()
         end)
     end
 end
-
-mod.on_setting_changed = function(id)
-    local val = mod:get(id)
-
-    if id == "cycle_includes_center" then
-        cycle_includes_center = val
-    elseif id == "center_to_1p_human" then
-        center_to_1p_human = val
-    elseif id == "center_to_1p_ogryn" then
-        center_to_1p_ogryn = val
-    elseif id == "aim_mode" then
-        aim_selection = val
-        aim_node = _get_aim_node()
-    elseif id == "nonaim_mode" then
-        nonaim_selection = val
-        nonaim_node = _get_nonaim_node()
-    elseif id == "third_person_spectate" then
-        third_person_spectate = val
-    elseif id == "perspective_transition_time" then
-        CameraTransitionTemplates.to_third_person.position.duration = val
-        CameraTransitionTemplates.to_first_person.position.duration = val
-    elseif string.find(id, OPT_PREFIX_AUTOSWITCH) then
-        local key = string.sub(id, string.len(OPT_PREFIX_AUTOSWITCH))
-        if val == 0 then
-            autoswitch_events[key] = nil
-        elseif val == 1 then
-            autoswitch_events[key] = false
-        elseif val == 2 then
-            autoswitch_events[key] = true
-        end
-    end
-end
-mod.on_setting_changed("perspective_transition_time")
-mod.on_setting_changed("autoswitch_observer")
-mod.on_setting_changed("autoswitch_slot_primary")
-mod.on_setting_changed("autoswitch_slot_secondary")
-mod.on_setting_changed("autoswitch_slot_grenade_ability")
-mod.on_setting_changed("autoswitch_slot_pocketable")
-mod.on_setting_changed("autoswitch_slot_luggable")
 
 local _has_disable_reason = function()
     for _, d in pairs(disable_reasons) do
@@ -183,6 +147,58 @@ local _enable_due_to = function(reason, e)
     end
 end
 
+local _mux_due_to = function(reason, enable, disable)
+    _enable_due_to(reason, enable)
+    _disable_due_to(reason, disable)
+end
+
+local _autoswitch_from_event = function(reason, event, condition)
+    local autoswitch_mode = 0
+    if event and autoswitch_events[event] and (condition == nil or condition) then
+        autoswitch_mode = autoswitch_events[event]
+    end
+    _mux_due_to(reason, autoswitch_mode == 2, autoswitch_mode == 1)
+end
+
+mod.on_setting_changed = function(id)
+    local val = mod:get(id)
+
+    if id == "cycle_includes_center" then
+        cycle_includes_center = val
+    elseif id == "center_to_1p_human" then
+        center_to_1p_human = val
+    elseif id == "center_to_1p_ogryn" then
+        center_to_1p_ogryn = val
+    elseif id == "aim_mode" then
+        aim_selection = val
+        aim_node = _get_aim_node()
+    elseif id == "nonaim_mode" then
+        nonaim_selection = val
+        nonaim_node = _get_nonaim_node()
+    elseif id == "allow_switching" then
+        _disable_due_to("_mod", not val)
+    elseif id == "perspective_transition_time" then
+        CameraTransitionTemplates.to_third_person.position.duration = val
+        CameraTransitionTemplates.to_first_person.position.duration = val
+    elseif string.find(id, OPT_PREFIX_AUTOSWITCH) then
+        local key = string.sub(id, string.len(OPT_PREFIX_AUTOSWITCH))
+        autoswitch_events[key] = val
+    end
+end
+mod.on_setting_changed("perspective_transition_time")
+mod.on_setting_changed("allow_switching")
+mod.on_setting_changed("autoswitch_spectate")
+mod.on_setting_changed("autoswitch_slot_primary")
+mod.on_setting_changed("autoswitch_slot_secondary")
+mod.on_setting_changed("autoswitch_slot_grenade_ability")
+mod.on_setting_changed("autoswitch_slot_pocketable")
+mod.on_setting_changed("autoswitch_slot_luggable")
+mod.on_setting_changed("autoswitch_sprint")
+mod.on_setting_changed("autoswitch_lunge_ogryn")
+mod.on_setting_changed("autoswitch_lunge_human")
+mod.on_setting_changed("autoswitch_act2_primary")
+mod.on_setting_changed("autoswitch_act2_secondary")
+
 mod.set_using_third_person = function(use_3p)
     if use_3p ~= nil then
         _enable_due_to("_base", use_3p)
@@ -201,13 +217,23 @@ mod.on_unload = function(quitting)
     end
 end
 
-local _handle_autoswitch = function(event_name)
-    mod.set_using_third_person(autoswitch_events[event_name])
-end
-
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
-    _disable_due_to("device", slot_name == "slot_device")
-    _handle_autoswitch(slot_name)
+    _autoswitch_from_event("slot", slot_name)
+    _autoswitch_from_event("act2", nil)
+    holding_primary = slot_name == "slot_primary"
+    holding_secondary = slot_name == "slot_secondary"
+end)
+
+mod:hook(CLASS.InputService, "get", function(func, self, action_name)
+    local val = func(self, action_name)
+    if action_name == "action_two_hold" then
+        if holding_primary then
+            _autoswitch_from_event("act2", "act2_primary", val)
+        elseif holding_secondary then
+            _autoswitch_from_event("act2", "act2_secondary", val)
+        end
+    end
+    return val
 end)
 
 mod:hook(CLASS.MissionManager, "force_third_person_mode", function(func, self)
@@ -270,11 +296,23 @@ mod:hook(CLASS.PlayerUnitCameraExtension, "_evaluate_camera_tree", function(func
     local is_ogryn = self._breed.name == "ogryn"
     _disable_due_to("aim", _should_aim_to_1p(alternate_fire_is_active, is_ogryn))
 
+    local wants_sprint_camera = sprint_character_state_component.wants_sprint_camera
+    local is_lunging = self._lunge_character_state_component.is_lunging
+    if wants_sprint_camera then
+        _autoswitch_from_event("sprint", "sprint")
+    elseif is_lunging then
+        if is_ogryn then
+            _autoswitch_from_event("sprint", "lunge_ogryn")
+        else
+            _autoswitch_from_event("sprint", "lunge_human")
+        end
+    else
+        _autoswitch_from_event("sprint", nil)
+    end
+
     if wants_first_person_camera then
-        local wants_sprint_camera = sprint_character_state_component.wants_sprint_camera
         local sprint_overtime = sprint_character_state_component.sprint_overtime
         local have_sprint_over_time = sprint_overtime and sprint_overtime > 0
-        local is_lunging = self._lunge_character_state_component.is_lunging
 
         if is_assisted then
             node = "first_person_assisted"
@@ -387,7 +425,7 @@ end)
 
 mod:hook_safe(CLASS.CameraHandler, "_switch_follow_target", function(self, new_unit)
     if self._player then
-        _enable_due_to("spectate", third_person_spectate and new_unit ~= self._player.player_unit)
+        _autoswitch_from_event("spectate", "spectate", new_unit ~= self._player.player_unit)
     end
     mod.apply_perspective()
 end)
