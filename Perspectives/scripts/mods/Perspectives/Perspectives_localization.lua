@@ -3,37 +3,60 @@ return {
 		en = "Switch between first and third person perspectives.",
 		["zh-cn"] = "在第一人称和第三人称视角之间切换。",
 	},
-	toggle_perspective_keybind = {
-		en = "Toggle Perspective",
-		["zh-cn"] = "切换视角",
+	third_person_toggle = {
+		en = "Switch Perspective (Toggle)",
+	},
+	third_person_held = {
+		en = "Switch Perspective (Held)",
 	},
 	cycle_shoulder = {
-		en = "Cycle Aiming Shoulders",
-		["zh-cn"] = "切换越肩",
+		en = "Cycle Viewpoint",
 	},
 	aim_mode = {
 		en = "Aiming Behavior",
-		["zh-cn"] = "瞄准行为",
 	},
-	aim_cycle = {
-		en = "Shoulders",
-		["zh-cn"] = "越肩",
+	nonaim_mode = {
+		en = "Non-Aiming Behavior",
 	},
-	aim_center = {
-		en = "Centered 3rd Person",
-		["zh-cn"] = "中心对齐第三人称",
-	},
-	aim_1p = {
+	viewpoint_1p = {
 		en = "Switch to 1st Person",
-		["zh-cn"] = "切换到第一人称",
+	},
+	viewpoint_cycle = {
+		en = "Cycled Viewpoint",
+	},
+	viewpoint_center = {
+		en = "Center",
+	},
+	viewpoint_right = {
+		en = "Right",
+	},
+	viewpoint_left = {
+		en = "Left",
 	},
 	cycle_includes_center = {
-		en = "Include 'Centered 3rd Person' in Shoulder Cycle",
-		["zh-cn"] = "在越肩切换中包含“中心对齐第三人称”",
+		en = "Include Center in Cycle",
+	},
+	center_to_1p_human = {
+		en = "Center Aim Goes to 1st Person (Human)",
+	},
+	center_to_1p_ogryn = {
+		en = "Center Aim Goes to 1st Person (Ogryn)",
+	},
+	center_to_1p_description = {
+		en = "If on, when cycled to a centered viewpoint and aiming, you'll temporarily go to 1st person instead of using the 3rd person centered aim camera. This is recommended for humans, and very strongly recommended for Ogryns.",
 	},
 	perspective_transition_time = {
 		en = "Perspective Transition Time",
 		["zh-cn"] = "视角切换时间",
+	},
+	third_person_spectate = {
+		en = "Force 3rd Person as Spectator",
+	},
+	use_lookaround_node = {
+		en = "[LookAround] 3rd Person Inspect",
+	},
+	use_lookaround_node_description = {
+		en = "When using the mod LookAround to get freelook in 3rd person, use the 3rd Person Inspect viewpoint.",
 	},
 	default_perspective_mode = {
 		en = "Initial Perspective",
@@ -54,5 +77,35 @@ return {
 	defper_always_third = {
 		en = "3rd Person",
 		["zh-cn"] = "第三人称",
+	},
+	group_3p_behavior = {
+		en = "3rd Person Behavior",
+	},
+	group_autoswitch = {
+		en = "Auto-switch Perspectives On Wield",
+	},
+	autoswitch_slot_primary = {
+		en = Localize("loc_inventory_title_slot_primary")
+	},
+	autoswitch_slot_secondary = {
+		en = Localize("loc_inventory_title_slot_secondary")
+	},
+	autoswitch_slot_grenade_ability = {
+		en = Localize("loc_pickup_consumable_small_grenade_01")
+	},
+	autoswitch_slot_pocketable = {
+		en = Localize("loc_item_type_pocketable")
+	},
+	autoswitch_slot_luggable = {
+		en = Localize("loc_item_type_luggable")
+	},
+	autoswitch_none = {
+		en = "Don't Switch",
+	},
+	autoswitch_first = {
+		en = "Force 1st Person",
+	},
+	autoswitch_third = {
+		en = "Force 3rd Person",
 	},
 }
