@@ -53,6 +53,11 @@ Adds keybinds to spam light melee attacks for you.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/88).
 
+## LookAround
+Provides the ability to freelook.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/115).
+
 ## Perspectives
 Switch between first and third person perspectives.
 
