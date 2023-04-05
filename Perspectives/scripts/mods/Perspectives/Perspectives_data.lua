@@ -40,7 +40,7 @@ return {
 				type            = "numeric",
 				default_value   = 0.1,
 				range           = { 0.0, 1.0 },
-				decimals_number = 1,
+				decimals_number = 2,
 			},
 			{
 				setting_id    = "default_perspective_mode",
@@ -112,6 +112,40 @@ return {
 						default_value = true,
 					},
 				},
+			},
+			{
+				setting_id  = "group_custom_viewpoint",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id      = "custom_distance",
+						type            = "numeric",
+						default_value   = 0.0,
+						range           = { -0.75, 0.75 },
+						decimals_number = 2,
+					},
+					{
+						setting_id      = "custom_offset",
+						type            = "numeric",
+						default_value   = 0.0,
+						range           = { -0.75, 0.75 },
+						decimals_number = 2,
+					},
+					{
+						setting_id      = "custom_distance_zoom",
+						type            = "numeric",
+						default_value   = 0.0,
+						range           = { -0.75, 0.75 },
+						decimals_number = 2,
+					},
+					{
+						setting_id      = "custom_offset_zoom",
+						type            = "numeric",
+						default_value   = 0.0,
+						range           = { -0.75, 0.75 },
+						decimals_number = 2,
+					},
+				}
 			},
 			{
 				setting_id  = "group_autoswitch",

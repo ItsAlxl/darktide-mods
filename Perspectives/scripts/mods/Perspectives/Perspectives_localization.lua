@@ -55,6 +55,42 @@ return {
 		en = "Perspective Transition Time",
 		["zh-cn"] = "视角切换时间",
 	},
+	group_custom_viewpoint = {
+		en = "Custom Viewpoint",
+	},
+	custom_viewpoint_apply = {
+		en = "Apply Changes",
+	},
+	custom_viewpoint_apply_description = {
+		en = "Whenever changing any camera distance/offset values, you must set this to On to apply those changes.",
+	},
+	changes_applied_notif = {
+		en = "Custom Viewpoint Applied",
+	},
+	custom_distance = {
+		en = "Camera Distance (Non-Aiming)",
+	},
+	custom_distance_description = {
+		en = "Increase to push your camera more backward.",
+	},
+	custom_offset = {
+		en = "Camera Offset (Non-Aiming)",
+	},
+	custom_offset_description = {
+		en = "Increase to bring your further from the center of your view. For example, the left-side viewpoint will be more left at higher values.",
+	},
+	custom_distance_zoom = {
+		en = "Camera Distance (Aiming)",
+	},
+	custom_distance_zoom_description = {
+		en = "Increase to push your camera more backward when aiming.",
+	},
+	custom_offset_zoom = {
+		en = "Camera Offset (Aiming)",
+	},
+	custom_offset_zoom_description = {
+		en = "Increase to bring your further from the center of your view. For example, the left-side aiming viewpoint will be more left at higher values.",
+	},
 	use_lookaround_node = {
 		en = "[LookAround] 3rd Person Inspect",
 	},

@@ -1,23 +1,45 @@
 local mod = get_mod("Perspectives")
+local CameraSettings = require("scripts/settings/camera/camera_settings")
 
-local FOV_ZOOM = 55
-local FOV_NORMAL = 60
+local FOV_NORMAL = 62.5
+local FOV_ZOOM = 55.0
 
+local custom_distance = 0.0
+local custom_offset = 0.0
+local custom_distance_zoom = 0.0
+local custom_offset_zoom = 0.0
+
+-- +x/-x = right/left
+-- +y/-y = forward/back
+-- +z/-z = up/down
 local OFFSET_TO_OGRYN = {
     x = 0.0,
     y = -0.75,
     z = -0.1,
 }
 
-local _flip_offset = function(offset, flip)
+-- flip is either true (flip), false (don't flip), or nil (it's a center viewpoint)
+local _transform_offset = function(offset, flip, is_zoom)
+    if is_zoom then
+        offset.y = offset.y + custom_distance - custom_distance_zoom
+    end
+
+    local offset_amt = is_zoom and (custom_offset_zoom - custom_offset) or custom_offset
+    if flip == nil then
+        offset.z = offset.z + offset_amt
+    else
+        offset.x = offset.x + offset_amt
+    end
+
     if flip then
         offset.x = -offset.x
     end
+
     return offset
 end
 
 local _get_shoulder_offset = function(left)
-    return _flip_offset({
+    return _transform_offset({
         x = 0.5,
         y = 0,
         z = 0,
@@ -25,27 +47,27 @@ local _get_shoulder_offset = function(left)
 end
 
 local _get_shoulder_zoom_offset = function(left)
-    return _flip_offset({
+    return _transform_offset({
         x = -0.1,
         y = 0.65,
         z = -0.1,
-    }, left)
+    }, left, true)
 end
 
 local _get_shoulder_ogryn_offset = function(left)
-    return _flip_offset({
+    return _transform_offset({
         x = OFFSET_TO_OGRYN.x + 0.5,
-        y = OFFSET_TO_OGRYN.y + 0,
-        z = OFFSET_TO_OGRYN.z + 0,
-    }, left)
+        y = OFFSET_TO_OGRYN.y + 0.0,
+        z = OFFSET_TO_OGRYN.z + 0.0,
+    }, left, false)
 end
 
 local _get_shoulder_zoom_ogryn_offset = function(left)
-    return _flip_offset({
+    return _transform_offset({
         x = -0.1,
         y = 0.65,
         z = 0.0,
-    }, left)
+    }, left, true)
 end
 
 local _node_get_child_idx = function(node, child_name)
@@ -105,26 +127,26 @@ local function _alter_third_person_tree(node)
                 {
                     {
                         {
-                            _node = _create_node("pspv_center_zoom_ogryn", {
+                            _node = _create_node("pspv_center_zoom_ogryn", _transform_offset({
                                 x = 0.0,
                                 y = 1.8,
                                 z = -0.2,
-                            }, FOV_ZOOM)
+                            }, nil, true), FOV_ZOOM)
                         },
-                        _node = _create_node("pspv_center_ogryn", OFFSET_TO_OGRYN)
+                        _node = _create_node("pspv_center_ogryn", _transform_offset(OFFSET_TO_OGRYN, nil))
                     },
                     {
-                        _node = _create_node("pspv_center_zoom", {
+                        _node = _create_node("pspv_center_zoom", _transform_offset({
                             x = 0.0,
                             y = 1.0,
                             z = -0.3,
-                        }, FOV_ZOOM)
+                        }, nil, true), FOV_ZOOM)
                     },
-                    _node = _create_node("pspv_center", {
+                    _node = _create_node("pspv_center", _transform_offset({
                         x = 0.0,
                         y = 0.0,
                         z = 0.2,
-                    })
+                    }, nil))
                 },
                 {
                     {
@@ -138,7 +160,7 @@ local function _alter_third_person_tree(node)
                 },
                 _node = _create_node("pspv_root", {
                     x = 0.0,
-                    y = 0.5,
+                    y = 0.5 - custom_distance,
                     z = -0.1,
                 }, FOV_NORMAL)
             })
@@ -152,14 +174,20 @@ local function _alter_third_person_tree(node)
     end
 end
 
-mod:hook_require("scripts/settings/camera/camera_settings", function(CameraSettings)
-    _alter_third_person_tree(CameraSettings.player_third_person)
-end)
 
 local _refresh_camera_trees = function()
+    _alter_third_person_tree(CameraSettings.player_third_person)
     local camera_handler = mod.get_camera_handler()
     if camera_handler then
         camera_handler:on_reload()
     end
 end
 _refresh_camera_trees()
+
+mod.apply_custom_viewpoint = function(notify, distance, offset, distance_zoom, offset_zoom)
+    custom_distance = distance
+    custom_offset = offset
+    custom_distance_zoom = distance_zoom
+    custom_offset_zoom = offset_zoom
+    _refresh_camera_trees()
+end
