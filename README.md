@@ -8,6 +8,11 @@ Choose what your character equips after throwing a grenade.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/80).
 
+## AnonPlayers
+Automatically accept new contracts and collect the weekly completion bonus.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/117).
+
 ## BetterMelk
 Automatically accept new contracts and collect the weekly completion bonus.
 
