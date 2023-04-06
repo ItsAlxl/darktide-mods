@@ -157,25 +157,36 @@ mod.mux_3p_due_to = function(reason, enable, disable)
     if diff then
         mod.apply_perspective()
     end
+    return diff
+end
+
+mod.clear_reason = function(reason)
+    return mod.mux_3p_due_to(reason, false, false)
 end
 
 local _autoswitch_from_event = function(reason, event, condition)
+    if not event then
+        return mod.clear_reason(reason)
+    end
+
     local autoswitch_mode = 0
-    if event and autoswitch_events[event] and (condition == nil or condition) then
+    if autoswitch_events[event] and (condition == nil or condition) then
         autoswitch_mode = autoswitch_events[event]
     end
-    mod.mux_3p_due_to(reason, autoswitch_mode == 2, autoswitch_mode == 1)
+    return mod.mux_3p_due_to(reason, autoswitch_mode == 2, autoswitch_mode == 1)
 end
 
-local _apply_viewpoint_changes = function(notify)
-    mod.apply_custom_viewpoint(notify, mod:get("custom_distance"), mod:get("custom_offset"), mod:get("custom_distance_zoom"), mod:get("custom_offset_zoom"))
+local _apply_viewpoint_changes = function()
+    mod.apply_custom_viewpoint(mod:get("custom_distance"), mod:get("custom_offset"), mod:get("custom_distance_zoom"), mod:get("custom_offset_zoom"))
 end
-_apply_viewpoint_changes(false)
+_apply_viewpoint_changes()
 
 mod.on_setting_changed = function(id)
     local val = mod:get(id)
 
-    if id == "cycle_includes_center" then
+    if id == "allow_switching" then
+        mod.disable_3p_due_to("_mod", not val)
+    elseif id == "cycle_includes_center" then
         cycle_includes_center = val
     elseif id == "center_to_1p_human" then
         center_to_1p_human = val
@@ -187,13 +198,11 @@ mod.on_setting_changed = function(id)
     elseif id == "nonaim_mode" then
         nonaim_selection = val
         nonaim_node = _get_nonaim_node()
-    elseif id == "allow_switching" then
-        mod.disable_3p_due_to("_mod", not val)
     elseif id == "perspective_transition_time" then
         CameraTransitionTemplates.to_third_person.position.duration = val
         CameraTransitionTemplates.to_first_person.position.duration = val
     elseif id == "custom_distance" or id == "custom_offset" or id == "custom_distance_zoom" or id == "custom_offset_zoom" then
-        _apply_viewpoint_changes(true)
+        _apply_viewpoint_changes()
     elseif string.find(id, OPT_PREFIX_AUTOSWITCH) then
         local key = string.sub(id, string.len(OPT_PREFIX_AUTOSWITCH))
         autoswitch_events[key] = val
@@ -213,15 +222,18 @@ mod.on_setting_changed("autoswitch_lunge_human")
 mod.on_setting_changed("autoswitch_act2_primary")
 mod.on_setting_changed("autoswitch_act2_secondary")
 
-mod.set_using_third_person = function(use_3p)
-    if use_3p ~= nil then
-        mod.enable_3p_due_to("_base", use_3p)
+mod.toggle_third_person = function()
+    local prev = mod.is_requesting_third_person()
+    mod.clear_reason("slot")
+    mod.clear_reason("spectate")
+    if prev == mod.is_requesting_third_person() then
+        mod.enable_3p_due_to("_base", not prev)
     end
 end
 
 mod.kb_toggle_third_person = function()
     if not mod.is_cursor_active() then
-        mod.set_using_third_person(not enable_reasons._base)
+        mod.toggle_third_person()
     end
 end
 
@@ -313,15 +325,15 @@ mod:hook(CLASS.PlayerUnitCameraExtension, "_evaluate_camera_tree", function(func
     local wants_sprint_camera = sprint_character_state_component.wants_sprint_camera
     local is_lunging = self._lunge_character_state_component.is_lunging
     if wants_sprint_camera then
-        _autoswitch_from_event("sprint", "sprint")
+        _autoswitch_from_event("movt", "sprint")
     elseif is_lunging then
         if is_ogryn then
-            _autoswitch_from_event("sprint", "lunge_ogryn")
+            _autoswitch_from_event("movt", "lunge_ogryn")
         else
-            _autoswitch_from_event("sprint", "lunge_human")
+            _autoswitch_from_event("movt", "lunge_human")
         end
     else
-        _autoswitch_from_event("sprint", nil)
+        _autoswitch_from_event("movt", nil)
     end
 
     if wants_first_person_camera then
