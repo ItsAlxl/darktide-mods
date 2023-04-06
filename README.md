@@ -8,6 +8,11 @@ Choose what your character equips after throwing a grenade.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/80).
 
+## AimSensitivity
+Set a sensitivity multiplier for aiming down sights.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/119).
+
 ## AnonPlayers
 Automatically accept new contracts and collect the weekly completion bonus.
 
