@@ -92,8 +92,12 @@ mod:hook_safe(CLASS.HudElementCrosshair, "destroy", function(self)
 end)
 
 local _get_shooting_vector = function(player_extensions, weapon_extension)
-    player_extensions = player_extensions or hud_crosshair_parent:player_extensions()
+    player_extensions = player_extensions or (hud_crosshair_parent and hud_crosshair_parent:player_extensions())
     weapon_extension = weapon_extension or (player_extensions and player_extensions.weapon)
+
+    if not player_extensions or not weapon_extension then
+        return nil, nil
+    end
 
     local unit_data_extension = player_extensions.unit_data
     local first_person_extention = player_extensions.first_person
@@ -114,8 +118,8 @@ mod:hook_safe(CLASS.PlayerUnitFirstPersonExtension, "fixed_update", function(sel
     local range = MAX_DISTANCE
     local color_type = nil
 
-    if hud_crosshair_parent and self._footstep_context and self._footstep_context.physics_world then
-        local shoot_position, shoot_direction = _get_shooting_vector()
+    local shoot_position, shoot_direction = _get_shooting_vector()
+    if shoot_position and shoot_direction and self._footstep_context and self._footstep_context.physics_world then
         local hits = _crosshair_raycast(self._footstep_context.physics_world, shoot_position, shoot_direction)
         if hits then
             local Actor_unit = Actor.unit
