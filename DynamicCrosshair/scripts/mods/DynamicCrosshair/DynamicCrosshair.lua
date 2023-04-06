@@ -22,7 +22,8 @@ local CROSSHAIR_COMPONENTS = {
     "charge_mask_right",
 }
 
-local MAX_DISTANCE = 50
+local MIN_DISTANCE = 1.0
+local MAX_DISTANCE = 50.0
 local HIT_IDX_DISTANCE = 2
 local HIT_IDX_ACTOR = 4
 
@@ -48,7 +49,10 @@ local color_types = {
 }
 
 local compat_custom_color = mod:get("compat_custom_color")
+
+local hud_crosshair_parent = nil
 local latest_color_type = nil
+local latest_range = MAX_DISTANCE
 
 local _rgba_to_idx = function(rgba)
     if rgba == "a" then
@@ -83,47 +87,46 @@ mod.on_setting_changed = function(id)
     end
 end
 
+mod:hook_safe(CLASS.HudElementCrosshair, "destroy", function(self)
+    hud_crosshair_parent = nil
+end)
+
+local _get_shooting_vector = function(player_extensions, weapon_extension)
+    player_extensions = player_extensions or hud_crosshair_parent:player_extensions()
+    weapon_extension = weapon_extension or (player_extensions and player_extensions.weapon)
+
+    local unit_data_extension = player_extensions.unit_data
+    local first_person_extention = player_extensions.first_person
+    local first_person_unit = first_person_extention:first_person_unit()
+    local shoot_rotation = Unit.world_rotation(first_person_unit, 1)
+    local movement_state_component = unit_data_extension:read_component("movement_state")
+    shoot_rotation = Recoil.apply_weapon_recoil_rotation(weapon_extension:recoil_template(), unit_data_extension:read_component("recoil"), movement_state_component, shoot_rotation)
+    shoot_rotation = Sway.apply_sway_rotation(weapon_extension:sway_template(), unit_data_extension:read_component("sway"), movement_state_component, shoot_rotation)
+
+    return Unit.world_position(first_person_unit, 1), Quaternion.forward(shoot_rotation)
+end
+
 local _crosshair_raycast = function(physics_world, shoot_position, shoot_direction)
     return PhysicsWorld.raycast(physics_world, shoot_position, shoot_direction, MAX_DISTANCE, "all", "collision_filter", "filter_debug_unit_selector")
 end
 
-mod:hook(CLASS.HudElementCrosshair, "_crosshair_position", function(func, self, dt, t, ui_renderer)
-    -- modified from scripts/ui/hud/elements/crosshair/hud_element_crosshair
-    local target_x = 0
-    local target_y = 0
-    local ui_renderer_scale = ui_renderer.scale
-    local parent = self._parent
-    local player_extensions = parent:player_extensions()
-    local weapon_extension = player_extensions and player_extensions.weapon
-    local player_camera = parent:player_camera()
+mod:hook_safe(CLASS.PlayerUnitFirstPersonExtension, "fixed_update", function(self, ...)
+    local range = MAX_DISTANCE
+    local color_type = nil
 
-    if weapon_extension and player_camera then
-        local unit_data_extension = player_extensions.unit_data
-        local first_person_extention = player_extensions.first_person
-        local first_person_unit = first_person_extention:first_person_unit()
-        local shoot_rotation = Unit.world_rotation(first_person_unit, 1)
-        local shoot_position = Unit.world_position(first_person_unit, 1)
-        local recoil_template = weapon_extension:recoil_template()
-        local recoil_component = unit_data_extension:read_component("recoil")
-        local movement_state_component = unit_data_extension:read_component("movement_state")
-        shoot_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, shoot_rotation)
-        local sway_component = unit_data_extension:read_component("sway")
-        local sway_template = weapon_extension:sway_template()
-        shoot_rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, shoot_rotation)
-        local shoot_direction = Quaternion.forward(shoot_rotation)
-        local range = MAX_DISTANCE
+    if hud_crosshair_parent and self._footstep_context and self._footstep_context.physics_world then
+        local shoot_position, shoot_direction = _get_shooting_vector()
+        local hits = _crosshair_raycast(self._footstep_context.physics_world, shoot_position, shoot_direction)
+        if hits then
+            local Actor_unit = Actor.unit
 
-        -- This crashes sometimes for reasons I can't figure out, so let's just pcall it
-        local raycast_success, raycast_hits = pcall(_crosshair_raycast, player_extensions.interactor._physics_world, shoot_position, shoot_direction)
-        local color_type = nil
-        if raycast_success and raycast_hits then
             local closest_hit = nil
-            local num_hits = #raycast_hits
+            local num_hits = #hits
             for i = 1, num_hits do
-                local hit = raycast_hits[i]
+                local hit = hits[i]
                 local distance = hit[HIT_IDX_DISTANCE]
-                local unit = Actor.unit(hit[HIT_IDX_ACTOR])
-                if unit and unit ~= parent._player.player_unit then
+                local unit = Actor_unit(hit[HIT_IDX_ACTOR])
+                if unit and unit ~= self._unit and distance > MIN_DISTANCE then
                     if distance < range then
                         closest_hit = hit
                         range = distance
@@ -132,7 +135,7 @@ mod:hook(CLASS.HudElementCrosshair, "_crosshair_position", function(func, self, 
             end
 
             if closest_hit then
-                local unit = Actor.unit(closest_hit[HIT_IDX_ACTOR])
+                local unit = Actor_unit(closest_hit[HIT_IDX_ACTOR])
                 local health_extension = ScriptUnit.has_extension(unit, "health_system")
                 if health_extension and health_extension:is_alive() then
                     local target_unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
@@ -150,8 +153,26 @@ mod:hook(CLASS.HudElementCrosshair, "_crosshair_position", function(func, self, 
                 end
             end
         end
-        latest_color_type = color_type
+    end
+    latest_range = range
+    latest_color_type = color_type
+end)
 
+mod:hook(CLASS.HudElementCrosshair, "_crosshair_position", function(func, self, dt, t, ui_renderer)
+    -- modified from scripts/ui/hud/elements/crosshair/hud_element_crosshair
+    local target_x = 0
+    local target_y = 0
+    local ui_renderer_scale = ui_renderer.scale
+    if not hud_crosshair_parent then
+        hud_crosshair_parent = self._parent
+    end
+    local player_extensions = hud_crosshair_parent:player_extensions()
+    local weapon_extension = player_extensions and player_extensions.weapon
+    local player_camera = hud_crosshair_parent:player_camera()
+
+    if weapon_extension and player_camera then
+        local shoot_position, shoot_direction = _get_shooting_vector(player_extensions, weapon_extension)
+        local range = latest_range
         local world_aim_position = shoot_position + shoot_direction * range
         local screen_aim_position = Camera.world_to_screen(player_camera, world_aim_position)
         local abs_target_x = screen_aim_position.x
@@ -162,7 +183,6 @@ mod:hook(CLASS.HudElementCrosshair, "_crosshair_position", function(func, self, 
         target_x = abs_target_x - pivot_x
         target_y = abs_target_y - pivot_y
     end
-
     local current_x = self._crosshair_position_x * ui_renderer_scale
     local current_y = self._crosshair_position_y * ui_renderer_scale
     local ui_renderer_inverse_scale = ui_renderer.inverse_scale
