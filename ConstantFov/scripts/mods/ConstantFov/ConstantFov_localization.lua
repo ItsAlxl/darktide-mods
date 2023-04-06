@@ -1,4 +1,8 @@
 return {
+	mod_name = {
+		en = "ConstantFov",
+		ru = "Постоянное поле зрения(FOV)",
+	},
 	mod_description = {
 		en = "Tweak FOV-changing effects.",
 		["zh-cn"] = "调整视野（FOV）变化效果。",
@@ -7,7 +11,7 @@ return {
 	group_toggles = {
 		en = "Allowed FOV Changes",
 		["zh-cn"] = "允许的视野变化",
-		ru = "Разрешенные изменения поля зрения",
+		ru = "Разрешённые изменения поля зрения",
 	},
 	allow_aim = {
 		en = "Aiming",
@@ -62,6 +66,6 @@ return {
 	apply_baseline_description = {
 		en = "Darktide normally applies a baseline FOV multiplier. Turn it off if you want a 'rawer' value.",
 		["zh-cn"] = "暗潮通常会使用一个基础视野倍数。如果你想要更“原始”的效果，可以禁用。",
-		ru = "Darktide обычно применяет базовый множитель поля зрения. Выключите его, если вы хотите получить более \"грубое\" значение.",
+		ru = "Игра обычно применяет базовый множитель поля зрения. Выключите его, если вы хотите получить более \"грубое\" значение.",
 	},
 }
