@@ -3,6 +3,7 @@ local CameraSettings = require("scripts/settings/camera/camera_settings")
 
 local FOV_NORMAL = 62.5
 local FOV_ZOOM = 55.0
+local CUSTOM_MULT = 0.75
 
 local custom_distance = 0.0
 local custom_offset = 0.0
@@ -184,10 +185,10 @@ local _refresh_camera_trees = function()
 end
 _refresh_camera_trees()
 
-mod.apply_custom_viewpoint = function(notify, distance, offset, distance_zoom, offset_zoom)
-    custom_distance = distance
-    custom_offset = offset
-    custom_distance_zoom = distance_zoom
-    custom_offset_zoom = offset_zoom
+mod.apply_custom_viewpoint = function(distance, offset, distance_zoom, offset_zoom)
+    custom_distance = distance * CUSTOM_MULT
+    custom_offset = offset * CUSTOM_MULT
+    custom_distance_zoom = distance_zoom * CUSTOM_MULT
+    custom_offset_zoom = offset_zoom * CUSTOM_MULT
     _refresh_camera_trees()
 end

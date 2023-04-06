@@ -71,25 +71,19 @@ return {
 		en = "Camera Distance (Non-Aiming)",
 	},
 	custom_distance_description = {
-		en = "Increase to push your camera more backward.",
+		en = "Increase to push your camera farther backward.",
 	},
 	custom_offset = {
 		en = "Camera Offset (Non-Aiming)",
 	},
 	custom_offset_description = {
-		en = "Increase to bring your further from the center of your view. For example, the left-side viewpoint will be more left at higher values.",
+		en = "Increase to push your camera farther from the center of your character. For example, the left-side viewpoint will be farther left at higher values.",
 	},
 	custom_distance_zoom = {
 		en = "Camera Distance (Aiming)",
 	},
-	custom_distance_zoom_description = {
-		en = "Increase to push your camera more backward when aiming.",
-	},
 	custom_offset_zoom = {
 		en = "Camera Offset (Aiming)",
-	},
-	custom_offset_zoom_description = {
-		en = "Increase to bring your further from the center of your view. For example, the left-side aiming viewpoint will be more left at higher values.",
 	},
 	use_lookaround_node = {
 		en = "[LookAround] 3rd Person Inspect",
@@ -133,9 +127,6 @@ return {
 		en = Localize("loc_ingame_wield_2")
 	},
 	autoswitch_slot_grenade_ability = {
-		en = Localize("loc_ingame_grenade_ability")
-	},
-	autoswitch_slot_grenade_ability_description = {
 		en = Localize("loc_pickup_consumable_small_grenade_01") .. " / " .. Localize("loc_ability_psyker_smite")
 	},
 	autoswitch_slot_pocketable = {
@@ -148,8 +139,7 @@ return {
 		en = Localize("loc_pickup_luggable_battery_01") .. " / " .. Localize("loc_pickup_luggable_control_rod_01")
 	},
 	autoswitch_sprint = {
-		en = "Sprinting",
-		["zh-cn"] = "疾跑",
+		en = Localize("loc_ingame_sprint")
 	},
 	autoswitch_lunge_ogryn = {
 		en = "Charge (Ogryn)",
@@ -168,8 +158,10 @@ return {
 	},
 	autoswitch_to_first = {
 		en = "1st Person",
+		["zh-cn"] = "第一人称",
 	},
 	autoswitch_to_third = {
 		en = "3rd Person",
+		["zh-cn"] = "第三人称",
 	},
 }
