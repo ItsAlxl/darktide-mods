@@ -138,6 +138,12 @@ return {
 	autoswitch_slot_luggable_description = {
 		en = Localize("loc_pickup_luggable_battery_01") .. " / " .. Localize("loc_pickup_luggable_control_rod_01")
 	},
+	autoswitch_slot_unarmed = {
+		en = "Unarmed",
+	},
+	autoswitch_slot_unarmed_description = {
+		en = "Occurs whenever your character puts your weapon away, e.g. when interacting with certain objects or being kocked back.",
+	},
 	autoswitch_sprint = {
 		en = Localize("loc_ingame_sprint")
 	},

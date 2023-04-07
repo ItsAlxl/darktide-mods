@@ -17,7 +17,7 @@ local center_to_1p_ogryn = mod:get("center_to_1p_ogryn")
 local enable_reasons = {}
 local disable_reasons = {}
 local autoswitch_events = {
-    slot_device = 1 -- 1 means "go to 1st person"
+    slot_device = 1, -- 1 means "go to 1st person"
 }
 
 local use_3p_freelook_node = false
@@ -216,6 +216,7 @@ mod.on_setting_changed("autoswitch_slot_secondary")
 mod.on_setting_changed("autoswitch_slot_grenade_ability")
 mod.on_setting_changed("autoswitch_slot_pocketable")
 mod.on_setting_changed("autoswitch_slot_luggable")
+mod.on_setting_changed("autoswitch_slot_unarmed")
 mod.on_setting_changed("autoswitch_sprint")
 mod.on_setting_changed("autoswitch_lunge_ogryn")
 mod.on_setting_changed("autoswitch_lunge_human")

@@ -190,6 +190,12 @@ return {
 						options       = table.clone(autoswitch_options),
 					},
 					{
+						setting_id    = "autoswitch_slot_unarmed",
+						type          = "dropdown",
+						default_value = 0,
+						options       = table.clone(autoswitch_options),
+					},
+					{
 						setting_id    = "autoswitch_sprint",
 						type          = "dropdown",
 						default_value = 0,

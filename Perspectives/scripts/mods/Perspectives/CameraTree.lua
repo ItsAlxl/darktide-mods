@@ -20,16 +20,18 @@ local OFFSET_TO_OGRYN = {
 }
 
 -- flip is either true (flip), false (don't flip), or nil (it's a center viewpoint)
-local _transform_offset = function(offset, flip, is_zoom)
+local _transform_offset = function(offset, flip, is_zoom, ignore_custom_offset)
     if is_zoom then
         offset.y = offset.y + custom_distance - custom_distance_zoom
     end
 
-    local offset_amt = is_zoom and (custom_offset_zoom - custom_offset) or custom_offset
-    if flip == nil then
-        offset.z = offset.z + offset_amt
-    else
-        offset.x = offset.x + offset_amt
+    if not ignore_custom_offset then
+        local offset_amt = is_zoom and (custom_offset_zoom - custom_offset) or custom_offset
+        if flip == nil then
+            offset.z = offset.z + offset_amt
+        else
+            offset.x = offset.x + offset_amt
+        end
     end
 
     if flip then
@@ -60,7 +62,7 @@ local _get_shoulder_ogryn_offset = function(left)
         x = OFFSET_TO_OGRYN.x + 0.5,
         y = OFFSET_TO_OGRYN.y + 0.0,
         z = OFFSET_TO_OGRYN.z + 0.0,
-    }, left, false)
+    }, left, false, true)
 end
 
 local _get_shoulder_zoom_ogryn_offset = function(left)
@@ -134,7 +136,7 @@ local function _alter_third_person_tree(node)
                                 z = -0.2,
                             }, nil, true), FOV_ZOOM)
                         },
-                        _node = _create_node("pspv_center_ogryn", _transform_offset(OFFSET_TO_OGRYN, nil))
+                        _node = _create_node("pspv_center_ogryn", _transform_offset(OFFSET_TO_OGRYN, nil, false, true))
                     },
                     {
                         _node = _create_node("pspv_center_zoom", _transform_offset({
