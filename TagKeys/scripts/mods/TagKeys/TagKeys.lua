@@ -1,20 +1,10 @@
 local mod = get_mod("TagKeys")
 local Vo = require("scripts/utilities/vo")
 
-local Tagger = nil
-
-mod:hook_safe("HudElementSmartTagging", "init", function(self, ...)
-    Tagger = self
-end)
-
-mod:hook_safe("HudElementSmartTagging", "destroy", function(self, ...)
-    if Tagger == self then
-        Tagger = nil
-    end
-end)
+local SmartTagger = nil
 
 local _find_wheel_option = function(display_name)
-    for _, entry in pairs(Tagger._entries) do
+    for _, entry in pairs(SmartTagger._entries) do
         if entry and entry.option and entry.option.display_name == display_name then
             return entry.option
         end
@@ -22,8 +12,22 @@ local _find_wheel_option = function(display_name)
     return nil
 end
 
+local _find_smart_tagger = function()
+    if Managers.ui then
+        local hud = Managers.ui:get_hud()
+        SmartTagger = hud and hud:element("HudElementSmartTagging")
+        if SmartTagger then
+            mod:hook_safe(SmartTagger, "destroy", function(...)
+                SmartTagger = nil
+            end)
+            return true
+        end
+    end
+    return false
+end
+
 local _force_tag = function(display_name)
-    if not Tagger then
+    if not SmartTagger and not _find_smart_tagger() then
         return
     end
 
@@ -42,11 +46,11 @@ local _force_tag = function(display_name)
 
     if tag_type then
         local force_update_targets = true
-        local raycast_data = Tagger:_find_raycast_targets(force_update_targets)
+        local raycast_data = SmartTagger:_find_raycast_targets(force_update_targets)
         local hit_position = raycast_data.static_hit_position
 
         if hit_position then
-            Tagger:_trigger_smart_tag(tag_type, nil, Vector3Box.unbox(hit_position))
+            SmartTagger:_trigger_smart_tag(tag_type, nil, Vector3Box.unbox(hit_position))
         end
     end
 
@@ -55,7 +59,7 @@ local _force_tag = function(display_name)
     if chat_message_data then
         local text = chat_message_data.text
         local channel_tag = chat_message_data.channel
-        local channel, channel_handle = Tagger:_get_chat_channel_by_tag(channel_tag)
+        local channel, channel_handle = SmartTagger:_get_chat_channel_by_tag(channel_tag)
 
         if channel then
             Managers.chat:send_loc_channel_message(channel_handle, text, nil)
@@ -65,7 +69,7 @@ local _force_tag = function(display_name)
     local voice_event_data = option.voice_event_data
 
     if voice_event_data then
-        local parent = Tagger._parent
+        local parent = SmartTagger._parent
         local player_unit = parent:player_unit()
 
         if player_unit then
