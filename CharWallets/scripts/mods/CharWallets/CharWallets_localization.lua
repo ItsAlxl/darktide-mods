@@ -1,4 +1,8 @@
 return {
+	mod_name = {
+		en = "CharWallets",
+		ru = "Кошельки персонажей",
+	},
 	mod_description = {
 		en = "Display your characters' wallets on the character selection screen.",
 		["zh-cn"] = "在特工选择界面显示角色的材料数量。",
@@ -42,7 +46,7 @@ return {
 	size_x = {
 		en = "Wallet Stretch",
 		["zh-cn"] = "材料数拉伸量",
-		ru = "Растяжение валют",
+		ru = "Растяжение по горизонтали",
 	},
 	contracts_x = {
 		en = "Contracts Offset",
