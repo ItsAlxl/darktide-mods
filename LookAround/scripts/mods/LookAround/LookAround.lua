@@ -22,6 +22,8 @@ local sensitivity_mouse = 1.0
 local sensitivity_controller = 1.0
 
 local active_reasons = {}
+local kb_toggle = false
+local kb_held = false
 
 local auto_on_spectate = false
 local clamp_pitch = true
@@ -87,9 +89,22 @@ local _start_freelook = function(reason, start)
     end
 end
 
-mod.kb_freelook = function(held)
+local _apply_kb = function()
+    _start_freelook("key", kb_toggle ~= kb_held)
+    _start_freelook("spectate", false)
+end
+
+mod.kb_freelook_toggle = function(held)
     if not (Managers.input and Managers.input:cursor_active()) then
-        _start_freelook("key", not active_reasons.key)
+        kb_toggle = not kb_toggle
+        _apply_kb()
+    end
+end
+
+mod.kb_freelook_held = function(held)
+    if not held or not (Managers.input and Managers.input:cursor_active()) then
+        kb_held = held
+        _apply_kb()
     end
 end
 

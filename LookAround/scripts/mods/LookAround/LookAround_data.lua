@@ -13,7 +13,7 @@ return {
 				keybind_global  = false,
 				keybind_trigger = "pressed",
 				keybind_type    = "function_call",
-				function_name   = "kb_freelook",
+				function_name   = "kb_freelook_toggle",
 			},
 			{
 				setting_id      = "freelook_held",
@@ -22,7 +22,7 @@ return {
 				keybind_global  = false,
 				keybind_trigger = "held",
 				keybind_type    = "function_call",
-				function_name   = "kb_freelook",
+				function_name   = "kb_freelook_held",
 			},
 			{
 				setting_id    = "clamp_pitch",
