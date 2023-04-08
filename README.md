@@ -68,6 +68,11 @@ Provides the ability to freelook.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/115).
 
+## PenanceDetails
+Penances provide more details about your current progress.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/122).
+
 ## Perspectives
 Switch between first and third person perspectives.
 
