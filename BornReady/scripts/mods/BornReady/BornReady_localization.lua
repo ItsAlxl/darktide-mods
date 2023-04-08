@@ -2,6 +2,7 @@ return {
 	mod_name = {
 		en = "BornReady",
 		ru = "Рождён готовым",
+		["zh-cn"] = "自动准备",
 	},
 	mod_description = {
 		en = "Automatically readies up when joining a lobby.",

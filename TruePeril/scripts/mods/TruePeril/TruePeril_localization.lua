@@ -2,6 +2,7 @@ return {
 	mod_name = {
 		en = "TruePeril",
 		ru = "Истинная угроза",
+		["zh-cn"] = "真实危机值",
 	},
 	mod_description = {
 		en = "Makes the Psyker peril gauge more accurate.",

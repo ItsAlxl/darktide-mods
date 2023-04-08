@@ -2,6 +2,7 @@ return {
 	mod_name = {
 		en = "WhichMissions",
 		ru = "Какие Миссии",
+		["zh-cn"] = "任务苦修状态",
 	},
 	mod_description = {
 		en = "Provides some commands to help you figure out which missions you're missing for penances. Try /wm_help in the chat.",
