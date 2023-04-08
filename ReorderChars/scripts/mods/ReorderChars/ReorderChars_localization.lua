@@ -1,8 +1,12 @@
 return {
+	mod_name = {
+		en = "ReorderChars",
+		ru = "Перестановка персонажей",
+	},
 	mod_description = {
 		en = "Reorder your characters on the character select screen.",
 		["zh-cn"] = "为特工选择界面的角色重新排序。",
-		ru = "Измените порядок расположения своих персонажей на экране выбора персонажей.",
+		ru = "Изменяйте порядок расположения своих персонажей на экране выбора персонажей.",
 	},
 	move_up = {
 		en = "Move Up",
