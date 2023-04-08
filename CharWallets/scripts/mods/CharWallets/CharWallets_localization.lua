@@ -2,6 +2,7 @@ return {
 	mod_name = {
 		en = "CharWallets",
 		ru = "Кошельки персонажей",
+		["zh-cn"] = "角色钱包",
 	},
 	mod_description = {
 		en = "Display your characters' wallets on the character selection screen.",

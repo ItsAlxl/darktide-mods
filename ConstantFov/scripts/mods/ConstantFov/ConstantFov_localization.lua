@@ -2,6 +2,7 @@ return {
 	mod_name = {
 		en = "ConstantFov",
 		ru = "Постоянное поле зрения(FOV)",
+		["zh-cn"] = "恒定视角（FOV）",
 	},
 	mod_description = {
 		en = "Tweak FOV-changing effects.",

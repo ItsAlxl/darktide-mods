@@ -2,6 +2,7 @@ return {
 	mod_name = {
 		en = "BetterMelk",
 		ru = "Лучший Мелк",
+		["zh-cn"] = "梅尔克协议优化",
 	},
 	mod_description = {
 		en = "Automatically accept new contracts and collect the weekly completion bonus.",

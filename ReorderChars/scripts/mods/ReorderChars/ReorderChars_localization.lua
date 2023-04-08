@@ -2,6 +2,7 @@ return {
 	mod_name = {
 		en = "ReorderChars",
 		ru = "Перестановка персонажей",
+		["zh-cn"] = "角色排序",
 	},
 	mod_description = {
 		en = "Reorder your characters on the character select screen.",
