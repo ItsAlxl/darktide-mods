@@ -131,10 +131,10 @@ local _achievements_sort_function = function(a, b)
 end
 
 local _should_include_achievement = function(achievement_definition, achievement_data)
-    return not achievement_definition:ui_type() == AchievementUITypes.feat_of_strength or achievement_definition:is_visible(achievement_data)
+    return achievement_definition:ui_type() ~= AchievementUITypes.feat_of_strength or achievement_definition:is_visible(achievement_data)
 end
 
--- this is is not modified, but I need to change the logic of _ui_achievement(), which is unfortunately a local function
+-- this is is not directly modified, but I need to change the logic of _ui_achievement(), which is unfortunately a local function
 mod:hook(CLASS.AccountService, "get_achievements", function(func, self)
     local get_achievements_promise = self._get_achievements_promise
 
