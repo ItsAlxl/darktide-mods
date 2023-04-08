@@ -59,6 +59,9 @@ local _anonymize = function(profile, real_name, is_account)
     if not anon_mode or anon_mode < 0 then
         return ""
     end
+    if anon_mode == 0 then
+        return real_name
+    end
 
     if no_profile or anon_mode == 1 then
         if is_me then
