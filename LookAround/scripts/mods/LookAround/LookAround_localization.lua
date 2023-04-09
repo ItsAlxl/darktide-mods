@@ -1,6 +1,6 @@
 return {
 	mod_description = {
-		en = "LookAround gives you the ability to freelook.",
+		en = "Provides the ability to freelook.",
 		["zh-cn"] = "允许你获得自由查看视角。",
 	},
 	freelook = {
