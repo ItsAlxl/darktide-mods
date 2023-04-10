@@ -14,7 +14,7 @@ Set a sensitivity multiplier for aiming down sights.
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/119).
 
 ## AnonPlayers
-Automatically accept new contracts and collect the weekly completion bonus.
+Anonymize player names.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/117).
 
