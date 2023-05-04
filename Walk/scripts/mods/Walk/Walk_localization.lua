@@ -11,4 +11,7 @@ return {
 	walk_speed = {
 		en = "Walk Speed Multiplier",
 	},
+	sprint_cancels = {
+		en = "Sprinting cancels walk",
+	},
 }
