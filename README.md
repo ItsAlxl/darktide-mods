@@ -3,6 +3,8 @@ I generally make mods based on requests in the Darktide Modding Discord that see
 
 All code is dual-licensed under the Unlicense (public domain) and the MIT License (permissive); see [LICENSE](LICENSE)
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/itsalxl)
+
 ## AfterGrenade
 Choose what your character equips after throwing a grenade.
 

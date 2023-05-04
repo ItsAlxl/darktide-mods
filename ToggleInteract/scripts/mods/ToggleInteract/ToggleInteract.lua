@@ -49,17 +49,12 @@ mod:hook(CLASS.InputService, "get", function(func, self, action_name)
     return val
 end)
 
-mod:hook(CLASS.InteractorExtension, "is_interacting", function(func, self)
-    local val = func(self)
-    if val ~= prev_interacting then
-        if val then
-            keep_interacting = true
-        else
-            keep_interacting = false
-        end
+mod:hook_safe(CLASS.InteractorExtension, "fixed_update", function(self, ...)
+    local is_interacting = self:is_interacting()
+    if is_interacting ~= prev_interacting then
+        keep_interacting = is_interacting
     end
-    prev_interacting = val
-    return val
+    prev_interacting = is_interacting
 end)
 
 mod:hook(CLASS.LocalizationManager, "localize", function(func, self, key, ...)
