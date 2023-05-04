@@ -17,12 +17,13 @@ local center_to_1p_ogryn = mod:get("center_to_1p_ogryn")
 local enable_reasons = {}
 local disable_reasons = {}
 local autoswitch_events = {
-    slot_device = 1, -- 1 means "go to 1st person"
+    slot_device = 1, -- see autoswitch_options in data
 }
 
 local use_3p_freelook_node = false
 local holding_primary = false
 local holding_secondary = false
+local is_spectating = false
 
 local _get_followed_unit = function()
     local camera_handler = mod.get_camera_handler()
@@ -106,7 +107,16 @@ local _has_enable_reason = function()
 end
 
 mod.is_requesting_third_person = function()
-    return _has_enable_reason() and not _has_disable_reason()
+    local enable = false
+    local disable = false
+    if is_spectating then
+        enable = not not (enable_reasons["_base"] or enable_reasons["spectate"])
+        disable = disable_reasons["_base"] or disable_reasons["spectate"]
+    else
+        enable = _has_enable_reason()
+        disable = _has_disable_reason()
+    end
+    return enable and not disable
 end
 
 mod.apply_perspective = function()
@@ -452,7 +462,8 @@ end)
 
 mod:hook_safe(CLASS.CameraHandler, "_switch_follow_target", function(self, new_unit)
     if self._player then
-        _autoswitch_from_event("spectate", "spectate", new_unit ~= self._player.player_unit)
+        is_spectating = new_unit ~= self._player.player_unit
+        _autoswitch_from_event("spectate", "spectate", is_spectating)
     end
     mod.apply_perspective()
 end)
