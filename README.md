@@ -130,7 +130,13 @@ Allows you to remove the interpolation/decay of the value on the Psyker's peril 
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/63).
 
+## Walk
+Walk slowly at the push of a button.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/151).
+
 ## WhichMissions
+Note: This mod is deprecated. Use PenanceDetails instead.
 Adds chat commands to list which mission types you need for the "complete one of each mission type..." penances.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/55).
