@@ -20,7 +20,7 @@ return {
 				type            = "keybind",
 				default_value   = { },
 				keybind_global  = false,
-				keybind_trigger = "pressed",
+				keybind_trigger = "held",
 				keybind_type    = "function_call",
 				function_name   = "toggle_walk",
 			},
