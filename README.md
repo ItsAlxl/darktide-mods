@@ -90,6 +90,11 @@ Easily randomize your current loadout.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/66).
 
+## PlaystationPrompts
+Replaces X-Box BYXA button prompts with Playstation O▲■X button prompts.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/153).
+
 ## ReorderChars aka Reorder Characters
 Allows you to reorder your characters on the character select screen.
 
