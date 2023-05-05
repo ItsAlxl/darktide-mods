@@ -60,6 +60,11 @@ Make all possible ranged weapons fully automatic.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/87).
 
+## InventoryStats
+Displays some stats in the inventory screen.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/152).
+
 ## KeepSwinging
 Adds keybinds to spam light melee attacks for you.
 
