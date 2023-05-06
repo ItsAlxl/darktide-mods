@@ -23,7 +23,7 @@ for _, stat in pairs(mod.stat_order) do
 end
 
 return {
-	name = "InventoryStats",
+	name = mod:localize("mod_name"),
 	description = mod:localize("mod_description"),
 	is_togglable = true,
 	options = {
