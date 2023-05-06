@@ -1,4 +1,26 @@
 local mod = get_mod("InventoryStats")
+mod.stat_order = {
+	"health",
+	"toughness",
+	"wounds",
+	"crit_chance",
+	"crit_dmg",
+	"stamina",
+	"stamina_regen",
+	"sprint_speed",
+	"sprint_time",
+	"dodge_count",
+	"dodge_dist",
+}
+
+local stat_toggles = {}
+for _, stat in pairs(mod.stat_order) do
+	stat_toggles[#stat_toggles + 1] = {
+		setting_id    = stat,
+		type          = "checkbox",
+		default_value = true,
+	}
+end
 
 return {
 	name = "InventoryStats",
@@ -14,53 +36,7 @@ return {
 			{
 				setting_id  = "g_stat_toggles",
 				type        = "group",
-				sub_widgets = {
-					{
-						setting_id    = "health",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "wounds",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "toughness",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "stamina",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "stamina_regen",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "crit_chance",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "crit_dmg",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "sprint_speed",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "sprint_time",
-						type          = "checkbox",
-						default_value = true,
-					},
-				}
+				sub_widgets = stat_toggles
 			},
 		}
 	}

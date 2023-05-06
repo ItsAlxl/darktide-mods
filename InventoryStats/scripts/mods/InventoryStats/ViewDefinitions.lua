@@ -22,7 +22,7 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_definitions", f
         parent = "screen",
         horizontal_alignment = "right",
         size = {
-            225,
+            250,
             40
         },
         position = {

@@ -38,4 +38,10 @@ return {
 	sprint_time = {
 		en = Localize("loc_ingame_sprint") .. " Time",
 	},
+	dodge_count = {
+		en = Localize("loc_weapon_stats_display_effective_dodges")
+	},
+	dodge_dist = {
+		en = Localize("loc_weapon_stats_display_dodge_distance")
+	},
 }

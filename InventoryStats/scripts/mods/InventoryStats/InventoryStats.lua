@@ -12,20 +12,8 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 
 local EMPTY_TABLE = {}
 
-local allow_vis = {}
-
 local stats_widgets = {}
-local stat_order = {
-    "health",
-    "wounds",
-    "toughness",
-    "crit_chance",
-    "crit_dmg",
-    "stamina",
-    "stamina_regen",
-    "sprint_speed",
-    "sprint_time",
-}
+local allow_vis = {}
 
 local inv_view = nil
 local request_update = false
@@ -33,12 +21,12 @@ mod.equip_swap = {}
 
 mod.on_setting_changed = function(id)
     local val = mod:get(id)
-    if table.contains(stat_order, id) then
+    if table.contains(mod.stat_order, id) then
         allow_vis[id] = val
     end
 end
 
-for _, stat in pairs(stat_order) do
+for _, stat in pairs(mod.stat_order) do
     mod.on_setting_changed(stat)
 end
 
@@ -84,6 +72,16 @@ end
 local _calculate_sprint_time = function(plr_unit, stat_buffs, max_stamina)
     local wep_stam_template = ScriptUnit.has_extension(plr_unit, "weapon_system"):stamina_template()
     return max_stamina / ((wep_stam_template and wep_stam_template.sprint_cost_per_second or math.huge) * stat_buffs.sprinting_cost_multiplier)
+end
+
+local _calculate_dodge_count = function(plr_unit, stat_buffs)
+    local wep_dodge_template = ScriptUnit.has_extension(plr_unit, "weapon_system"):dodge_template()
+    return math.ceil((wep_dodge_template and wep_dodge_template.diminishing_return_start or 2) + math.round(stat_buffs.extra_consecutive_dodges or 0))
+end
+
+local _calculate_dodge_dist = function(plr_unit, dodge_template)
+    local wep_dodge_template = ScriptUnit.has_extension(plr_unit, "weapon_system"):dodge_template()
+    return (wep_dodge_template and wep_dodge_template.base_distance or dodge_template.base_distance) * (wep_dodge_template and wep_dodge_template.distance_scale or 1)
 end
 
 local _guarantee_stat_widget = function(view, stat_name)
@@ -178,18 +176,23 @@ mod:hook_safe(CLASS.PlayerUnitBuffExtension, "fixed_update", function(...)
     _set_stat_vis(inv_view, "stamina_regen", unit_data_ext ~= nil)
     _set_stat_vis(inv_view, "sprint_speed", unit_data_ext ~= nil)
     _set_stat_vis(inv_view, "sprint_time", unit_data_ext ~= nil)
+    _set_stat_vis(inv_view, "dodge_count", unit_data_ext ~= nil)
+    _set_stat_vis(inv_view, "dodge_dist", unit_data_ext ~= nil)
     if unit_data_ext then
         local spec = unit_data_ext:specialization()
         local stam_template = spec.stamina
         local max_stamina = _calculate_max_stamina(plr_unit, stam_template)
+
         stats_widgets.stamina.content.data = max_stamina
         stats_widgets.stamina_regen.content.data = string.format("%.2f", _calculate_stamina_regen(stam_template, stat_buffs))
         stats_widgets.sprint_speed.content.data = string.format("%.2f", _calculate_sprint_speed(plr_unit, spec.sprint))
         stats_widgets.sprint_time.content.data = string.format("%.2f", _calculate_sprint_time(plr_unit, stat_buffs, max_stamina))
+        stats_widgets.dodge_count.content.data = _calculate_dodge_count(plr_unit, stat_buffs)
+        stats_widgets.dodge_dist.content.data = string.format("%.2f", _calculate_dodge_dist(plr_unit, spec.dodge))
     end
 
     local vis_count = 0
-    for _, stat in ipairs(stat_order) do
+    for _, stat in ipairs(mod.stat_order) do
         if stats_widgets[stat] and stats_widgets[stat].visible then
             stats_widgets[stat].offset[2] = vis_count * 40
             vis_count = vis_count + 1
@@ -204,8 +207,8 @@ end)
 local _get_stat_widget_list = function()
     local list = {}
     --for i = #stat_order, 1, -1 do
-    for i = 1, #stat_order do
-        list[#list + 1] = stats_widgets[stat_order[i]]
+    for i = 1, #mod.stat_order do
+        list[#list + 1] = stats_widgets[mod.stat_order[i]]
     end
     return list
 end

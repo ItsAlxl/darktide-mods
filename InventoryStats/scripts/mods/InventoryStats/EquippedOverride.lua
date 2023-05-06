@@ -43,11 +43,13 @@ local _calculate_tweak_average = function(tweak, sub_key)
     local sum = 0.0
     local count = 0
     for _, t in pairs(mod.equip_swap.tweaks[tweak]) do
-        sum = sum + (t[sub_key] or 0.0)
-        count = count + 1
+        if t[sub_key] then
+            sum = sum + t[sub_key]
+            count = count + 1
+        end
     end
     if count == 0 then
-        return 0
+        return nil
     end
     return sum / count
 end
@@ -62,7 +64,7 @@ local _calculate_tweak_average_sub = function(tweak, sub_key, subsub_key)
         end
     end
     if count == 0 then
-        return 0
+        return nil
     end
     return sum / count
 end
@@ -105,6 +107,16 @@ mod:hook(CLASS.PlayerUnitWeaponExtension, "sprint_template", function(func, ...)
             mod.equip_swap.override_tweak.sprint = _create_tweak("sprint", { "sprint_speed_mod" })
         end
         return mod.equip_swap.override_tweak.sprint
+    end
+    return func(...)
+end)
+
+mod:hook(CLASS.PlayerUnitWeaponExtension, "dodge_template", function(func, ...)
+    if _override_current_weapon_logic() then
+        if not mod.equip_swap.override_tweak.dodge then
+            mod.equip_swap.override_tweak.dodge = _create_tweak("dodge", { "diminishing_return_start", "base_distance", "distance_scale" })
+        end
+        return mod.equip_swap.override_tweak.dodge
     end
     return func(...)
 end)
