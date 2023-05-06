@@ -2,6 +2,15 @@ return {
 	mod_description = {
 		en = "Displays some stats in the inventory screen",
 	},
+	force_equip = {
+		en = "Force Equip Updates",
+	},
+	force_equip_description = {
+		en = "If 'Off', after changing equipment or switching presets, you'll need to exit the inventory menu, wait a couple seconds for your changes to apply, then open the inventory menu again to see the stats change.",
+	},
+	g_stat_toggles = {
+		en = "Displayed Stats",
+	},
 	health = {
 		en = "Health",
 	},
@@ -24,9 +33,9 @@ return {
 		en = "Crit Power",
 	},
 	sprint_speed = {
-		en = "Sprint Speed",
+		en = Localize("loc_weapon_stats_display_sprint_speed")
 	},
 	sprint_time = {
-		en = "Sprint Time",
+		en = Localize("loc_ingame_sprint") .. " Time",
 	},
 }

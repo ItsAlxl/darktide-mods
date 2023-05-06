@@ -12,6 +12,8 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 
 local EMPTY_TABLE = {}
 
+local allow_vis = {}
+
 local stats_widgets = {}
 local stat_order = {
     "health",
@@ -25,9 +27,20 @@ local stat_order = {
     "sprint_time",
 }
 
-local cached_inv_view = nil
+local inv_view = nil
 local request_update = false
 mod.equip_swap = {}
+
+mod.on_setting_changed = function(id)
+    local val = mod:get(id)
+    if table.contains(stat_order, id) then
+        allow_vis[id] = val
+    end
+end
+
+for _, stat in pairs(stat_order) do
+    mod.on_setting_changed(stat)
+end
 
 local _is_wep_ranged = function()
     if not mod.equip_swap.template then
@@ -82,6 +95,11 @@ local _guarantee_stat_widget = function(view, stat_name)
     end
 end
 
+local _set_stat_vis = function(view, stat_name, vis)
+    _guarantee_stat_widget(view, stat_name)
+    stats_widgets[stat_name].visible = allow_vis[stat_name] and vis
+end
+
 mod.set_equipped_wep = function(w)
     if w == mod.equip_swap.wep then
         return
@@ -90,28 +108,32 @@ mod.set_equipped_wep = function(w)
         mod.equip_swap.template = WeaponTemplate.weapon_template_from_item(w)
         mod.equip_swap.tweaks, _, _, _ = Weapon._init_traits(nil, mod.equip_swap.template, w, nil, nil)
         mod.equip_swap.wep = w
+        mod.equip_swap.override_tweak = {}
     else
         mod.equip_swap.template = nil
         mod.equip_swap.tweaks = nil
         mod.equip_swap.wep = nil
+        mod.equip_swap.override_tweak = nil
     end
     mod.update_inventory_stats()
 end
 
 mod.update_inventory_stats = function(view)
     if view ~= nil then
-        cached_inv_view = view
+        inv_view = view
     end
     request_update = true
 end
 
-mod:hook_safe(CLASS.PlayerUnitBuffExtension, "fixed_update", function(self, unit, dt, t, fixed_frame)
-    if not request_update or not cached_inv_view then
+-- The update is handled here to ensure the stats take into account buff changes
+-- as an added bonus, it also accumulates updates if several are requested in a frame
+mod:hook_safe(CLASS.PlayerUnitBuffExtension, "fixed_update", function(...)
+    if not request_update or not inv_view then
         return
     end
     request_update = false
 
-    local plr = cached_inv_view._preview_player
+    local plr = inv_view._preview_player
     local plr_unit = plr.player_unit
 
     local buff_ext = ScriptUnit.has_extension(plr_unit, "buff_system")
@@ -131,42 +153,31 @@ mod:hook_safe(CLASS.PlayerUnitBuffExtension, "fixed_update", function(self, unit
     end
 
     local health_ext = ScriptUnit.has_extension(plr_unit, "health_system")
-    _guarantee_stat_widget(cached_inv_view, "health")
-    _guarantee_stat_widget(cached_inv_view, "wounds")
-    stats_widgets.health.visible = health_ext ~= nil
-    stats_widgets.wounds.visible = health_ext ~= nil
+    _set_stat_vis(inv_view, "health", health_ext ~= nil)
+    _set_stat_vis(inv_view, "wounds", health_ext ~= nil)
     if health_ext then
         stats_widgets.health.content.data = health_ext:max_health()
         stats_widgets.wounds.content.data = health_ext:max_wounds()
     end
 
     local tough_ext = ScriptUnit.has_extension(plr_unit, "toughness_system")
-    _guarantee_stat_widget(cached_inv_view, "toughness")
-    stats_widgets.toughness.visible = tough_ext ~= nil
+    _set_stat_vis(inv_view, "toughness", tough_ext ~= nil)
     if tough_ext then
         stats_widgets.toughness.content.data = tough_ext:max_toughness()
     end
 
-    _guarantee_stat_widget(cached_inv_view, "crit_chance")
-    _guarantee_stat_widget(cached_inv_view, "crit_dmg")
-    stats_widgets.crit_chance.visible = mod.equip_swap.wep ~= nil
-    stats_widgets.crit_dmg.visible = mod.equip_swap.wep ~= nil
+    _set_stat_vis(inv_view, "crit_chance", mod.equip_swap.wep ~= nil)
+    _set_stat_vis(inv_view, "crit_dmg", mod.equip_swap.wep ~= nil)
     if mod.equip_swap.wep then
         stats_widgets.crit_chance.content.data = string.format("%d%%", 100.0 * _calculate_crit_chance(plr, plr_unit) + 0.5)
         stats_widgets.crit_dmg.content.data = _calculate_crit_dmg(stat_buffs)
     end
 
     local unit_data_ext = ScriptUnit.has_extension(plr_unit, "unit_data_system")
-    _guarantee_stat_widget(cached_inv_view, "stamina")
-    _guarantee_stat_widget(cached_inv_view, "stamina_regen")
-    stats_widgets.stamina.visible = unit_data_ext ~= nil
-    stats_widgets.stamina_regen.visible = unit_data_ext ~= nil
-
-    _guarantee_stat_widget(cached_inv_view, "sprint_speed")
-    _guarantee_stat_widget(cached_inv_view, "sprint_time")
-    stats_widgets.sprint_speed.visible = unit_data_ext ~= nil
-    stats_widgets.sprint_time.visible = unit_data_ext ~= nil
-
+    _set_stat_vis(inv_view, "stamina", unit_data_ext ~= nil)
+    _set_stat_vis(inv_view, "stamina_regen", unit_data_ext ~= nil)
+    _set_stat_vis(inv_view, "sprint_speed", unit_data_ext ~= nil)
+    _set_stat_vis(inv_view, "sprint_time", unit_data_ext ~= nil)
     if unit_data_ext then
         local spec = unit_data_ext:specialization()
         local stam_template = spec.stamina
@@ -230,14 +241,22 @@ mod:hook_safe(CLASS.InventoryBackgroundView, "_update_presentation_wield_item", 
     _refresh_from_background_view(self)
 end)
 
-mod:hook_safe(CLASS.InventoryBackgroundView, "_equip_slot_item", function(self, ...)
-    local promise = self:_equip_local_changes()
+local _force_equipment_refresh = function(bg_view)
+    local promise = bg_view:_equip_local_changes()
     if promise then
         promise:next(function(...)
-            _refresh_from_background_view(self)
-            self._starting_profile_equipped_items = table.clone(self._current_profile_equipped_items)
+            _refresh_from_background_view(bg_view)
+            bg_view._starting_profile_equipped_items = table.clone(bg_view._current_profile_equipped_items)
         end)
     else
-        _refresh_from_background_view(self)
+        _refresh_from_background_view(bg_view)
     end
+end
+
+mod:hook_safe(CLASS.InventoryBackgroundView, "event_inventory_view_equip_item", function(self, ...)
+    _force_equipment_refresh(self)
+end)
+
+mod:hook_safe(CLASS.InventoryBackgroundView, "event_on_profile_preset_changed", function(self, ...)
+    _force_equipment_refresh(self)
 end)

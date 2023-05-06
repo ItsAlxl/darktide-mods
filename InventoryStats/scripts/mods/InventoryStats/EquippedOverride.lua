@@ -56,8 +56,10 @@ local _calculate_tweak_average_sub = function(tweak, sub_key, subsub_key)
     local sum = 0.0
     local count = 0
     for _, t in pairs(mod.equip_swap.tweaks[tweak]) do
-        sum = sum + (t[sub_key] and t[sub_key][subsub_key] or 0.0)
-        count = count + 1
+        if t[sub_key] then
+            sum = sum + (t[sub_key][subsub_key] or 0.0)
+            count = count + 1
+        end
     end
     if count == 0 then
         return 0
@@ -79,21 +81,30 @@ end
 
 mod:hook(CLASS.PlayerUnitWeaponExtension, "weapon_handling_template", function(func, ...)
     if _override_current_weapon_logic() then
-        return _create_tweak_sub("weapon_handling", "critical_strike", "chance_modifier")
+        if not mod.equip_swap.override_tweak.weapon_handling then
+            mod.equip_swap.override_tweak.weapon_handling = _create_tweak_sub("weapon_handling", "critical_strike", "chance_modifier")
+        end
+        return mod.equip_swap.override_tweak.weapon_handling
     end
     return func(...)
 end)
 
 mod:hook(CLASS.PlayerUnitWeaponExtension, "stamina_template", function(func, ...)
     if _override_current_weapon_logic() then
-        return _create_tweak("stamina", { "stamina_modifier", "sprint_cost_per_second" })
+        if not mod.equip_swap.override_tweak.stamina then
+            mod.equip_swap.override_tweak.stamina = _create_tweak("stamina", { "stamina_modifier", "sprint_cost_per_second" })
+        end
+        return mod.equip_swap.override_tweak.stamina
     end
     return func(...)
 end)
 
 mod:hook(CLASS.PlayerUnitWeaponExtension, "sprint_template", function(func, ...)
     if _override_current_weapon_logic() then
-        return _create_tweak("sprint", { "sprint_speed_mod" })
+        if not mod.equip_swap.override_tweak.sprint then
+            mod.equip_swap.override_tweak.sprint = _create_tweak("sprint", { "sprint_speed_mod" })
+        end
+        return mod.equip_swap.override_tweak.sprint
     end
     return func(...)
 end)
