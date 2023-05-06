@@ -39,7 +39,7 @@ return {
 	},
 	crit_dmg = {
 		en = "Crit Power",
-		["zh-cn"] = "暴击伤害",
+		["zh-cn"] = "暴击伤害倍数",
 	},
 	sprint_speed = {
 		en = Localize("loc_weapon_stats_display_sprint_speed"),
