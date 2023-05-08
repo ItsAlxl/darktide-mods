@@ -1,39 +1,29 @@
 local mod = get_mod("CharWallets")
-local ColorUtilities = require("scripts/utilities/ui/colors")
+
+mod.consts = {
+    BASE_WIDTH = 400,
+    BASE_OFFSET = 168,
+    DEFAULT_CURRENCY_ORDER = {
+        "credits",
+        "marks",
+        "plasteel",
+        "diamantine",
+    },
+    ICON_PACKAGE = "packages/ui/views/end_player_view/end_player_view",
+    ICON_SIZE = { 24, 17 },
+    CONTRACTS_TEXT_OFFSET = { 380, -8, 10 }
+}
+
+mod:io_dofile("CharWallets/scripts/mods/CharWallets/PassTemplates")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local WalletSettings = require("scripts/settings/wallet_settings")
 
-local ICON_PACKAGE = "packages/ui/views/end_player_view/end_player_view"
-local BASE_WIDTH = 400
-local BASE_OFFSET = 168
-local DEFAULT_CURRENCY_ORDER = {
-    "credits",
-    "marks",
-    "plasteel",
-    "diamantine",
-}
+local MAIN_MENU_VIEW = "main_menu_view"
+local BILLION = 10 ^ 9
+local MILLION = 10 ^ 6
+local THOUSAND = 10 ^ 3
+
 local currency_order = {}
-
-local currency_icon_style = {
-    size = { 24, 17 },
-    offset = { BASE_OFFSET, 86, 10 }
-}
-
-local currency_text_style = table.clone(UIFontSettings.body_small)
-currency_text_style.text_horizontal_alignment = "left"
-currency_text_style.text_vertical_alignment = "bottom"
-currency_text_style.horizontal_alignment = "left"
-currency_text_style.vertical_alignment = "center"
-currency_text_style.size = { 150, 20 }
-currency_text_style.offset = { BASE_OFFSET, 40, 10 }
-currency_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
-currency_text_style.default_color = Color.terminal_text_body_sub_header(255, true)
-currency_text_style.hover_color = Color.terminal_text_header(255, true)
-
-local contracts_text_style = table.clone(currency_text_style)
-contracts_text_style.text_horizontal_alignment = "right"
-contracts_text_style.offset = { 380, -8, 10 }
+local profile_to_widget = mod:persistent_table("profile_to_widget")
 
 local _sort_custom_order = function(a, b)
     if a.idx == b.idx then
@@ -44,7 +34,7 @@ end
 
 local _build_currency_order = function()
     local order_builder = {}
-    for default_idx, currency in pairs(DEFAULT_CURRENCY_ORDER) do
+    for default_idx, currency in pairs(mod.consts.DEFAULT_CURRENCY_ORDER) do
         table.insert(order_builder, {
             currency = currency,
             idx = mod:get("order_" .. currency),
@@ -65,12 +55,6 @@ local _ensure_order = function()
     end
 end
 
-mod.on_setting_changed = function(setting_id)
-    if setting_id:find("^order_") then
-        _build_currency_order()
-    end
-end
-
 local _get_contracts_string = function(num_completed, num_tasks, finished, bonus_rewarded)
     local s = num_completed .. "/" .. num_tasks .. ""
     if finished then
@@ -83,8 +67,43 @@ local _get_contracts_string = function(num_completed, num_tasks, finished, bonus
     return s
 end
 
+local _get_digit_count = function(num)
+    return math.floor(math.log(num, 10) + 1)
+end
+
+local _get_currency_string = function(num)
+    if mod:get("limit_digits") then
+        local suffix = ""
+        if num >= BILLION then
+            suffix = mod:localize("shortened_billion")
+            num = num / BILLION
+        elseif num >= MILLION then
+            suffix = mod:localize("shortened_million")
+            num = num / MILLION
+        elseif num >= THOUSAND then
+            suffix = mod:localize("shortened_thousand")
+            num = num / THOUSAND
+        end
+        local decimal_places = 3 - _get_digit_count(num)
+        if suffix == "" or decimal_places < 0 then
+            decimal_places = 0
+        end
+        return string.format("%." .. decimal_places .. "f%s", num, suffix)
+    end
+    return num
+end
+
+mod.on_setting_changed = function(id)
+    if string.find(id, "^order_") then
+        _build_currency_order()
+        mod.refresh_all_style()
+    elseif string.find(id, "_x$") then
+        mod.refresh_all_style()
+    end
+end
+
 local _is_currency_displayed = function(c)
-    return mod:get("show_" .. c)
+    return mod:is_enabled() and mod:get("show_" .. c)
 end
 
 local _get_style_update = function()
@@ -105,8 +124,8 @@ local _get_style_update = function()
         num_display = 1 -- prevent division by zero
     end
 
-    local adjusted_offset = BASE_OFFSET + mod:get("start_x")
-    local adjusted_width = (BASE_WIDTH + mod:get("size_x")) / num_display
+    local adjusted_offset = mod.consts.BASE_OFFSET + mod:get("start_x")
+    local adjusted_width = (mod.consts.BASE_WIDTH + mod:get("size_x")) / num_display
 
     local style_overrides = {}
     for _, currency in pairs(currency_order) do
@@ -118,81 +137,15 @@ local _get_style_update = function()
         }
         style_overrides[currency .. "_text"] = {
             visible = idx > 0,
-            offset = { adjusted_offset + offset + currency_icon_style.size[1], 40, 100 }
+            offset = { adjusted_offset + offset + mod.consts.ICON_SIZE[1], 40, 100 }
         }
     end
 
     style_overrides["contracts_text"] = {
         visible = _is_currency_displayed("contracts"),
-        offset = { contracts_text_style.offset[1] + mod:get("contracts_x"), contracts_text_style.offset[2], contracts_text_style.offset[3] }
+        offset = { mod.consts.CONTRACTS_TEXT_OFFSET[1] + mod:get("contracts_x"), mod.consts.CONTRACTS_TEXT_OFFSET[2], mod.consts.CONTRACTS_TEXT_OFFSET[3] }
     }
     return style_overrides
-end
-
-local _insert_pass_if_absent = function(dest, source_pass)
-    for _, dest_pass in pairs(dest) do
-        if source_pass == dest_pass or source_pass.style_id == dest_pass.style_id or source_pass.value_id == dest_pass.value_id then
-            return
-        end
-    end
-    table.insert(dest, source_pass)
-end
-
-local _text_color_change = function(content, style)
-    local math_max = math.max
-    local hotspot = content.hotspot
-    local default_color = hotspot.disabled and style.disabled_color or style.default_color
-    local hover_color = style.hover_color
-    local text_color = style.text_color
-    local progress = math_max(math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math_max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-    ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-end
-
-local _apply_extra_passes = function(onto)
-    _ensure_order()
-    for _, currency in pairs(currency_order) do
-        _insert_pass_if_absent(onto, {
-            value_id = currency .. "_icon",
-            style_id = currency .. "_icon",
-            pass_type = "texture",
-            value = WalletSettings[currency].icon_texture_small,
-            style = table.clone(currency_icon_style),
-        })
-
-        _insert_pass_if_absent(onto, {
-            value_id = currency .. "_text",
-            style_id = currency .. "_text",
-            pass_type = "text",
-            value = "---",
-            style = table.clone(currency_text_style),
-            change_function = _text_color_change
-        })
-    end
-
-    _insert_pass_if_absent(onto, {
-        value_id = "contracts_text",
-        style_id = "contracts_text",
-        pass_type = "text",
-        value = _get_contracts_string("-", "-"),
-        style = table.clone(contracts_text_style),
-        change_function = _text_color_change
-    })
-end
-
-mod:hook_require("scripts/ui/pass_templates/character_select_pass_templates", function(instance)
-    _apply_extra_passes(instance.character_select)
-end)
-
--- load the icons (h/t raindish)
-local _load_package = function(p)
-    if not Managers.package:is_loading(p) and not Managers.package:has_loaded(p) then
-        Managers.package:load(p, mod.name, nil, true)
-    end
-end
-
-function mod.on_all_mods_loaded()
-    _load_package(ICON_PACKAGE)
 end
 
 local _get_character_wallet = function(character_id)
@@ -212,8 +165,14 @@ local _get_character_wallet = function(character_id)
     end)
 end
 
-mod:hook_safe("MainMenuView", "_set_player_profile_information", function(self, profile, widget)
-    _ensure_order()
+mod.refresh_profile = function(profile)
+    if not profile then
+        return
+    end
+    local widget = profile_to_widget[profile]
+    if not widget then
+        return
+    end
 
     local character_id = profile.character_id
     _get_character_wallet(character_id):next(function(wallets)
@@ -222,7 +181,7 @@ mod:hook_safe("MainMenuView", "_set_player_profile_information", function(self, 
             if wallet then
                 local label = currency .. "_text"
                 if widget.content[label] then
-                    widget.content[label] = wallet.balance.amount
+                    widget.content[label] = _get_currency_string(wallet.balance.amount)
                 end
             end
         end
@@ -247,8 +206,49 @@ mod:hook_safe("MainMenuView", "_set_player_profile_information", function(self, 
     else
         widget.content[contracts_lbl] = ""
     end
+end
 
-    for style_id, style in pairs(_get_style_update()) do
-        table.merge_recursive(widget.style[style_id], style)
+mod.refresh_all_profiles = function()
+    for profile, _ in pairs(profile_to_widget) do
+        mod.refresh_profile(profile)
+    end
+end
+
+mod.refresh_all_style = function()
+    for _, widget in pairs(profile_to_widget) do
+        for style_id, style in pairs(_get_style_update()) do
+            table.merge_recursive(widget.style[style_id], style)
+        end
+    end
+end
+
+mod.refresh_all = function()
+    mod.refresh_all_style()
+    mod.refresh_all_profiles()
+end
+
+mod:hook(CLASS.MainMenuView, "_sync_character_slots", function(func, ...)
+    table.clear(profile_to_widget)
+    _build_currency_order()
+    func(...)
+    mod.refresh_all_style()
+end)
+
+mod:hook_safe(CLASS.MainMenuView, "_set_player_profile_information", function(self, profile, widget)
+    profile_to_widget[profile] = widget
+    mod.refresh_profile(profile)
+end)
+
+mod:hook_safe(CLASS.UIViewHandler, "close_view", function(self, view_name, ...)
+    if Managers.ui and Managers.ui:has_active_view(MAIN_MENU_VIEW) and view_name ~= MAIN_MENU_VIEW and view_name ~= "system_view" then
+        mod.refresh_all()
     end
 end)
+
+mod.on_disabled = function ()
+    mod.refresh_all_style()
+end
+
+mod.on_enabled = function ()
+    mod.refresh_all()
+end

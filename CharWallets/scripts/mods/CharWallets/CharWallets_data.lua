@@ -7,6 +7,11 @@ return {
 	options = {
 		widgets = {
 			{
+				setting_id    = "limit_digits",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
 				setting_id  = "options_vis",
 				type        = "group",
 				sub_widgets = {

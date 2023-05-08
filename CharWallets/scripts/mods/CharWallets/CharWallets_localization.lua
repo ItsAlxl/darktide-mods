@@ -23,7 +23,9 @@ return {
 		en = Localize("loc_currency_name_credits")
 	},
 	currency_marks = {
-		en = Localize("loc_currency_name_marks")
+		-- Trim because the en localized string has
+		-- a space at the beginning and I hate it
+		en = string.trim(Localize("loc_currency_name_marks"))
 	},
 	currency_plasteel = {
 		en = Localize("loc_currency_name_plasteel")
@@ -53,5 +55,17 @@ return {
 		en = "Contracts Offset",
 		["zh-cn"] = "每周协议偏移量",
 		ru = "Смещение контрактов",
+	},
+	limit_digits = {
+		en = "Shorten Large Numbers",
+	},
+	shortened_thousand = {
+		en = "k",
+	},
+	shortened_million = {
+		en = "M",
+	},
+	shortened_billion = {
+		en = "B",
 	},
 }
