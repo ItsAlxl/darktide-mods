@@ -2,11 +2,17 @@ return {
 	mod_name = {
 		en = "Inventory Stats",
 		ru = "Статистика в инвентаре",
+		["zh-cn"] = "装备属性状态",
 	},
 	mod_description = {
 		en = "Displays some stats in the inventory screen",
 		["zh-cn"] = "在库存界面显示一些属性状态",
 		ru = "Inventory Stats - Отображает некоторую статистику на экране инвентаря",
+	},
+	visbtn_text = {
+		en = "Stats",
+		["zh-cn"] = "属性状态",
+		ru = "Статистика",
 	},
 	force_equip = {
 		en = "Force Equip Updates",
@@ -17,6 +23,18 @@ return {
 		en = "If 'Off', after changing equipment or switching presets, you'll need to exit the inventory menu, wait a couple seconds for your changes to apply, then open the inventory menu again to see the stats change.",
 		["zh-cn"] = "如果关闭，则修改装备或切换战具套组时，你需要关闭库存界面，等待几秒装备修改生效，并再次打开库存界面才能看到属性数据变化。",
 		ru = "Если «Выключено», то после смены снаряжения или переключения пресетов вам нужно будет выйти из меню инвентаря, подождать пару секунд, пока ваши изменения вступят в силу, затем снова открыть меню инвентаря, чтобы увидеть изменения статистики.",
+	},
+	use_custom_pages = {
+		en = "Use Custom Pages",
+	},
+	use_custom_pages_description = {
+		en = "Separates the stats into pages intentionally, as defined in the mod's 'CustomPages.lua' file. By default, it groups similar stats together.",
+	},
+	page_size = {
+		en = "Page Size",
+	},
+	page_size_description = {
+		en = "Separates the stats into pages by number. Has no effect if 'Use Custom Pages' is On.",
 	},
 	g_stat_toggles = {
 		en = "Displayed Stats",
@@ -35,6 +53,18 @@ return {
 	},
 	toughness = {
 		en = Localize("loc_hud_display_name_toughness"),
+	},
+	tough_regen_delay = {
+		en = "T. Regen Delay",
+	},
+	tough_regen_still = {
+		en = "T. Regen (Still)",
+	},
+	tough_regen_moving = {
+		en = "T. Regen (Move)",
+	},
+	tough_bounty = {
+		en = "T. Regen (Kill)",
 	},
 	stamina = {
 		en = Localize("loc_hud_display_name_stamina"),

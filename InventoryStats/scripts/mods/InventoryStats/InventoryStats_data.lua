@@ -1,16 +1,20 @@
 local mod = get_mod("InventoryStats")
 mod.stat_order = {
+	"wounds",
 	"health",
 	"toughness",
-	"wounds",
+	"tough_regen_delay",
+	"tough_regen_still",
+	"tough_regen_moving",
+	"tough_bounty",
 	"crit_chance",
 	"crit_dmg",
+	"dodge_count",
+	"dodge_dist",
 	"stamina",
 	"stamina_regen",
 	"sprint_speed",
 	"sprint_time",
-	"dodge_count",
-	"dodge_dist",
 }
 
 local stat_toggles = {}
@@ -32,6 +36,17 @@ return {
 				setting_id    = "force_equip",
 				type          = "checkbox",
 				default_value = true,
+			},
+			{
+				setting_id    = "use_custom_pages",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
+				setting_id    = "page_size",
+				type          = "numeric",
+				default_value = 12,
+				range         = { 1, 12 },
 			},
 			{
 				setting_id  = "g_stat_toggles",
