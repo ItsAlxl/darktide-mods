@@ -58,6 +58,7 @@ return {
 	},
 	limit_digits = {
 		en = "Shorten Large Numbers",
+		["zh-cn"] = "缩写大数字",
 	},
 	shortened_thousand = {
 		en = "k",

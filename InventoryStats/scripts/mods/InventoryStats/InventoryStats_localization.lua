@@ -26,15 +26,19 @@ return {
 	},
 	use_custom_pages = {
 		en = "Use Custom Pages",
+		["zh-cn"] = "启用自定义分页",
 	},
 	use_custom_pages_description = {
 		en = "Separates the stats into pages intentionally, as defined in the mod's 'CustomPages.lua' file. By default, it groups similar stats together.",
+		["zh-cn"] = "分页显示属性状态，具体属性在“CustomPages.lua”文件中定义。默认分页设置会将有关联的属性分在同一页。",
 	},
 	page_size = {
 		en = "Page Size",
+		["zh-cn"] = "分页大小",
 	},
 	page_size_description = {
 		en = "Separates the stats into pages by number. Has no effect if 'Use Custom Pages' is On.",
+		["zh-cn"] = "按数量分页属性状态。启用自定义分页时无效。",
 	},
 	g_stat_toggles = {
 		en = "Displayed Stats",
@@ -56,22 +60,26 @@ return {
 	},
 	tough_regen_delay = {
 		en = "T. Regen Delay",
+		["zh-cn"] = "韧性恢复延迟",
 	},
 	tough_regen_still = {
 		en = "T. Regen (Still)",
+		["zh-cn"] = "韧性恢复（静止）",
 	},
 	tough_regen_moving = {
 		en = "T. Regen (Move)",
+		["zh-cn"] = "韧性恢复（移动）",
 	},
 	tough_bounty = {
 		en = "T. Regen (Kill)",
+		["zh-cn"] = "韧性恢复（击杀）",
 	},
 	stamina = {
 		en = Localize("loc_hud_display_name_stamina"),
 	},
 	stamina_regen = {
 		en = Localize("loc_hud_display_name_stamina") .. " Regen",
-		["zh-cn"] = Localize("loc_hud_display_name_stamina") .. "恢复",
+		["zh-cn"] = "体力恢复",
 		ru = "Реген. выносл.",
 	},
 	crit_chance = {
@@ -89,7 +97,7 @@ return {
 	},
 	sprint_time = {
 		en = Localize("loc_ingame_sprint") .. " Time",
-		["zh-cn"] = Localize("loc_ingame_sprint") .. "时间",
+		["zh-cn"] = "疾跑时间",
 		ru = "Время бега",
 	},
 	dodge_count = {
