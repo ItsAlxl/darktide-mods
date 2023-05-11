@@ -1,26 +1,19 @@
 local mod = get_mod("CharWallets")
 
-mod.consts = {
-    BASE_WIDTH = 400,
-    BASE_OFFSET = 168,
-    DEFAULT_CURRENCY_ORDER = {
-        "credits",
-        "marks",
-        "plasteel",
-        "diamantine",
-    },
-    ICON_PACKAGE = "packages/ui/views/end_player_view/end_player_view",
-    ICON_SIZE = { 24, 17 },
-    CONTRACTS_TEXT_OFFSET = { 380, -8, 10 }
-}
-
-mod:io_dofile("CharWallets/scripts/mods/CharWallets/PassTemplates")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
+local Style = mod:io_dofile("CharWallets/scripts/mods/CharWallets/PassTemplates")
 
-local MAIN_MENU_VIEW = "main_menu_view"
+local MAIN_MENU_BG_VIEW = "main_menu_background_view"
 local BILLION = 10 ^ 9
 local MILLION = 10 ^ 6
 local THOUSAND = 10 ^ 3
+local IGNORE_VIEW_UPDATES = {
+    MAIN_MENU_BG_VIEW,
+    "main_menu_view",
+    "system_view",
+    "loading_view",
+    "title_view",
+}
 
 local currency_order = {}
 local profile_to_widget = mod:persistent_table("profile_to_widget")
@@ -34,7 +27,7 @@ end
 
 local _build_currency_order = function()
     local order_builder = {}
-    for default_idx, currency in pairs(mod.consts.DEFAULT_CURRENCY_ORDER) do
+    for default_idx, currency in pairs(mod.DEFAULT_CURRENCY_ORDER) do
         table.insert(order_builder, {
             currency = currency,
             idx = mod:get("order_" .. currency),
@@ -102,52 +95,6 @@ mod.on_setting_changed = function(id)
     end
 end
 
-local _is_currency_displayed = function(c)
-    return mod:is_enabled() and mod:get("show_" .. c)
-end
-
-local _get_style_update = function()
-    local num_display = 0
-    local currency_to_idx = {}
-
-    _ensure_order()
-    for _, currency in pairs(currency_order) do
-        if _is_currency_displayed(currency) then
-            num_display = num_display + 1
-            currency_to_idx[currency] = num_display
-        else
-            currency_to_idx[currency] = -1
-        end
-    end
-
-    if num_display == 0 then
-        num_display = 1 -- prevent division by zero
-    end
-
-    local adjusted_offset = mod.consts.BASE_OFFSET + mod:get("start_x")
-    local adjusted_width = (mod.consts.BASE_WIDTH + mod:get("size_x")) / num_display
-
-    local style_overrides = {}
-    for _, currency in pairs(currency_order) do
-        local idx = currency_to_idx[currency]
-        local offset = adjusted_width * (idx - 1)
-        style_overrides[currency .. "_icon"] = {
-            visible = idx > 0,
-            offset = { adjusted_offset + offset, 86, 100 }
-        }
-        style_overrides[currency .. "_text"] = {
-            visible = idx > 0,
-            offset = { adjusted_offset + offset + mod.consts.ICON_SIZE[1], 40, 100 }
-        }
-    end
-
-    style_overrides["contracts_text"] = {
-        visible = _is_currency_displayed("contracts"),
-        offset = { mod.consts.CONTRACTS_TEXT_OFFSET[1] + mod:get("contracts_x"), mod.consts.CONTRACTS_TEXT_OFFSET[2], mod.consts.CONTRACTS_TEXT_OFFSET[3] }
-    }
-    return style_overrides
-end
-
 local _get_character_wallet = function(character_id)
     local wallets_promise = nil
     local store_service = Managers.data_service.store
@@ -165,58 +112,69 @@ local _get_character_wallet = function(character_id)
     end)
 end
 
+local _in_main_menu = function()
+    return Managers.ui and Managers.ui:has_active_view(MAIN_MENU_BG_VIEW)
+end
+
+local _get_character_contracts = function(character_id)
+    return Managers.data_service.contracts._backend_interface.contracts:get_current_contract(character_id)
+end
+
 mod.refresh_profile = function(profile)
-    if not profile then
+    if not profile or not _in_main_menu() then
         return
     end
     local widget = profile_to_widget[profile]
-    if not widget then
+    if not widget or not widget.content then
         return
     end
 
     local character_id = profile.character_id
     _get_character_wallet(character_id):next(function(wallets)
         for _, currency in pairs(currency_order) do
-            local wallet = wallets:by_type(currency)
-            if wallet then
-                local label = currency .. "_text"
-                if widget.content[label] then
-                    widget.content[label] = _get_currency_string(wallet.balance.amount)
-                end
-            end
+            widget.content[currency .. "_text"] = _get_currency_string(wallets:by_type(currency).balance.amount)
         end
     end)
 
     local contracts_lbl = "contracts_text"
     if profile.current_level >= PlayerProgressionUnlocks.contracts then
-        Managers.backend.interfaces.contracts:get_current_contract(character_id):next(function(contract_data)
-            local contract_tasks = contract_data.tasks
-            local num_tasks_completed = 0
-            local num_tasks = #contract_tasks
-            for _, task in pairs(contract_tasks) do
-                if task.fulfilled then
-                    num_tasks_completed = num_tasks_completed + 1
+        local contracts = _get_character_contracts(character_id)
+        if contracts then
+            _get_character_contracts(character_id):next(function(contract_data)
+                local contract_tasks = contract_data.tasks
+                local num_tasks_completed = 0
+                local num_tasks = #contract_tasks
+                for _, task in pairs(contract_tasks) do
+                    if task.fulfilled then
+                        num_tasks_completed = num_tasks_completed + 1
+                    end
                 end
-            end
-
-            if widget.content[contracts_lbl] then
                 widget.content[contracts_lbl] = _get_contracts_string(num_tasks_completed, num_tasks, contract_data.fulfilled, contract_data.rewarded)
-            end
-        end)
+            end)
+        else
+            widget.content[contracts_lbl] = "---"
+        end
     else
-        widget.content[contracts_lbl] = ""
+        widget.content[contracts_lbl] = "---"
     end
 end
 
 mod.refresh_all_profiles = function()
+    if not _in_main_menu() then
+        return
+    end
     for profile, _ in pairs(profile_to_widget) do
         mod.refresh_profile(profile)
     end
 end
 
 mod.refresh_all_style = function()
+    if not _in_main_menu() then
+        return
+    end
+    _ensure_order()
     for _, widget in pairs(profile_to_widget) do
-        for style_id, style in pairs(_get_style_update()) do
+        for style_id, style in pairs(Style.get_style_update(currency_order)) do
             table.merge_recursive(widget.style[style_id], style)
         end
     end
@@ -240,15 +198,15 @@ mod:hook_safe(CLASS.MainMenuView, "_set_player_profile_information", function(se
 end)
 
 mod:hook_safe(CLASS.UIViewHandler, "close_view", function(self, view_name, ...)
-    if Managers.ui and Managers.ui:has_active_view(MAIN_MENU_VIEW) and view_name ~= MAIN_MENU_VIEW and view_name ~= "system_view" then
+    if _in_main_menu() and not table.contains(IGNORE_VIEW_UPDATES, view_name) then
         mod.refresh_all()
     end
 end)
 
-mod.on_disabled = function ()
+mod.on_disabled = function()
     mod.refresh_all_style()
 end
 
-mod.on_enabled = function ()
+mod.on_enabled = function()
     mod.refresh_all()
 end

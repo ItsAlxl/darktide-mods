@@ -1,5 +1,40 @@
 local mod = get_mod("CharWallets")
 
+mod.DEFAULT_CURRENCY_ORDER = {
+	"credits",
+	"marks",
+	"plasteel",
+	"diamantine",
+}
+
+local show_opts = {}
+local order_opts = {}
+
+local _add_show_opt = function(currency_name)
+	show_opts[#show_opts + 1] = {
+		setting_id    = "show_" .. currency_name,
+		title         = "currency_" .. currency_name,
+		type          = "checkbox",
+		default_value = true,
+	}
+end
+
+local _add_order_opt = function(currency_name, def_idx)
+	order_opts[#order_opts + 1] = {
+		setting_id    = "order_" .. currency_name,
+		title         = "currency_" .. currency_name,
+		type          = "numeric",
+		default_value = def_idx,
+		range         = { 1, 4 },
+	}
+end
+
+for idx, currency in ipairs(mod.DEFAULT_CURRENCY_ORDER) do
+	_add_show_opt(currency)
+	_add_order_opt(currency, idx)
+end
+_add_show_opt("contracts")
+
 return {
 	name = mod:localize("mod_name"),
 	description = mod:localize("mod_description"),
@@ -14,72 +49,12 @@ return {
 			{
 				setting_id  = "options_vis",
 				type        = "group",
-				sub_widgets = {
-					{
-						setting_id    = "show_credits",
-						title         = "currency_credits",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "show_marks",
-						title         = "currency_marks",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "show_plasteel",
-						title         = "currency_plasteel",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "show_diamantine",
-						title         = "currency_diamantine",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "show_contracts",
-						title         = "currency_contracts",
-						type          = "checkbox",
-						default_value = true,
-					},
-				}
+				sub_widgets = show_opts
 			},
 			{
 				setting_id  = "options_order",
 				type        = "group",
-				sub_widgets = {
-					{
-						setting_id    = "order_credits",
-						title          = "currency_credits",
-						type          = "numeric",
-						default_value = 1,
-						range         = { 1, 4 },
-					},
-					{
-						setting_id    = "order_marks",
-						title          = "currency_marks",
-						type          = "numeric",
-						default_value = 2,
-						range         = { 1, 4 },
-					},
-					{
-						setting_id    = "order_plasteel",
-						title          = "currency_plasteel",
-						type          = "numeric",
-						default_value = 3,
-						range         = { 1, 4 },
-					},
-					{
-						setting_id    = "order_diamantine",
-						title          = "currency_diamantine",
-						type          = "numeric",
-						default_value = 4,
-						range         = { 1, 4 },
-					},
-				}
+				sub_widgets = order_opts
 			},
 			{
 				setting_id  = "options_spacing",
