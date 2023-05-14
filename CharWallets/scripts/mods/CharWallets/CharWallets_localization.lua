@@ -7,7 +7,7 @@ return {
 	mod_description = {
 		en = "Display your characters' wallets on the character selection screen.",
 		["zh-cn"] = "在特工选择界面显示角色的材料数量。",
-		ru = "Отображение вашей валюты на экране выбора персонажей.",
+		ru = "Char Wallets - Отображение вашей валюты на экране выбора персонажей.",
 	},
 	options_vis = {
 		en = "Wallet Contents",
@@ -59,14 +59,18 @@ return {
 	limit_digits = {
 		en = "Shorten Large Numbers",
 		["zh-cn"] = "缩写大数字",
+		ru = "Сокращать большие числа",
 	},
 	shortened_thousand = {
 		en = "k",
+		ru = "т",
 	},
 	shortened_million = {
 		en = "M",
+		ru = "м",
 	},
 	shortened_billion = {
 		en = "B",
+		ru = "мд",
 	},
 }
