@@ -49,4 +49,7 @@ return {
 		["zh-cn"] = "聊天和通知",
 		ru = "Чат + Уведомление",
 	},
+	msg_error = {
+		en = "Unable to fetch weekly contracts",
+	},
 }
