@@ -51,5 +51,6 @@ return {
 	},
 	msg_error = {
 		en = "Unable to fetch weekly contracts",
+		ru = "Не удалось получить еженедельные контракты",
 	},
 }
