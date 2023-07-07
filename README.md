@@ -100,6 +100,11 @@ Allows you to reorder your characters on the character select screen.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/75).
 
+## Shirtless
+Takes your shirt off.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/193).
+
 ## SortBrunt
 Sorts Brunt's Armory to keep similar items together.
 
