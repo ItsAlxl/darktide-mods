@@ -88,10 +88,12 @@ local _apply_weapon_template = function(template)
 end
 
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
-    if slot_name == "slot_secondary" then
-        _apply_weapon_template(self._weapons[slot_name].weapon_template)
-    else
-        _disable_autofire()
+    if self._player == Managers.player:local_player(1) then
+        if slot_name == "slot_secondary" then
+            _apply_weapon_template(self._weapons[slot_name].weapon_template)
+        else
+            _disable_autofire()
+        end
     end
 end)
 
@@ -106,8 +108,11 @@ mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, g
 end)
 
 mod:hook_safe(CLASS.ActionHandler, "start_action", function(self, id, ...)
-    if id == "weapon_action" then
-        time_scale = self._registered_components[id].component.time_scale
+    local plr = Managers.player:local_player(1)
+    if plr and plr.player_unit == self._unit then
+        if id == "weapon_action" then
+            time_scale = self._registered_components[id].component.time_scale
+        end
     end
 end)
 
