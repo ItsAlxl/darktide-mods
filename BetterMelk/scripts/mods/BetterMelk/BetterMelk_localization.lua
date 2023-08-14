@@ -11,9 +11,11 @@ return {
 	},
 	options_charscreen = {
 		en = "Character Screen Widget",
+		["zh-cn"] = "角色界面显示",
 	},
 	show_contracts = {
 		en = "Show Contracts in Character Select",
+		["zh-cn"] = "在角色选择界面显示协议",
 	},
 	contracts_x = {
 		en = "Contracts Offset",
@@ -67,5 +69,7 @@ return {
 	},
 	msg_error = {
 		en = "Unable to fetch weekly contracts",
+		["zh-cn"] = "无法拉取每周协议",
+		ru = "Не удалось получить еженедельные контракты",
 	},
 }
