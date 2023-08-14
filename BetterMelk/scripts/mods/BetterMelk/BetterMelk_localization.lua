@@ -9,6 +9,22 @@ return {
 		["zh-cn"] = "自动接受新协议并收集每周协议额外奖励。",
 		ru = "Автоматически принимайте новые контракты и получайте еженедельный бонус за их выполнение.",
 	},
+	options_charscreen = {
+		en = "Character Screen Widget",
+	},
+	show_contracts = {
+		en = "Show Contracts in Character Select",
+	},
+	contracts_x = {
+		en = "Contracts Offset",
+		["zh-cn"] = "每周协议偏移量",
+		ru = "Смещение контрактов",
+	},
+	options_notif = {
+		en = "Notification",
+		["zh-cn"] = "通知",
+		ru = "Уведомление",
+	},
 	notify_new = {
 		en = "New Contracts Message",
 		["zh-cn"] = "新协议消息",
@@ -51,7 +67,5 @@ return {
 	},
 	msg_error = {
 		en = "Unable to fetch weekly contracts",
-		["zh-cn"] = "无法拉取每周协议",
-		ru = "Не удалось получить еженедельные контракты",
 	},
 }
