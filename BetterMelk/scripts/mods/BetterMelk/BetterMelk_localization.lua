@@ -7,15 +7,17 @@ return {
 	mod_description = {
 		en = "Automatically accept new contracts and collect the weekly completion bonus.",
 		["zh-cn"] = "自动接受新协议并收集每周协议额外奖励。",
-		ru = "Автоматически принимайте новые контракты и получайте еженедельный бонус за их выполнение.",
+		ru = "Better Melk - Автоматически принимайте новые контракты и получайте еженедельный бонус за их выполнение.",
 	},
 	options_charscreen = {
 		en = "Character Screen Widget",
 		["zh-cn"] = "角色界面显示",
+		ru = "Виджет на экране выбора персонажей",
 	},
 	show_contracts = {
 		en = "Show Contracts in Character Select",
 		["zh-cn"] = "在角色选择界面显示协议",
+		ru = "Показывать контракты на экране выбора персонажей",
 	},
 	contracts_x = {
 		en = "Contracts Offset",
