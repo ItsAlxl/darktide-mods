@@ -135,8 +135,6 @@ mod.set_equipped_wep = function(w)
     mod.update_inventory_stats()
 end
 
-mod.DBOG_tweak = _create_tweak_exhaustive
-
 local _replace_template_getter = function(template_key, func, ...)
     if _override_current_weapon_logic() and mod.equip_swap.override_tweak[template_key] then
         return mod.equip_swap.override_tweak[template_key]

@@ -248,19 +248,19 @@ mod:hook_safe(CLASS.PlayerUnitBuffExtension, "fixed_update", function(...)
     _guarantee_stat_widget(inv_view, "tough_regen_moving")
     _guarantee_stat_widget(inv_view, "tough_bounty")
     if unit_data_ext then
-        local spec = unit_data_ext:specialization()
-        local stam_template = spec.stamina
-        local tough_template = spec.toughness
+        local archetype = unit_data_ext:archetype()
+        local stam_template = archetype.stamina
+        local tough_template = archetype.toughness
         local max_stamina = Calculate.max_stamina(plr_unit, stam_template)
 
         stats_widgets.stamina.content.data = max_stamina
         stats_widgets.stamina_regen.content.data = string.format("%.2f", Calculate.stamina_regen(stam_template, stat_buffs))
 
-        stats_widgets.sprint_speed.content.data = string.format("%.2f", Calculate.sprint_speed(plr_unit, spec.sprint))
+        stats_widgets.sprint_speed.content.data = string.format("%.2f", Calculate.sprint_speed(plr_unit, archetype.sprint))
         stats_widgets.sprint_time.content.data = string.format("%.2f", Calculate.sprint_time(plr_unit, stat_buffs, max_stamina))
 
         stats_widgets.dodge_count.content.data = Calculate.dodge_count(plr_unit, stat_buffs)
-        stats_widgets.dodge_dist.content.data = string.format("%.2f", Calculate.dodge_dist(plr_unit, spec.dodge))
+        stats_widgets.dodge_dist.content.data = string.format("%.2f", Calculate.dodge_dist(plr_unit, archetype.dodge))
 
         stats_widgets.tough_regen_delay.content.data = string.format("%.2f", Calculate.tough_regen_delay(plr_unit, stat_buffs, tough_template))
         stats_widgets.tough_regen_still.content.data = string.format("%.2f", Calculate.tough_regen(plr_unit, stat_buffs, tough_template, true))

@@ -1,4 +1,3 @@
-local CriticalStrike = require("scripts/utilities/attack/critical_strike")
 local Stamina = require("scripts/utilities/attack/stamina")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 
@@ -20,7 +19,25 @@ end
 
 return {
     crit_chance = function(plr, plr_unit, wep_template)
-        return CriticalStrike.chance(plr, ScriptUnit.has_extension(plr_unit, "weapon_system"):weapon_handling_template() or EMPTY_TABLE, _is_wep_ranged(wep_template), _is_wep_melee(wep_template))
+        -- taken from scripts/utilities/attack/critical_strike
+        local buff_extension = ScriptUnit.extension(plr_unit, "buff_system")
+        local buffs = buff_extension:stat_buffs()
+        local additional_chance = buffs.critical_strike_chance or 0
+
+        if _is_wep_melee(wep_template) then
+            additional_chance = additional_chance + buffs.melee_critical_strike_chance
+        elseif _is_wep_ranged(wep_template) then
+            additional_chance = additional_chance + buffs.ranged_critical_strike_chance
+        end
+
+        local weapon_handling_template = ScriptUnit.has_extension(plr_unit, "weapon_system"):weapon_handling_template() or EMPTY_TABLE
+        local critical_strike = weapon_handling_template.critical_strike
+        if critical_strike and critical_strike.chance_modifier then
+            additional_chance = additional_chance + critical_strike.chance_modifier
+        end
+
+        return math.clamp(plr:profile().archetype.base_critical_strike_chance + additional_chance, 0, 1)
+    
     end,
 
     crit_dmg = function(stat_buffs, wep_template)
