@@ -7,6 +7,11 @@ return {
 	options = {
 		widgets = {
 			{
+				setting_id    = "hud_element",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
 				setting_id      = "held_keybind",
 				type            = "keybind",
 				default_value   = {},
@@ -26,11 +31,6 @@ return {
 			},
 			{
 				setting_id    = "as_modifier",
-				type          = "checkbox",
-				default_value = false,
-			},
-			{
-				setting_id    = "wield_default",
 				type          = "checkbox",
 				default_value = false,
 			},

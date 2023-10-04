@@ -17,4 +17,7 @@ return {
 	shoot_for_me = {
 		en = "Constantly shoot when on Automatic Firemode",
 	},
+	hud_element = {
+		en = "HUD Indicator",
+	},
 }

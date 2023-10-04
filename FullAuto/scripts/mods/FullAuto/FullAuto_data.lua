@@ -7,6 +7,11 @@ return {
 	options = {
 		widgets = {
 			{
+				setting_id    = "hud_element",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
 				setting_id    = "default_autofire",
 				type          = "checkbox",
 				default_value = true,

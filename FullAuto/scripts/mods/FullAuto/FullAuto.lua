@@ -28,9 +28,44 @@ local next_autofire = -1.0
 local time_scale = 1.0
 local is_sprinting = false
 
+local firemode_hud_element = {
+    package = "packages/ui/views/inventory_background_view/inventory_background_view",
+    use_retained_mode = true,
+    use_hud_scale = true,
+    class_name = "HudElementFullAutoFireMode",
+    filename = "FullAuto/scripts/mods/FullAuto/HudElementFullAutoFireMode",
+    visibility_groups = {
+        "alive",
+        "communication_wheel",
+        "tactical_overlay"
+    }
+}
+mod:add_require_path(firemode_hud_element.filename)
+
+local _add_hud_element = function(element_pool)
+    local found_key, _ = table.find_by_key(element_pool, "class_name", firemode_hud_element.class_name)
+    if found_key then
+        element_pool[found_key] = firemode_hud_element
+    else
+        table.insert(element_pool, firemode_hud_element)
+    end
+end
+mod:hook_require("scripts/ui/hud/hud_elements_player_onboarding", _add_hud_element)
+mod:hook_require("scripts/ui/hud/hud_elements_player", _add_hud_element)
+
+local _get_hud_element = function ()
+    local hud = Managers.ui:get_hud()
+    return hud and hud:element("HudElementFullAutoFireMode")
+end
+
 mod.on_setting_changed = function(id)
-    if id == "shoot_for_me" then
-        shoot_for_me = mod:get("shoot_for_me")
+    if id == "hud_element" then
+        local firemode_element = _get_hud_element()
+        if firemode_element then
+            firemode_element:update_vis(mod:get(id))
+        end
+    elseif id == "shoot_for_me" then
+        shoot_for_me = mod:get(id)
     end
 end
 
@@ -121,13 +156,26 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
     end
 end)
 
+local _set_firemode_selection = function(asf)
+    select_autofire = asf
+
+    local firemode_element = _get_hud_element()
+    if firemode_element then
+        firemode_element:update_firemode(select_autofire)
+    end
+end
+
+mod.is_in_autofire_mode = function()
+    return select_autofire
+end
+
 mod._toggle_select = function(held)
-    select_autofire = not select_autofire
+    _set_firemode_selection(not select_autofire)
 end
 
 mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, game_mode_name, ...)
     if game_mode_name ~= "hub" then
-        select_autofire = mod:get("default_autofire")
+        _set_firemode_selection(mod:get("default_autofire"))
     end
 end)
 
@@ -148,8 +196,8 @@ mod:hook_require("scripts/extension_systems/character_state_machine/character_st
     end)
 end)
 
-local _input_action_hook = function(func, self, action_name, ...)
-    local val = func(self, action_name, ...)
+local _input_action_hook = function(func, self, action_name)
+    local val = func(self, action_name)
     if track_autofire or (track_natural and shoot_for_me) then
         local is_lmb_press = action_name == "action_one_pressed"
         if val then

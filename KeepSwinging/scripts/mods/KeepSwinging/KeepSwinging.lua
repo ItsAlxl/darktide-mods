@@ -21,21 +21,20 @@ for act, _ in pairs(disable_actions) do
     }
 end
 
-local allow_autoswing = false
+local allow_swinging = false
 local is_swinging = false
 
 local held_interrupted = false
 local holding_action_one = false
 
 local as_modifier = mod:get("as_modifier")
-local wield_default = mod:get("wield_default")
 local persist_after_disable = mod:get("persist_after_disable")
 
 local swing_delay = 1
 local release_delay = 1
 local request_repress = false
 
-local function _is_interrupted()
+local _is_interrupted = function()
     for _, t in pairs(disable_actions) do
         if t.active and t.enabled then
             return true
@@ -44,11 +43,44 @@ local function _is_interrupted()
     return false
 end
 
+local mode_hud_element = {
+    package = "packages/ui/views/inventory_background_view/inventory_background_view",
+    use_retained_mode = true,
+    use_hud_scale = true,
+    class_name = "HudElementKeepSwingingMode",
+    filename = "KeepSwinging/scripts/mods/KeepSwinging/HudElementKeepSwingingMode",
+    visibility_groups = {
+        "alive",
+        "communication_wheel",
+        "tactical_overlay"
+    }
+}
+mod:add_require_path(mode_hud_element.filename)
+
+local _add_hud_element = function(element_pool)
+    local found_key, _ = table.find_by_key(element_pool, "class_name", mode_hud_element.class_name)
+    if found_key then
+        element_pool[found_key] = mode_hud_element
+    else
+        table.insert(element_pool, mode_hud_element)
+    end
+end
+mod:hook_require("scripts/ui/hud/hud_elements_player_onboarding", _add_hud_element)
+mod:hook_require("scripts/ui/hud/hud_elements_player", _add_hud_element)
+
+local _get_hud_element = function ()
+    local hud = Managers.ui:get_hud()
+    return hud and hud:element("HudElementKeepSwingingMode")
+end
+
 mod.on_setting_changed = function(id)
-    if id == "as_modifier" then
+    if id == "hud_element" then
+        local mode_element = _get_hud_element()
+        if mode_element then
+            mode_element:update_vis(mod:get(id))
+        end
+    elseif id == "as_modifier" then
         as_modifier = mod:get(id)
-    elseif id == "wield_default" then
-        wield_default = mod:get(id)
     elseif id == "persist_after_disable" then
         persist_after_disable = mod:get(id)
     elseif id == "disable_action_one_hold" then
@@ -62,24 +94,40 @@ mod.on_setting_changed = function(id)
     end
 end
 
-local function _allow_autoswing(a)
-    allow_autoswing = a
-    is_swinging = a and wield_default
-end
-
-local function _start_attack_request()
+local _start_attack_request = function()
     if as_modifier or not holding_action_one then
         attack_action_requests.action_one_pressed = true
     end
     attack_action_requests.action_one_hold = true
 end
 
-local function _finish_attack_request()
+local _finish_attack_request = function()
     attack_action_requests.action_one_release = true
 end
 
-mod:hook_safe("PlayerUnitWeaponExtension", "on_slot_wielded", function(self, slot_name, ...)
-    _allow_autoswing(slot_name == "slot_primary")
+local _set_autoswing = function(auto_swinging)
+    is_swinging = auto_swinging
+    if auto_swinging then
+        swing_delay = 1
+    else
+        request_repress = as_modifier and holding_action_one
+        for act, _ in pairs(disable_actions) do
+            disable_actions[act].active = false
+        end
+    end
+
+    local mode_element = _get_hud_element()
+    if mode_element then
+        mode_element:update_mode(is_swinging)
+    end
+end
+
+mod.is_in_auto_mode = function()
+    return is_swinging
+end
+
+mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
+    allow_swinging = slot_name == "slot_primary"
 end)
 
 mod._toggle_swinging = function(held)
@@ -88,20 +136,10 @@ mod._toggle_swinging = function(held)
         return
     end
 
-    is_swinging = not is_swinging
-    if allow_autoswing then
-        if is_swinging then
-            swing_delay = 1
-        else
-            request_repress = as_modifier and holding_action_one
-            for act, _ in pairs(disable_actions) do
-                disable_actions[act].active = false
-            end
-        end
-    end
+    _set_autoswing(not is_swinging)
 end
 
-local function _consume_action_request(act)
+local _consume_action_request = function(act)
     if attack_action_requests[act] then
         attack_action_requests[act] = false
         return true
@@ -112,7 +150,7 @@ end
 local _input_action_hook = function(func, self, action_name)
     local val = func(self, action_name)
 
-    if allow_autoswing and is_swinging then
+    if allow_swinging and is_swinging then
         if disable_actions[action_name] and disable_actions[action_name].enabled and (not as_modifier or action_name ~= "action_one_hold") then
             disable_actions[action_name].active = val
         end

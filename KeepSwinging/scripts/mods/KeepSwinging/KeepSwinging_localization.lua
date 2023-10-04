@@ -19,14 +19,6 @@ return {
 		en = "If ON, Auto-Swing will modify your normal attack button to spam light attacks instead of performing heavy attacks. If OFF, Auto-Swing will perform light attacks for you without having to press the attack button.",
 		["zh-cn"] = "启用时，你的默认攻击键将重复轻攻击而不再重攻击。禁用时，无需按下攻击键，就会执行自动轻攻击。",
 	},
-	wield_default = {
-		en = "Wield Enables Auto-Swing",
-		["zh-cn"] = "手持启用自动攻击",
-	},
-	wield_default_description = {
-		en = "If ON, Auto-Swing will be enabled when you switch to a melee weapon.",
-		["zh-cn"] = "启用时，切换到近战武器就会开始自动攻击。",
-	},
 	group_disable_acts = {
 		en = "Manual Actions Interrupt Auto-Swing",
 		["zh-cn"] = "手动操作打断自动攻击",
@@ -54,5 +46,8 @@ return {
 	disable_weapon_extra_hold = {
 		en = "Weapon Extra",
 		["zh-cn"] = "武器特殊",
+	},
+	hud_element = {
+		en = "HUD Indicator",
 	},
 }
