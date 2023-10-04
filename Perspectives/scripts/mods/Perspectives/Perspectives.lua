@@ -315,6 +315,10 @@ local NODE_OBJECT_NAMES = {
     consumed = "j_hips"
 }
 mod:hook(CLASS.PlayerUnitCameraExtension, "_evaluate_camera_tree", function(func, self)
+    if self._unit ~= mod.get_player_unit() then
+        func(self)
+        return
+    end
     -- modified from scripts/extension_systems/camera/player_unit_camera_extension
     local wants_first_person_camera = self._first_person_extension:wants_first_person_camera()
     local character_state_component = self._character_state_component
