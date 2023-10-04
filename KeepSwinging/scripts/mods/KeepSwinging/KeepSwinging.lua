@@ -109,8 +109,8 @@ local function _consume_action_request(act)
     return false
 end
 
-local _input_action_hook = function(func, self, action_name, ...)
-    local val = func(self, action_name, ...)
+local _input_action_hook = function(func, self, action_name)
+    local val = func(self, action_name)
 
     if allow_autoswing and is_swinging then
         if disable_actions[action_name] and disable_actions[action_name].enabled and (not as_modifier or action_name ~= "action_one_hold") then

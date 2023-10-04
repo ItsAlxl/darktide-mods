@@ -114,8 +114,8 @@ mod:hook_safe(CLASS.CameraHandler, "_switch_follow_target", function(self, new_u
     end
 end)
 
-local _input_action_hook = function(func, self, action_name, ...)
-    local val = func(self, action_name, ...)
+local _input_action_hook = function(func, self, action_name)
+    local val = func(self, action_name)
     if mod.is_requesting_freelook() and INPUT_FILTER[action_name] then
         if action_name == "look_raw" then
             val.x = val.x * sensitivity_mouse

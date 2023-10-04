@@ -261,8 +261,8 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
     holding_secondary = slot_name == "slot_secondary"
 end)
 
-local _input_action_hook = function(func, self, action_name, ...)
-    local val = func(self, action_name, ...)
+local _input_action_hook = function(func, self, action_name)
+    local val = func(self, action_name)
     if action_name == "action_two_hold" then
         if holding_primary then
             _autoswitch_from_event("act2", "act2_primary", val)

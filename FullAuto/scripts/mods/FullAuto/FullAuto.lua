@@ -124,8 +124,8 @@ mod:hook_require("scripts/extension_systems/character_state_machine/character_st
     end)
 end)
 
-local _input_action_hook = function(func, self, action_name, ...)
-    local val = func(self, action_name, ...)
+local _input_action_hook = function(func, self, action_name)
+    local val = func(self, action_name)
     if track_autofire then
         if val then
             if action_name == "action_one_pressed" then
