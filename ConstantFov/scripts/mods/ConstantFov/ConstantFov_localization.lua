@@ -29,10 +29,8 @@ return {
 		["zh-cn"] = "疾跑",
 		ru = "Спринт",
 	},
-	allow_vetult = {
-		en = "Veteran Volley Fire",
-		["zh-cn"] = "老兵齐射",
-		ru = "Залповый огонь Ветерана",
+	allow_buffs = {
+		en = "Buffs",
 	},
 	group_tweaks = {
 		en = "FOV Change Tweaks",

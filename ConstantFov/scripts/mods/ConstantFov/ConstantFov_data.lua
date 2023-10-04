@@ -26,7 +26,7 @@ return {
 						default_value = false,
 					},
 					{
-						setting_id    = "allow_vetult",
+						setting_id    = "allow_buffs",
 						type          = "checkbox",
 						default_value = false,
 					},

@@ -1,21 +1,12 @@
 local mod = get_mod("ConstantFov")
-
 local DEFAULT_BASE_MULT = 1.1344640137963142
-local VeteranAbilities = require("scripts/settings/ability/player_abilities/veteran_abilities")
-
-local vet_ult_buffs = {}
-for _, ab in pairs(VeteranAbilities) do
-    if ab.ability_template_tweak_data and ab.ability_template_tweak_data.buff_to_add and ab.ability_type and ab.ability_type == "combat_ability" then
-        table.insert(vet_ult_buffs, ab.ability_template_tweak_data.buff_to_add)
-    end
-end
 
 local fov_data = {
     base = mod:get("apply_baseline") and DEFAULT_BASE_MULT or 1.0,
     change_multiplier = mod:get("change_multiplier"),
     limit_lower = mod:get("limit_lower"),
     limit_upper = mod:get("limit_upper"),
-    allow_vetult = mod:get("allow_vetult"),
+    allow_buffs = mod:get("allow_buffs"),
 }
 
 local allow_nodes = {
@@ -55,11 +46,8 @@ end)
 
 mod:hook(CLASS.Buff, "update_stat_buffs", function(func, self, current_stat_buffs, ...)
     func(self, current_stat_buffs, ...)
-    if not fov_data.allow_vetult then
-        local fov_multiplier = current_stat_buffs.fov_multiplier
-        if fov_multiplier and table.contains(vet_ult_buffs, self:template_name()) then
-            current_stat_buffs.fov_multiplier = 1
-        end
+    if not fov_data.allow_buffs and current_stat_buffs.fov_multiplier then
+        current_stat_buffs.fov_multiplier = 1
     end
 end)
 
