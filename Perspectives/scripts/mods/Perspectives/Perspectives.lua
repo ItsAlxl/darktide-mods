@@ -261,8 +261,8 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
     holding_secondary = slot_name == "slot_secondary"
 end)
 
-mod:hook(CLASS.InputService, "get", function(func, self, action_name)
-    local val = func(self, action_name)
+local _input_action_hook = function(func, self, action_name, ...)
+    local val = func(self, action_name, ...)
     if action_name == "action_two_hold" then
         if holding_primary then
             _autoswitch_from_event("act2", "act2_primary", val)
@@ -271,7 +271,9 @@ mod:hook(CLASS.InputService, "get", function(func, self, action_name)
         end
     end
     return val
-end)
+end
+mod:hook(CLASS.InputService, "_get", _input_action_hook)
+mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
 mod:hook(CLASS.MissionManager, "force_third_person_mode", function(func, self)
     local mode = mod:get("default_perspective_mode")

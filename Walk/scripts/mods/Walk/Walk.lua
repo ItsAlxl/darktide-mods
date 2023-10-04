@@ -35,7 +35,7 @@ local _is_move_action = function(act)
         or act == "move_backward"
 end
 
-mod:hook(CLASS.InputService, "get", function(func, self, action_name)
+local _input_action_hook = function(func, self, action_name)
     local val = func(self, action_name)
     if mod.is_walking then
         if _is_move_action(action_name) then
@@ -47,7 +47,9 @@ mod:hook(CLASS.InputService, "get", function(func, self, action_name)
         end
     end
     return val
-end)
+end
+mod:hook(CLASS.InputService, "_get", _input_action_hook)
+mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
 mod:hook_require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint", function(instance)
     mod:hook(instance, "sprint_input", function(func, input_source, is_sprinting, sprint_requires_press_to_interrupt)

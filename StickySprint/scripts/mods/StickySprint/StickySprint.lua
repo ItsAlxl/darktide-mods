@@ -20,8 +20,8 @@ mod:hook_require("scripts/extension_systems/character_state_machine/character_st
     end)
 end)
 
-mod:hook("InputService", "get", function(func, self, action_name)
-    local val = func(self, action_name)
+local _input_action_hook = function(func, self, action_name, ...)
+    local val = func(self, action_name, ...)
     if action_name == "sprint" then
         if ignore_sprint_action then
             return false
@@ -31,4 +31,6 @@ mod:hook("InputService", "get", function(func, self, action_name)
         end
     end
     return val
-end)
+end
+mod:hook(CLASS.InputService, "_get", _input_action_hook)
+mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)

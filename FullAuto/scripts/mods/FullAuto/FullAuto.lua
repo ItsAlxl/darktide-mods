@@ -124,8 +124,8 @@ mod:hook_require("scripts/extension_systems/character_state_machine/character_st
     end)
 end)
 
-mod:hook(CLASS.InputService, "get", function(func, self, action_name)
-    local val = func(self, action_name)
+local _input_action_hook = function(func, self, action_name, ...)
+    local val = func(self, action_name, ...)
     if track_autofire then
         if val then
             if action_name == "action_one_pressed" then
@@ -155,4 +155,6 @@ mod:hook(CLASS.InputService, "get", function(func, self, action_name)
     end
 
     return val
-end)
+end
+mod:hook(CLASS.InputService, "_get", _input_action_hook)
+mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)

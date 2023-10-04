@@ -32,7 +32,7 @@ local _does_action_cancel = function(action_name)
     return false
 end
 
-mod:hook(CLASS.InputService, "get", function(func, self, action_name)
+local _input_action_hook = function(func, self, action_name)
     local val = func(self, action_name)
     if action_name == requested_ephemeral then
         requested_ephemeral = nil
@@ -47,7 +47,9 @@ mod:hook(CLASS.InputService, "get", function(func, self, action_name)
         end
     end
     return val
-end)
+end
+mod:hook(CLASS.InputService, "_get", _input_action_hook)
+mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
 mod:hook_safe(CLASS.InteractorExtension, "fixed_update", function(self, ...)
     local is_interacting = self:is_interacting()

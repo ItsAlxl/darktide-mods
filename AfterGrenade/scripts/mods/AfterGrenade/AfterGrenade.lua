@@ -25,7 +25,7 @@ local _update_request_type = function()
     end
 end
 
-mod:hook("InputService", "get", function(func, self, action_name)
+local _input_action_hook = function(func, self, action_name)
     local val = func(self, action_name)
 
     if action_name == request then
@@ -34,7 +34,9 @@ mod:hook("InputService", "get", function(func, self, action_name)
     end
 
     return val
-end)
+end
+mod:hook(CLASS.InputService, "_get", _input_action_hook)
+mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
 mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects, action_name, ...)
     if after_request_type then

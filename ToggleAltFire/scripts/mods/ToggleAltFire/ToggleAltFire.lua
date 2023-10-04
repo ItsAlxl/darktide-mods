@@ -97,7 +97,7 @@ mod:hook_safe("PlayerUnitWeaponExtension", "on_slot_wielded", function(self, slo
     _set_toggleable(slot_name == "slot_secondary" and _is_toggleable_weapon(self._weapons[slot_name].weapon_template))
 end)
 
-mod:hook("InputService", "get", function(func, self, action_name)
+local _input_action_hook = function(func, self, action_name)
     local val = func(self, action_name)
     if perform_toggle then
         if action_name == "action_two_hold" then
@@ -115,7 +115,9 @@ mod:hook("InputService", "get", function(func, self, action_name)
         end
     end
     return val
-end)
+end
+mod:hook(CLASS.InputService, "_get", _input_action_hook)
+mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
 mod:hook_safe("CharacterStateMachine", "_change_state", function(self, unit, dt, t, next_state, ...)
     if perform_toggle then

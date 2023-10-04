@@ -114,8 +114,8 @@ mod:hook_safe(CLASS.CameraHandler, "_switch_follow_target", function(self, new_u
     end
 end)
 
-mod:hook(CLASS.InputService, "get", function(func, self, action_name)
-    local val = func(self, action_name)
+local _input_action_hook = function(func, self, action_name, ...)
+    local val = func(self, action_name, ...)
     if mod.is_requesting_freelook() and INPUT_FILTER[action_name] then
         if action_name == "look_raw" then
             val.x = val.x * sensitivity_mouse
@@ -129,7 +129,9 @@ mod:hook(CLASS.InputService, "get", function(func, self, action_name)
         return Vector3.zero()
     end
     return val
-end)
+end
+mod:hook(CLASS.InputService, "_get", _input_action_hook)
+mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
 mod:hook(CLASS.CameraManager, "update", function(func, self, dt, t, viewport_name, yaw, pitch, roll)
     if mod.is_requesting_freelook() then

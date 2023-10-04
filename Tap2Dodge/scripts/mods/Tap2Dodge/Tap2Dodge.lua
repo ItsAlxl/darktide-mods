@@ -18,7 +18,7 @@ mod.on_setting_changed = function(id)
     end
 end
 
-mod:hook("InputService", "get", function(func, self, action_name)
+local _input_action_hook = function(func, self, action_name)
     local val = func(self, action_name)
 
     if move_data[action_name] then
@@ -49,4 +49,6 @@ mod:hook("InputService", "get", function(func, self, action_name)
     end
 
     return val
-end)
+end
+mod:hook(CLASS.InputService, "_get", _input_action_hook)
+mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
