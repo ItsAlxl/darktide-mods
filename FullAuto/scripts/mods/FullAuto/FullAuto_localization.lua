@@ -7,8 +7,14 @@ return {
 		en = "Default to Automatic Firemode",
 		["zh-cn"] = "默认为全自动开火模式",
 	},
-	toggle_keybind = {
-		en = "Toggle Automatic Firemode",
+	pressed_autoshoot = {
+		en = "Automatic Firemode (Toggle)",
 		["zh-cn"] = "开关全自动开火模式",
+	},
+	held_autoshoot = {
+		en = "Automatic Firemode (Held)",
+	},
+	shoot_for_me = {
+		en = "Constantly shoot when on Automatic Firemode",
 	},
 }

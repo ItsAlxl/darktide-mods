@@ -15,24 +15,41 @@ local track_autofire = false
 local autofire_delay_normal = nil
 local autofire_delay_aim = nil
 
+local track_natural = false
+local is_natural_autofire_normal = false
+local is_natural_autofire_aim = false
+
 local autofire_delay_current = nil
+local natural_current = false
 local is_firing = false
+local shoot_for_me = mod:get("shoot_for_me")
 local next_autofire = -1.0
 
 local time_scale = 1.0
 local is_sprinting = false
+
+mod.on_setting_changed = function(id)
+    if id == "shoot_for_me" then
+        shoot_for_me = mod:get("shoot_for_me")
+    end
+end
 
 local _disable_autofire = function()
     track_autofire = false
     autofire_delay_normal = nil
     autofire_delay_aim = nil
 
+    track_natural = false
+    is_natural_autofire_normal = false
+    is_natural_autofire_aim = false
+
     autofire_delay_current = false
+    natural_current = false
     is_firing = false
     next_autofire = -1
 end
 
-local function _get_action(template, primary)
+local _get_action = function(template, primary)
     local actions = NORMAL_ACTIONS
     if not primary then
         actions = AIMED_ACTIONS
@@ -47,7 +64,7 @@ local function _get_action(template, primary)
     return nil
 end
 
-local function _get_chain_time(template, primary)
+local _get_chain_time = function(template, primary)
     local act = _get_action(template, primary)
     if act then
         local chain_actions = NORMAL_CHAINS
@@ -78,13 +95,20 @@ local _apply_weapon_template = function(template)
 
     if _check_firemode(template.displayed_attacks.primary) then
         autofire_delay_normal = _get_chain_time(template, true)
+    else
+        is_natural_autofire_normal = true
     end
     if _check_firemode(template.displayed_attacks.secondary) or _check_firemode(template.displayed_attacks.extra) then
         autofire_delay_aim = _get_chain_time(template, false)
+    else
+        is_natural_autofire_aim = true
     end
 
     track_autofire = (autofire_delay_normal or autofire_delay_aim) and true or false
     autofire_delay_current = autofire_delay_normal
+
+    track_natural = is_natural_autofire_normal or is_natural_autofire_aim
+    natural_current = is_natural_autofire_normal
 end
 
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
@@ -97,7 +121,7 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
     end
 end)
 
-mod._toggle_select = function()
+mod._toggle_select = function(held)
     select_autofire = not select_autofire
 end
 
@@ -124,33 +148,44 @@ mod:hook_require("scripts/extension_systems/character_state_machine/character_st
     end)
 end)
 
-local _input_action_hook = function(func, self, action_name)
-    local val = func(self, action_name)
-    if track_autofire then
+local _input_action_hook = function(func, self, action_name, ...)
+    local val = func(self, action_name, ...)
+    if track_autofire or (track_natural and shoot_for_me) then
+        local is_lmb_press = action_name == "action_one_pressed"
         if val then
-            if action_name == "action_one_pressed" then
-                is_firing = true
-                next_autofire = -1
-            end
-            if action_name == "action_one_release" then
-                is_firing = false
+            if not shoot_for_me then
+                if is_lmb_press then
+                    is_firing = true
+                    next_autofire = -1
+                end
+                if action_name == "action_one_release" then
+                    is_firing = false
+                end
             end
 
             if action_name == "action_two_pressed" then
                 autofire_delay_current = autofire_delay_aim
+                natural_current = is_natural_autofire_aim
             end
             if action_name == "action_two_release" then
                 autofire_delay_current = autofire_delay_normal
+                natural_current = is_natural_autofire_normal
             end
         end
 
-        if select_autofire and is_firing and autofire_delay_current and action_name == "action_one_pressed" then
-            local this_t = Managers.time and Managers.time:time("main")
-            if next_autofire < 0 or this_t >= next_autofire then
-                next_autofire = this_t + autofire_delay_current / time_scale * (is_sprinting and SPRINT_MULTIPLIER or STANDARD_MULTIPLIER)
-                return true
+        if select_autofire then
+            if track_natural then
+                if natural_current and action_name == "action_one_hold" and select_autofire then
+                    return true
+                end
+            elseif is_lmb_press and (is_firing or shoot_for_me) and autofire_delay_current then
+                local this_t = Managers.time and Managers.time:time("main")
+                if next_autofire < 0 or this_t >= next_autofire then
+                    next_autofire = this_t + autofire_delay_current / time_scale * (is_sprinting and SPRINT_MULTIPLIER or STANDARD_MULTIPLIER)
+                    return true
+                end
+                return false
             end
-            return false
         end
     end
 

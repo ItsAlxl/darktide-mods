@@ -7,7 +7,12 @@ return {
 	options = {
 		widgets = {
 			{
-				setting_id      = "toggle_keybind",
+				setting_id    = "default_autofire",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
+				setting_id      = "pressed_autoshoot",
 				type            = "keybind",
 				default_value   = {},
 				keybind_global  = false,
@@ -16,9 +21,18 @@ return {
 				function_name   = "_toggle_select",
 			},
 			{
-				setting_id    = "default_autofire",
+				setting_id      = "held_autoshoot",
+				type            = "keybind",
+				default_value   = {},
+				keybind_global  = false,
+				keybind_trigger = "held",
+				keybind_type    = "function_call",
+				function_name   = "_toggle_select",
+			},
+			{
+				setting_id    = "shoot_for_me",
 				type          = "checkbox",
-				default_value = true,
+				default_value = false,
 			},
 		}
 	}
