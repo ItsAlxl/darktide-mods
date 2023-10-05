@@ -17,7 +17,7 @@ local _update_request_type = function()
             elseif plr_class == "ogryn_2" then
                 after_request_type = mod:get("ag_ogryn")
             end
-            
+
             if after_request_type == "" then
                 after_request_type = nil
             end
@@ -38,7 +38,7 @@ end
 mod:hook(CLASS.InputService, "_get", _input_action_hook)
 mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
-mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects, action_name, ...)
+mod:hook_safe(CLASS.ActionHandler, "start_action", function(self, id, action_objects, action_name, ...)
     if after_request_type then
         if action_name == "action_unwield_to_previous" and (prev_action == "action_throw_grenade" or prev_action == "action_underhand_throw_grenade") then
             request = after_request_type
@@ -47,8 +47,8 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
     end
 end)
 
-mod:hook_safe("GameModeManager", "init", function(self, game_mode_context, game_mode_name, ...)
-    if game_mode_name == "hub" then
+mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, game_mode_name, ...)
+    if game_mode_name ~= "hub" then
         _update_request_type()
     end
 end)
