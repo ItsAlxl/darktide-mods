@@ -130,12 +130,12 @@ local _apply_weapon_template = function(template)
 
     if _check_firemode(template.displayed_attacks.primary) then
         autofire_delay_normal = _get_chain_time(template, true)
-    else
+    elseif template.fire_mode then
         is_natural_autofire_normal = true
     end
     if _check_firemode(template.displayed_attacks.secondary) or _check_firemode(template.displayed_attacks.extra) then
         autofire_delay_aim = _get_chain_time(template, false)
-    else
+    elseif template.fire_mode then
         is_natural_autofire_aim = true
     end
 
