@@ -39,6 +39,11 @@ return {
 				keybind_type    = "function_call",
 				function_name   = "_toggle_select",
 			},
+			{
+				setting_id    = "include_psyker_bees",
+				type          = "checkbox",
+				default_value = true,
+			},
 		}
 	}
 }

@@ -20,4 +20,7 @@ return {
 	hud_element = {
 		en = "HUD Indicator",
 	},
+	include_psyker_bees = {
+		en = Localize("loc_class_psyker_title") .. " " .. Localize("loc_ability_psyker_blitz_throwing_knives")
+	},
 }

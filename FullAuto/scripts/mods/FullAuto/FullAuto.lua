@@ -1,8 +1,8 @@
 local mod = get_mod("FullAuto")
 
-local NORMAL_ACTIONS = { "action_shoot_hip", "action_shoot", "rapid_left", "action_shoot_flame" }
+local NORMAL_ACTIONS = { "action_shoot_hip", "action_shoot", "rapid_left", "action_shoot_flame", "action_rapid_left", "action_rapid_right" }
 local NORMAL_CHAINS = { "shoot_pressed", "shoot", "shoot_charge" }
-local AIMED_ACTIONS = { "action_shoot_zoomed" }
+local AIMED_ACTIONS = { "action_shoot_zoomed", "action_rapid_zoomed" }
 local AIMED_CHAINS = { "zoom_shoot" }
 local FULLAUTO_FIREMODE = "full_auto"
 
@@ -24,6 +24,8 @@ local natural_current = false
 local is_firing = false
 local shoot_for_me = mod:get("shoot_for_me")
 local next_autofire = -1.0
+
+local include_psyker_bees = mod:get("include_psyker_bees")
 
 local time_scale = 1.0
 local is_sprinting = false
@@ -64,6 +66,8 @@ mod.on_setting_changed = function(id)
         if firemode_element then
             firemode_element:update_vis(mod:get(id))
         end
+    elseif id == "include_psyker_bees" then
+        include_psyker_bees = mod:get(id)
     elseif id == "shoot_for_me" then
         shoot_for_me = mod:get(id)
     end
@@ -128,12 +132,13 @@ local _apply_weapon_template = function(template)
         return
     end
 
-    if _check_firemode(template.displayed_attacks.primary) then
+    local is_bees = template.psyker_smite
+    if is_bees or _check_firemode(template.displayed_attacks.primary) then
         autofire_delay_normal = _get_chain_time(template, true)
     elseif template.fire_mode then
         is_natural_autofire_normal = true
     end
-    if _check_firemode(template.displayed_attacks.secondary) or _check_firemode(template.displayed_attacks.extra) then
+    if is_bees or _check_firemode(template.displayed_attacks.secondary) or _check_firemode(template.displayed_attacks.extra) then
         autofire_delay_aim = _get_chain_time(template, false)
     elseif template.fire_mode then
         is_natural_autofire_aim = true
@@ -148,11 +153,11 @@ end
 
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
     if self._player == Managers.player:local_player(1) then
-        if slot_name == "slot_secondary" then
-            _apply_weapon_template(self._weapons[slot_name].weapon_template)
-        else
-            _disable_autofire()
+        local wep = self._weapons[slot_name].weapon_template
+        if not (slot_name == "slot_secondary" or (include_psyker_bees and wep.name == "psyker_throwing_knives")) then
+            wep = nil
         end
+        _apply_weapon_template(wep)
     end
 end)
 
