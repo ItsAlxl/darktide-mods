@@ -30,9 +30,32 @@ return {
 				default_value = true,
 			},
 			{
+				setting_id      = "clamp_yaw_normal",
+				tooltip         = "clamp_zero_hint",
+				type            = "numeric",
+				default_value   = 0,
+				range           = { 0, 120 },
+				decimals_number = 0
+			},
+			{
+				setting_id      = "clamp_yaw_spectate",
+				tooltip         = "clamp_zero_hint",
+				type            = "numeric",
+				default_value   = 0,
+				range           = { 0, 120 },
+				decimals_number = 0
+			},
+			{
 				setting_id    = "auto_on_spectate",
 				type          = "checkbox",
 				default_value = false,
+			},
+			{
+				setting_id      = "lerp_duration",
+				type            = "numeric",
+				default_value   = 0.18,
+				range           = { 0, 1.0 },
+				decimals_number = 2
 			},
 			{
 				setting_id      = "sensitivity_mouse",

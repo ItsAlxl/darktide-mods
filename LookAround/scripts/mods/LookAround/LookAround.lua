@@ -1,11 +1,13 @@
 local mod = get_mod("LookAround")
 
-local TAU = 2.0 * math.pi
-local PITCH_CLAMP_LOWER = math.pi
+local PI = math.pi
+local TAU = 2.0 * PI
+local PITCH_CLAMP_LOWER = PI
 local PITCH_CLAMP_UPPER = 0.95 * TAU
 local SENSITIVITY_MULT_MOUSE = 0.0025
 local SENSITIVITY_MULT_CONTROLLER = 1.2
 local CLAMP_OFFSET = 1.7
+local MINIMUM_RADIANS = 0.01
 local INPUT_FILTER = {
     look_raw = true,
     look_controller = true,
@@ -27,6 +29,10 @@ local kb_held = false
 
 local auto_on_spectate = false
 local clamp_pitch = true
+local clamp_yaw_normal = 2.0
+local clamp_yaw_spectate = MINIMUM_RADIANS
+
+local lerp_time_left = 0.0
 
 mod.is_requesting_freelook = function()
     for _, r in pairs(active_reasons) do
@@ -47,12 +53,18 @@ mod.on_setting_changed = function(id)
         auto_on_spectate = val
     elseif id == "clamp_pitch" then
         clamp_pitch = val
+    elseif id == "clamp_yaw_normal" then
+        clamp_yaw_normal = math.degrees_to_radians(val)
+    elseif id == "clamp_yaw_spectate" then
+        clamp_yaw_spectate = math.degrees_to_radians(val)
     end
 end
 mod.on_setting_changed("sensitivity_mouse")
 mod.on_setting_changed("sensitivity_controller")
 mod.on_setting_changed("auto_on_spectate")
 mod.on_setting_changed("clamp_pitch")
+mod.on_setting_changed("clamp_yaw_normal")
+mod.on_setting_changed("clamp_yaw_spectate")
 
 local _set_freelook_origin = function(on_plr_aim)
     if on_plr_aim then
@@ -69,6 +81,11 @@ end
 
 -- used by the mod "Perspectives"
 mod.on_freelook_changed = function(value)
+    if value then
+        lerp_time_left = 0.0
+    else
+        lerp_time_left = mod:get("lerp_duration")
+    end
 end
 
 local _start_freelook = function(reason, start)
@@ -135,12 +152,21 @@ mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
 mod:hook(CLASS.CameraManager, "update", function(func, self, dt, t, viewport_name, yaw, pitch, roll)
     if mod.is_requesting_freelook() then
-        yaw = freelook_aim.y
-
+        local yaw_limit = active_reasons["spectate"] and clamp_yaw_spectate or clamp_yaw_normal
+        if yaw_limit > MINIMUM_RADIANS then
+            freelook_aim.y = math.clamp(((freelook_aim.y - yaw - PI) % TAU) - PI, -yaw_limit, yaw_limit) + yaw
+        end
         if clamp_pitch then
             freelook_aim.p = math.clamp((freelook_aim.p - CLAMP_OFFSET) % TAU, PITCH_CLAMP_LOWER, PITCH_CLAMP_UPPER) + CLAMP_OFFSET
         end
+        yaw = freelook_aim.y
         pitch = freelook_aim.p
+    elseif lerp_time_left and lerp_time_left > 0.0 then
+        freelook_aim.y = freelook_aim.y - (((freelook_aim.y - yaw - PI) % TAU) - PI) * dt / lerp_time_left
+        freelook_aim.p = freelook_aim.p - (((freelook_aim.p - pitch - PI) % TAU) - PI) * dt / lerp_time_left
+        yaw = freelook_aim.y
+        pitch = freelook_aim.p
+        lerp_time_left = lerp_time_left - dt
     end
     func(self, dt, t, viewport_name, yaw, pitch, roll)
 end)

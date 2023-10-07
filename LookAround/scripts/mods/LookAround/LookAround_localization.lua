@@ -15,6 +15,18 @@ return {
 		en = "Limit Up/Down Angle",
 		["zh-cn"] = "限制上/下角度",
 	},
+	clamp_yaw_normal = {
+		en = "Left/Right Degree Limit (Normal)",
+	},
+	clamp_yaw_spectate = {
+		en = "Left/Right Degree Limit (Spectating)",
+	},
+	clamp_zero_hint = {
+		en = "Set to 0 to disable the limit",
+	},
+	lerp_duration = {
+		en = "Return-to-Normal Time",
+	},
 	auto_on_spectate = {
 		en = "Force Freelook While Spectating",
 		["zh-cn"] = "旁观时强制自由查看",
