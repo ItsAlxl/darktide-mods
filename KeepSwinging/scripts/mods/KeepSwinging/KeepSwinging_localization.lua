@@ -49,8 +49,10 @@ return {
 	},
 	hud_element = {
 		en = "HUD Indicator",
+		["zh-cn"] = "HUD 指示器",
 	},
 	default_mode = {
 		en = "Default to Auto-Swing",
+		["zh-cn"] = "默认自动攻击",
 	},
 }
