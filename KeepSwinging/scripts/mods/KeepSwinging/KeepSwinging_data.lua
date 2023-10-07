@@ -12,13 +12,14 @@ return {
 				default_value = true,
 			},
 			{
-				setting_id      = "held_keybind",
-				type            = "keybind",
-				default_value   = {},
-				keybind_global  = false,
-				keybind_trigger = "held",
-				keybind_type    = "function_call",
-				function_name   = "_toggle_swinging",
+				setting_id    = "as_modifier",
+				type          = "checkbox",
+				default_value = false,
+			},
+			{
+				setting_id    = "default_mode",
+				type          = "checkbox",
+				default_value = false,
 			},
 			{
 				setting_id      = "pressed_keybind",
@@ -30,9 +31,13 @@ return {
 				function_name   = "_toggle_swinging",
 			},
 			{
-				setting_id    = "as_modifier",
-				type          = "checkbox",
-				default_value = false,
+				setting_id      = "held_keybind",
+				type            = "keybind",
+				default_value   = {},
+				keybind_global  = false,
+				keybind_trigger = "held",
+				keybind_type    = "function_call",
+				function_name   = "_toggle_swinging",
 			},
 			{
 				setting_id  = "group_disable_acts",

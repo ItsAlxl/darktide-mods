@@ -4,7 +4,7 @@ return {
 		["zh-cn"] = "设置快捷键自动重复近战武器轻攻击。",
 	},
 	held_keybind = {
-		en = "Enable Auto-Swing (Hold)",
+		en = "Enable Auto-Swing (Held)",
 		["zh-cn"] = "启用自动攻击（按住）",
 	},
 	pressed_keybind = {
@@ -49,5 +49,8 @@ return {
 	},
 	hud_element = {
 		en = "HUD Indicator",
+	},
+	default_mode = {
+		en = "Default to Auto-Swing",
 	},
 }

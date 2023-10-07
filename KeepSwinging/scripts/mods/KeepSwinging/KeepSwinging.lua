@@ -22,7 +22,7 @@ for act, _ in pairs(disable_actions) do
 end
 
 local allow_swinging = false
-local is_swinging = false
+local is_swinging = mod:get("default_mode")
 
 local held_interrupted = false
 local holding_action_one = false
@@ -212,3 +212,9 @@ local _input_action_hook = function(func, self, action_name)
 end
 mod:hook(CLASS.InputService, "_get", _input_action_hook)
 mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
+
+mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, game_mode_name, ...)
+    if game_mode_name ~= "hub" then
+        _set_autoswing(mod:get("default_mode"))
+    end
+end)
