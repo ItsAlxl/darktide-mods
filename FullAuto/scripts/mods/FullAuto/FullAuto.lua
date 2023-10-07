@@ -53,7 +53,7 @@ end
 mod:hook_require("scripts/ui/hud/hud_elements_player_onboarding", _add_hud_element)
 mod:hook_require("scripts/ui/hud/hud_elements_player", _add_hud_element)
 
-local _get_hud_element = function ()
+local _get_hud_element = function()
     local hud = Managers.ui:get_hud()
     return hud and hud:element("HudElementFullAutoFireMode")
 end
@@ -188,10 +188,31 @@ mod:hook_safe(CLASS.ActionHandler, "start_action", function(self, id, ...)
     end
 end)
 
-mod:hook_require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint", function(instance)
-    mod:hook_safe(instance, "sprint_input", function(input_source, sprinting, ...)
+mod:hook_require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint", function(Sprint)
+    mod:hook_safe(Sprint, "sprint_input", function(input_source, sprinting, ...)
         if is_sprinting ~= sprinting then
             is_sprinting = sprinting
+        end
+    end)
+end)
+
+local _get_player_unit = function()
+    local plr = Managers.player and Managers.player:local_player(1)
+    return plr and plr.player_unit
+end
+
+mod:hook_require("scripts/utilities/alternate_fire", function(AlternateFire)
+    mod:hook_safe(AlternateFire, "start", function(alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, peeking_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, ...)
+        if player_unit == _get_player_unit() then
+            autofire_delay_current = autofire_delay_aim
+            natural_current = is_natural_autofire_aim
+        end
+    end)
+
+    mod:hook_safe(AlternateFire, "stop", function(alternate_fire_component, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, weapon_template, skip_stop_anim, player_unit, ...)
+        if player_unit == _get_player_unit() then
+            autofire_delay_current = autofire_delay_normal
+            natural_current = is_natural_autofire_normal
         end
     end)
 end)
@@ -200,24 +221,13 @@ local _input_action_hook = function(func, self, action_name)
     local val = func(self, action_name)
     if track_autofire or (track_natural and shoot_for_me) then
         local is_lmb_press = action_name == "action_one_pressed"
-        if val then
-            if not shoot_for_me then
-                if is_lmb_press then
-                    is_firing = true
-                    next_autofire = -1
-                end
-                if action_name == "action_one_release" then
-                    is_firing = false
-                end
+        if val and not shoot_for_me then
+            if is_lmb_press then
+                is_firing = true
+                next_autofire = -1
             end
-
-            if action_name == "action_two_pressed" then
-                autofire_delay_current = autofire_delay_aim
-                natural_current = is_natural_autofire_aim
-            end
-            if action_name == "action_two_release" then
-                autofire_delay_current = autofire_delay_normal
-                natural_current = is_natural_autofire_normal
+            if action_name == "action_one_release" then
+                is_firing = false
             end
         end
 

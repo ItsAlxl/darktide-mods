@@ -12,6 +12,11 @@ return {
 				default_value = true,
 			},
 			{
+				setting_id    = "shoot_for_me",
+				type          = "checkbox",
+				default_value = false,
+			},
+			{
 				setting_id    = "default_autofire",
 				type          = "checkbox",
 				default_value = true,
@@ -33,11 +38,6 @@ return {
 				keybind_trigger = "held",
 				keybind_type    = "function_call",
 				function_name   = "_toggle_select",
-			},
-			{
-				setting_id    = "shoot_for_me",
-				type          = "checkbox",
-				default_value = false,
 			},
 		}
 	}
