@@ -125,7 +125,7 @@ Bind the tagging wheel options to individual keys.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/79).
 
-## TalentRefundBelow aka Refund Talents Below
+## TalentRefundBelow aka Talent Tree UX Improvements
 Allows you to remove a talent and all subsequent talents in one click.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/216/).
