@@ -128,7 +128,7 @@ end
 
 local _apply_weapon_template = function(template)
     _disable_autofire()
-    if not template or not template.action_inputs then
+    if not template or not template.action_inputs or not template.displayed_attacks then
         return
     end
 
@@ -184,9 +184,13 @@ mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, g
     end
 end)
 
+local _get_player_unit = function()
+    local plr = Managers.player and Managers.player:local_player(1)
+    return plr and plr.player_unit
+end
+
 mod:hook_safe(CLASS.ActionHandler, "start_action", function(self, id, ...)
-    local plr = Managers.player:local_player(1)
-    if plr and plr.player_unit == self._unit then
+    if _get_player_unit() == self._unit then
         if id == "weapon_action" then
             time_scale = self._registered_components[id].component.time_scale
         end
@@ -200,11 +204,6 @@ mod:hook_require("scripts/extension_systems/character_state_machine/character_st
         end
     end)
 end)
-
-local _get_player_unit = function()
-    local plr = Managers.player and Managers.player:local_player(1)
-    return plr and plr.player_unit
-end
 
 mod:hook_require("scripts/utilities/alternate_fire", function(AlternateFire)
     mod:hook_safe(AlternateFire, "start", function(alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, peeking_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, ...)
