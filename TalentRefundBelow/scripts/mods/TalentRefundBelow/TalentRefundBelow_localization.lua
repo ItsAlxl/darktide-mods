@@ -36,7 +36,7 @@ return {
 	double_click_window = {
 		en = "Double-Click Timing Window",
 		["zh-cn"] = "双击时间阈值",
-		ru = "Окно времени для двойного щелчка",
+		ru = "Окно времени для двойного нажатия",
 	},
 	swap_siblings = {
 		en = "Swap Non-Exclusive Siblings when Full",
