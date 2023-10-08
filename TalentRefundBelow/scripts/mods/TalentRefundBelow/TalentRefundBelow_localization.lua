@@ -6,7 +6,7 @@ return {
 	mod_description = {
 		en = "Makes changing your talents more user-friendly.",
 		["zh-cn"] = "使修改天赋树操作更方便。",
-		ru = "TalentRefundBelow - Делает изменение ваших талантов более удобным.",
+		ru = "Talent Tree UX Improvements - Делает изменение ваших талантов более удобным.",
 	},
 	mode_never = {
 		en = "Never",
