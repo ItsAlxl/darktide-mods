@@ -11,7 +11,7 @@ mod.on_setting_changed = function(id)
 end
 
 local _should_ignore = function(ability)
-    return ability and ignores[ability]
+    return ability and ability.name and ignores[ability.name]
 end
 
 mod:hook(CLASS.HudElementTeamPlayerPanel, "_get_weapon_throwables_status", function(func, self, ability_extension)
