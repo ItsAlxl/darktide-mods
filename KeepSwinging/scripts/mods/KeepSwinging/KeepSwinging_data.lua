@@ -40,6 +40,11 @@ return {
 				function_name   = "_toggle_swinging",
 			},
 			{
+				setting_id    = "include_gauntlets",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
 				setting_id  = "group_disable_acts",
 				type        = "group",
 				sub_widgets = {

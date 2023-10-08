@@ -55,4 +55,7 @@ return {
 		en = "Default to Auto-Swing",
 		["zh-cn"] = "默认自动攻击",
 	},
+	include_gauntlets = {
+		en = Localize("loc_weapon_pattern_name_ogryn_gauntlet_p1"),
+	},
 }

@@ -34,6 +34,8 @@ local swing_delay = 1
 local release_delay = 1
 local request_repress = false
 
+local include_gauntlets = mod:get("include_gauntlets")
+
 local _is_interrupted = function()
     for _, t in pairs(disable_actions) do
         if t.active and t.enabled then
@@ -83,6 +85,8 @@ mod.on_setting_changed = function(id)
         as_modifier = mod:get(id)
     elseif id == "persist_after_disable" then
         persist_after_disable = mod:get(id)
+    elseif id == "include_gauntlets" then
+        include_gauntlets = mod:get(id)
     elseif id == "disable_action_one_hold" then
         disable_actions.action_one_hold.enabled = mod:get(id)
     elseif id == "disable_action_two_hold" then
@@ -127,7 +131,9 @@ mod.is_in_auto_mode = function()
 end
 
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
-    allow_swinging = slot_name == "slot_primary"
+    local wep = self._weapons[slot_name].weapon_template
+    local keywords = wep and wep.keywords
+    allow_swinging = keywords and (table.contains(keywords, "melee") or (include_gauntlets and table.contains(keywords, "grenadier_gauntlet")))
 end)
 
 mod._toggle_swinging = function(held)
