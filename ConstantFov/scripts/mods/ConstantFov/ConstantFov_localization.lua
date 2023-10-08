@@ -31,6 +31,7 @@ return {
 	},
 	allow_buffs = {
 		en = "Buffs",
+		["zh-cn"] = "增益",
 	},
 	group_tweaks = {
 		en = "FOV Change Tweaks",
