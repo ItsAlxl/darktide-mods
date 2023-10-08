@@ -27,8 +27,7 @@ return {
 		en = "Double-Click Timing Window",
 		["zh-cn"] = "双击时间阈值",
 	},
-	require_excl_swap_child = {
-		en = "Require common child for Exclusive Swap",
-		["zh-cn"] = "后续天赋树必须共通才能切换互斥天赋",
+	swap_siblings = {
+		en = "Swap Non-Exclusive Siblings when Full",
 	},
 }

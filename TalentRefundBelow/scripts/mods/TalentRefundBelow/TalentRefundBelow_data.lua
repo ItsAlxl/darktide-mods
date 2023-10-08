@@ -27,16 +27,16 @@ return {
 				}
 			},
 			{
+				setting_id    = "swap_siblings",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
 				setting_id      = "double_click_window",
 				type            = "numeric",
 				default_value   = 0.5,
 				range           = { 0.1, 2.0 },
 				decimals_number = 1,
-			},
-			{
-				setting_id    = "require_excl_swap_child",
-				type          = "checkbox",
-				default_value = true,
 			},
 		}
 	}
