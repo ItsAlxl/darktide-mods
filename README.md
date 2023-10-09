@@ -63,7 +63,7 @@ Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/87).
 ## IgnorePsykerGrenades
 Prevent Psyker blitzes from changing their grenade color in your HUD.
 
-Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/220).
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/221).
 
 ## InventoryStats
 Displays some stats in the inventory screen.
