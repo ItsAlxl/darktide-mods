@@ -1,6 +1,6 @@
 return {
 	mod_name = {
-		en = "TalentRefundBelow",
+		en = "Talent Tree UX",
 		ru = "Возврат талантов ниже",
 	},
 	mod_description = {
