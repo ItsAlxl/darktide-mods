@@ -128,11 +128,15 @@ end
 
 local _apply_weapon_template = function(template)
     _disable_autofire()
-    if not template or not template.action_inputs or not template.displayed_attacks then
+    if not template or not template.action_inputs then
         return
     end
 
     local is_bees = template.psyker_smite
+    if not is_bees and not template.displayed_attacks then
+        return
+    end
+
     if is_bees or _check_firemode(template.displayed_attacks.primary) then
         autofire_delay_normal = _get_chain_time(template, true)
     elseif template.fire_mode then
