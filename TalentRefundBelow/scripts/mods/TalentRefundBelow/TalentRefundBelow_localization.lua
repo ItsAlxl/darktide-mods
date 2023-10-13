@@ -1,7 +1,7 @@
 return {
 	mod_name = {
 		en = "Talent Tree UX",
-		ru = "Возврат талантов ниже",
+		ru = "Удобное дерево талантов",
 	},
 	mod_description = {
 		en = "Makes changing your talents more user-friendly.",
