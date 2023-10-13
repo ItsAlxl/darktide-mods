@@ -150,6 +150,11 @@ Held interactions become toggled interactions.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/120).
 
+## ToggleQuell
+Makes quelling peril a toggled action.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/228).
+
 ## TruePeril
 Allows you to remove the interpolation/decay of the value on the Psyker's peril gauge and to show up to 2 decimal places of the peril value.
 
