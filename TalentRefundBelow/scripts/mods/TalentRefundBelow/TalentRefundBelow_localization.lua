@@ -1,6 +1,7 @@
 return {
 	mod_name = {
 		en = "Talent Tree UX",
+		["zh-cn"] = "天赋树 UX 优化",
 		ru = "Удобное дерево талантов",
 	},
 	mod_description = {
@@ -40,6 +41,7 @@ return {
 	},
 	swap_siblings = {
 		en = "Swap Non-Exclusive Siblings when Full",
+		["zh-cn"] = "天赋全满时切换非互斥同级天赋",
 		ru = "Менять местами неэксклюзивные\nветки при завершённом билде",
 	},
 }
