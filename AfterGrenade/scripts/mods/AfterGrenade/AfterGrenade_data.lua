@@ -3,6 +3,7 @@ local mod = get_mod("AfterGrenade")
 local dropdown_options = {
 	{ text = "after_normal",    value = "" },
 	{ text = "after_keep",      value = "grenade_ability_pressed" },
+	{ text = "after_previous",  value = "PREVIOUS" },
 	{ text = "after_primary",   value = "wield_1" },
 	{ text = "after_secondary", value = "wield_2" },
 }
@@ -27,6 +28,12 @@ return {
 			},
 			{
 				setting_id    = "ag_ogryn",
+				type          = "dropdown",
+				default_value = "",
+				options       = table.clone(dropdown_options),
+			},
+			{
+				setting_id    = "ag_psyker",
 				type          = "dropdown",
 				default_value = "",
 				options       = dropdown_options,

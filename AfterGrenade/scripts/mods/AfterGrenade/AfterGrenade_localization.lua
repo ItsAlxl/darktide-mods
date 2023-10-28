@@ -1,22 +1,27 @@
 return {
 	mod_name = {
-		en = "AfterGrenade",
+		en = "AfterBlitz",
 		ru = "После гранаты",
 	},
 	mod_description = {
-		en = "Choose what your character equips after throwing a grenade.",
+		en = "Choose what your character does when unequipping their blitz.",
 		["zh-cn"] = "设置扔出手雷之后装备什么武器。",
-		ru = "AfterGrenade - Выберите, что будет экипировать ваш персонаж после броска гранаты.",
+		ru = "AfterBlitz - Выберите, что будет экипировать ваш персонаж после броска гранаты.",
 	},
 	after_normal = {
-		en = "Equip Previous (Default)",
-		["zh-cn"] = "装备上次的武器（默认）",
-		ru = "Экипировать предыдущее (по умолчанию)",
+		en = "Default Behavior",
+		["zh-cn"] = "默认",
+		ru = "по умолчанию",
 	},
 	after_keep = {
-		en = "Equip Grenades",
+		en = "Re-Equip Blitz",
 		["zh-cn"] = "装备手雷",
 		ru = "Экипировать гранаты",
+	},
+	after_previous = {
+		en = "Equip Previous",
+		["zh-cn"] = "装备上次的武器",
+		ru = "Экипировать предыдущее",
 	},
 	after_primary = {
 		en = "Equip Primary",
@@ -36,5 +41,8 @@ return {
 	},
 	ag_ogryn = {
 		en = Localize("loc_class_ogryn_title"),
+	},
+	ag_psyker = {
+		en = Localize("loc_class_psyker_title"),
 	},
 }

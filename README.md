@@ -5,7 +5,7 @@ All code is dual-licensed under the Unlicense (public domain) and the MIT Licens
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/itsalxl)
 
-## AfterGrenade
+## AfterGrenade aka AfterBlitz
 Choose what your character equips after throwing a grenade.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/80).
@@ -20,7 +20,7 @@ Anonymize player names.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/117).
 
-## BetterMelk
+## BetterMelk aka Better Melk
 Automatically accept new contracts and collect the weekly completion bonus.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/71).
@@ -90,7 +90,7 @@ Penances provide more details about your current progress.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/122).
 
-## Perspectives
+## Perspectives aka Perspectives Mod
 Switch between first and third person perspectives.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/111).
@@ -145,7 +145,7 @@ Double-tap movement keys to dodge.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/78).
 
-## ToggleAltFire aka Toggle Aim
+## ToggleAltFire aka Toggle Alt Fire
 Toggle aim-down-sights (and other ranged weapon alt-fires). Perhaps more configurable than it ought to be.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/60).

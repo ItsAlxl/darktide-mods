@@ -1,8 +1,8 @@
 local mod = get_mod("AfterGrenade")
 
-local prev_action = nil
 local request = nil
 local after_request_type = nil
+local last_equipped_slot = nil
 
 local _update_request_type = function()
     if Managers and Managers.player then
@@ -16,6 +16,8 @@ local _update_request_type = function()
                 after_request_type = mod:get("ag_veteran")
             elseif plr_class == "ogryn_2" then
                 after_request_type = mod:get("ag_ogryn")
+            elseif plr_class == "psyker_2" then
+                after_request_type = mod:get("ag_psyker")
             end
 
             if after_request_type == "" then
@@ -38,12 +40,25 @@ end
 mod:hook(CLASS.InputService, "_get", _input_action_hook)
 mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
-mod:hook_safe(CLASS.ActionHandler, "start_action", function(self, id, action_objects, action_name, ...)
+mod:hook_safe(CLASS.ActionHandler, "start_action", function(self, id, action_objects, action_name, action_params, action_settings, used_input, ...)
     if after_request_type then
-        if action_name == "action_unwield_to_previous" and (prev_action == "action_throw_grenade" or prev_action == "action_underhand_throw_grenade") then
-            request = after_request_type
+        local slot = self._inventory_component.wielded_slot
+        if action_name == "action_wield" then
+            if slot ~= "slot_grenade_ability" then
+                last_equipped_slot = slot
+            end
+        elseif slot == "slot_grenade_ability" and
+        ((action_name == "action_unwield" and used_input == "quick_wield") or action_name == "action_unwield_to_previous") then
+            if after_request_type == "PREVIOUS" then
+                if last_equipped_slot == "slot_secondary" then
+                    request = "wield_2"
+                else
+                    request = "wield_1"
+                end
+            else
+                request = after_request_type
+            end
         end
-        prev_action = action_name
     end
 end)
 
