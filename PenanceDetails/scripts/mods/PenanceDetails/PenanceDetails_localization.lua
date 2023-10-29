@@ -1,6 +1,7 @@
 return {
 	mod_name = {
 		en = "PenanceDetails",
+		["zh-cn"] = "苦修详情",
 		ru = "Подробности Искуплений",
 	},
 	mod_description = {

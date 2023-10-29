@@ -1,6 +1,7 @@
 return {
 	mod_name = {
 		en = "SortBrunt",
+		["zh-cn"] = "军备库排序",
 		ru = "Сортировка для Бранта",
 	},
 	mod_description = {
