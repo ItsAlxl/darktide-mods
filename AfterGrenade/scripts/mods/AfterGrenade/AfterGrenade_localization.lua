@@ -1,21 +1,22 @@
 return {
 	mod_name = {
 		en = "AfterBlitz",
+		["zh-cn"] = "闪击结束动作",
 		ru = "После гранаты",
 	},
 	mod_description = {
 		en = "Choose what your character does when unequipping their blitz.",
-		["zh-cn"] = "设置扔出手雷之后装备什么武器。",
+		["zh-cn"] = "设置角色在结束闪击（手雷）之后进行什么操作。",
 		ru = "AfterBlitz - Выберите, что будет экипировать ваш персонаж после броска гранаты.",
 	},
 	after_normal = {
 		en = "Default Behavior",
-		["zh-cn"] = "默认",
+		["zh-cn"] = "默认行为",
 		ru = "по умолчанию",
 	},
 	after_keep = {
 		en = "Re-Equip Blitz",
-		["zh-cn"] = "装备手雷",
+		["zh-cn"] = "重新装备闪击",
 		ru = "Экипировать гранаты",
 	},
 	after_previous = {

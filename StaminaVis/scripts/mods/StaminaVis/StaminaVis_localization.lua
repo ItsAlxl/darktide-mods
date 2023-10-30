@@ -1,6 +1,7 @@
 return {
 	mod_name = {
 		en = "StaminaVis",
+		["zh-cn"] = "体力可视化",
 		ru = "Видимость выносливости",
 	},
 	mod_description = {
