@@ -1,68 +1,49 @@
 local mod = get_mod("FullAuto")
 
-local NORMAL_ACTIONS = { "action_shoot_hip", "action_shoot", "rapid_left", "action_shoot_flame", "action_rapid_left", "action_rapid_right" }
-local NORMAL_CHAINS = { "shoot_pressed", "shoot", "shoot_charge" }
-local AIMED_ACTIONS = { "action_shoot_zoomed", "action_rapid_zoomed" }
-local AIMED_CHAINS = { "zoom_shoot" }
-local FULLAUTO_FIREMODE = "full_auto"
+local NATURAL_MODE = {
+    fullauto = 1,
+    chargeup = 2
+}
+mod.NATURAL_MODE = NATURAL_MODE
+local CHARGEUP_SHOT_STAGE = {
+    holding = 1,
+    release = 2,
+    repress = 3
+}
 
-local FALLBACK_DELAY = 0.25
 local STANDARD_MULTIPLIER = 0.5
 local SPRINT_MULTIPLIER = 1.1
 
 local select_autofire = mod:get("default_autofire")
-local track_autofire = false
+
+local track_autofire = nil
 local autofire_delay_normal = nil
 local autofire_delay_aim = nil
 
-local track_natural = false
-local is_natural_autofire_normal = false
-local is_natural_autofire_aim = false
+local track_natural = nil
+local natural_autofire_normal = nil
+local natural_autofire_aim = nil
 
 local autofire_delay_current = nil
-local natural_current = false
+local natural_current = nil
+
 local is_firing = false
 local shoot_for_me = mod:get("shoot_for_me")
 local next_autofire = -1.0
+local chargeup_stage = CHARGEUP_SHOT_STAGE.holding
 
 local include_psyker_bees = mod:get("include_psyker_bees")
+local chargeup_autofire = mod:get("chargeup_autofire")
 
 local time_scale = 1.0
 local is_sprinting = false
 
-local firemode_hud_element = {
-    package = "packages/ui/views/inventory_background_view/inventory_background_view",
-    use_retained_mode = true,
-    use_hud_scale = true,
-    class_name = "HudElementFullAutoFireMode",
-    filename = "FullAuto/scripts/mods/FullAuto/HudElementFullAutoFireMode",
-    visibility_groups = {
-        "alive",
-        "communication_wheel",
-        "tactical_overlay"
-    }
-}
-mod:add_require_path(firemode_hud_element.filename)
-
-local _add_hud_element = function(element_pool)
-    local found_key, _ = table.find_by_key(element_pool, "class_name", firemode_hud_element.class_name)
-    if found_key then
-        element_pool[found_key] = firemode_hud_element
-    else
-        table.insert(element_pool, firemode_hud_element)
-    end
-end
-mod:hook_require("scripts/ui/hud/hud_elements_player_onboarding", _add_hud_element)
-mod:hook_require("scripts/ui/hud/hud_elements_player", _add_hud_element)
-
-local _get_hud_element = function()
-    local hud = Managers.ui:get_hud()
-    return hud and hud:element("HudElementFullAutoFireMode")
-end
+mod:io_dofile("FullAuto/scripts/mods/FullAuto/CreateUI")
+mod:io_dofile("FullAuto/scripts/mods/FullAuto/WeaponValidator")
 
 mod.on_setting_changed = function(id)
     if id == "hud_element" then
-        local firemode_element = _get_hud_element()
+        local firemode_element = mod.get_hud_element()
         if firemode_element then
             firemode_element:update_vis(mod:get(id))
         end
@@ -70,105 +51,44 @@ mod.on_setting_changed = function(id)
         include_psyker_bees = mod:get(id)
     elseif id == "shoot_for_me" then
         shoot_for_me = mod:get(id)
+    elseif id == "chargeup_autofire" then
+        chargeup_autofire = mod:get(id)
     end
 end
 
 local _disable_autofire = function()
-    track_autofire = false
+    track_autofire = nil
     autofire_delay_normal = nil
     autofire_delay_aim = nil
 
-    track_natural = false
-    is_natural_autofire_normal = false
-    is_natural_autofire_aim = false
+    track_natural = nil
+    natural_autofire_normal = nil
+    natural_autofire_aim = nil
 
-    autofire_delay_current = false
-    natural_current = false
+    autofire_delay_current = nil
+    natural_current = nil
     is_firing = false
     next_autofire = -1
-end
-
-local _get_action = function(template, primary)
-    local actions = NORMAL_ACTIONS
-    if not primary then
-        actions = AIMED_ACTIONS
-    end
-
-    for _, a in pairs(actions) do
-        local act = template.actions[a]
-        if act then
-            return act
-        end
-    end
-    return nil
-end
-
-local _get_chain_time = function(template, primary)
-    local act = _get_action(template, primary)
-    if act then
-        local chain_actions = NORMAL_CHAINS
-        if not primary then
-            chain_actions = AIMED_CHAINS
-        end
-
-        for _, ca in pairs(chain_actions) do
-            local chain = act.allowed_chain_actions[ca]
-            if chain then
-                return chain.chain_time
-            end
-        end
-        return FALLBACK_DELAY
-    end
-    return nil
-end
-
-local _check_firemode = function(fm)
-    return fm and fm.fire_mode and fm.fire_mode ~= FULLAUTO_FIREMODE
-end
-
-local _apply_weapon_template = function(template)
-    _disable_autofire()
-    if not template or not template.action_inputs then
-        return
-    end
-
-    local is_bees = template.psyker_smite
-    if not is_bees and not template.displayed_attacks then
-        return
-    end
-
-    if is_bees or _check_firemode(template.displayed_attacks.primary) then
-        autofire_delay_normal = _get_chain_time(template, true)
-    elseif template.fire_mode then
-        is_natural_autofire_normal = true
-    end
-    if is_bees or _check_firemode(template.displayed_attacks.secondary) or _check_firemode(template.displayed_attacks.extra) then
-        autofire_delay_aim = _get_chain_time(template, false)
-    elseif template.fire_mode then
-        is_natural_autofire_aim = true
-    end
-
-    track_autofire = (autofire_delay_normal or autofire_delay_aim) and true or false
-    autofire_delay_current = autofire_delay_normal
-
-    track_natural = is_natural_autofire_normal or is_natural_autofire_aim
-    natural_current = is_natural_autofire_normal
+    chargeup_stage = CHARGEUP_SHOT_STAGE.holding
 end
 
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
     if self._player == Managers.player:local_player(1) then
-        local wep = self._weapons[slot_name].weapon_template
-        if not (slot_name == "slot_secondary" or (include_psyker_bees and wep.name == "psyker_throwing_knives")) then
-            wep = nil
-        end
-        _apply_weapon_template(wep)
+        _disable_autofire()
+        autofire_delay_normal, autofire_delay_aim, natural_autofire_normal, natural_autofire_aim = mod.get_weapon_data(self._weapons[slot_name].weapon_template, include_psyker_bees)
+
+        track_autofire = (autofire_delay_normal or autofire_delay_aim) and true or false
+        autofire_delay_current = autofire_delay_normal
+
+        track_natural = (natural_autofire_normal or natural_autofire_aim) and true or false
+        natural_current = natural_autofire_normal
     end
 end)
 
 local _set_firemode_selection = function(asf)
     select_autofire = asf
 
-    local firemode_element = _get_hud_element()
+    local firemode_element = mod.get_hud_element()
     if firemode_element then
         firemode_element:update_firemode(select_autofire)
     end
@@ -209,28 +129,68 @@ mod:hook_require("scripts/extension_systems/character_state_machine/character_st
     end)
 end)
 
+local _begin_aim = function()
+    autofire_delay_current = autofire_delay_aim
+    natural_current = natural_autofire_aim
+end
+
+local _end_aim = function()
+    autofire_delay_current = autofire_delay_normal
+    natural_current = natural_autofire_normal
+end
+
 mod:hook_require("scripts/utilities/alternate_fire", function(AlternateFire)
     mod:hook_safe(AlternateFire, "start", function(alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, peeking_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, ...)
         if player_unit == _get_player_unit() then
-            autofire_delay_current = autofire_delay_aim
-            natural_current = is_natural_autofire_aim
+            _begin_aim()
         end
     end)
 
     mod:hook_safe(AlternateFire, "stop", function(alternate_fire_component, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, weapon_template, skip_stop_anim, player_unit, ...)
         if player_unit == _get_player_unit() then
-            autofire_delay_current = autofire_delay_normal
-            natural_current = is_natural_autofire_normal
+            _end_aim()
         end
     end)
 end)
 
+mod:hook_safe(CLASS.WarpChargeActionModule, "start", function(self, ...)
+    if self._player_unit == _get_player_unit() then
+        _begin_aim()
+    end
+end)
+
+mod:hook_safe(CLASS.WarpChargeActionModule, "finish", function(self, ...)
+    if self._player_unit == _get_player_unit() then
+        _end_aim()
+    end
+end)
+
+mod:hook_safe(CLASS.ChargeActionModule, "start", function(self, ...)
+    if chargeup_stage == CHARGEUP_SHOT_STAGE.repress and self._player_unit == _get_player_unit() then
+        chargeup_stage = CHARGEUP_SHOT_STAGE.holding
+    end
+end)
+
+mod:hook_safe(CLASS.ChargeActionModule, "fixed_update", function(self, ...)
+    if chargeup_autofire and natural_current == NATURAL_MODE.chargeup and chargeup_stage == CHARGEUP_SHOT_STAGE.holding and self._player_unit == _get_player_unit() then
+        local charge_level = self._action_module_charge_component.charge_level
+        local charge_template = self._weapon_extension:charge_template()
+        local fully_charged_charge_level = charge_template.fully_charged_charge_level or 1
+
+        if charge_level >= fully_charged_charge_level then
+            chargeup_stage = CHARGEUP_SHOT_STAGE.release
+        end
+    end
+end)
+
 local _input_action_hook = function(func, self, action_name)
     local val = func(self, action_name)
-    if track_autofire or (track_natural and shoot_for_me) then
-        local is_lmb_press = action_name == "action_one_pressed"
+    if track_autofire or (track_natural and (shoot_for_me or natural_current == NATURAL_MODE.chargeup)) then
+        local is_lmb_action = action_name == "action_one_pressed"
+
+        -- first, determine if we're holding down LMB
         if val and not shoot_for_me then
-            if is_lmb_press then
+            if is_lmb_action then
                 is_firing = true
                 next_autofire = -1
             end
@@ -240,11 +200,28 @@ local _input_action_hook = function(func, self, action_name)
         end
 
         if select_autofire then
-            if track_natural then
-                if natural_current and action_name == "action_one_hold" and select_autofire then
-                    return true
+            -- if this is attack is a charge-up (helbore, staffs) or already fully-auto
+            if track_natural and natural_current then
+                if action_name == "action_one_hold" then
+                    -- just shoot, unless the chargeup is finished
+                    if chargeup_stage == CHARGEUP_SHOT_STAGE.release then
+                        chargeup_stage = CHARGEUP_SHOT_STAGE.repress
+                        return false
+                    end
+                    return shoot_for_me or val
                 end
-            elseif is_lmb_press and (is_firing or shoot_for_me) and autofire_delay_current then
+                if is_lmb_action and natural_current == NATURAL_MODE.chargeup then
+                    -- some attacks will require us to re-press LMB after firing a charge
+                    if (is_firing or shoot_for_me) and chargeup_stage == CHARGEUP_SHOT_STAGE.repress then
+                        return true
+                    end
+                    -- if we click during a chargeup, release it prematurely
+                    if val then
+                        chargeup_stage = CHARGEUP_SHOT_STAGE.release
+                    end
+                end
+            elseif is_lmb_action and (is_firing or shoot_for_me) and autofire_delay_current then
+                -- the original core of the mod; click every X seconds
                 local this_t = Managers.time and Managers.time:time("main")
                 if next_autofire < 0 or this_t >= next_autofire then
                     next_autofire = this_t + autofire_delay_current / time_scale * (is_sprinting and SPRINT_MULTIPLIER or STANDARD_MULTIPLIER)

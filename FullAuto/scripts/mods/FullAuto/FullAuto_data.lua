@@ -44,6 +44,11 @@ return {
 				type          = "checkbox",
 				default_value = true,
 			},
+			{
+				setting_id    = "chargeup_autofire",
+				type          = "checkbox",
+				default_value = true,
+			},
 		}
 	}
 }

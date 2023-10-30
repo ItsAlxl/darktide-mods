@@ -26,4 +26,7 @@ return {
 	include_psyker_bees = {
 		en = Localize("loc_class_psyker_title") .. " " .. Localize("loc_ability_psyker_blitz_throwing_knives")
 	},
+	chargeup_autofire = {
+		en = Localize("loc_weapon_keyword_charged_attack"),
+	},
 }
