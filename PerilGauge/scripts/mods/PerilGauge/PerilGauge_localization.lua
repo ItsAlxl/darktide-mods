@@ -153,6 +153,9 @@ return {
 		["zh-cn"] = "文字标签垂直位置",
 		ru = "Вертикальное положение ярлыка",
 	},
+	lbl_vert_description = {
+		en = "'Middle' is the same as 'Bottom' for horizontal gauges.",
+	},
 	vert_top = {
 		en = "Top",
 		["zh-cn"] = "顶部",
@@ -173,6 +176,9 @@ return {
 		["zh-cn"] = "文字标签水平位置",
 		ru = "Горизонтальное положение ярлыка",
 	},
+	lbl_horiz_description = {
+		en = "'Center' is the same as 'Right' for vertical gauges.",
+	},
 	horiz_left = {
 		en = "Left",
 		["zh-cn"] = "左侧",
@@ -187,5 +193,14 @@ return {
 		en = "Right",
 		["zh-cn"] = "右侧",
 		ru = "Справа",
+	},
+	override_peril_alpha = {
+		en = "Override Vanilla Peril Text Visibility",
+	},
+	gauge_thick = {
+		en = "Gauge Thickness",
+	},
+	gauge_length = {
+		en = "Gauge Length",
 	},
 }

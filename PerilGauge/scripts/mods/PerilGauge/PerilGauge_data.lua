@@ -7,6 +7,30 @@ return {
 	options = {
 		widgets = {
 			{
+				setting_id = "gauge_thick",
+				type = "numeric",
+				default_value = 15,
+				range = { 5, 50 },
+				decimals_number = 0,
+			},
+			{
+				setting_id = "gauge_length",
+				type = "numeric",
+				default_value = 200,
+				range = { 100, 450 },
+				decimals_number = 0,
+			},
+			{
+				setting_id = "override_peril_color",
+				type = "checkbox",
+				default_value = true,
+			},
+			{
+				setting_id = "override_peril_alpha",
+				type = "checkbox",
+				default_value = true,
+			},
+			{
 				setting_id = "vis_behavior",
 				type = "dropdown",
 				default_value = 0,
@@ -19,7 +43,7 @@ return {
 					{
 						setting_id = "vanish_delay",
 						type = "numeric",
-						default_value = 0,
+						default_value = 1.5,
 						range = { 0, 15 },
 						decimals_number = 1,
 					},
@@ -45,11 +69,6 @@ return {
 						decimals_number = 1,
 					},
 				}
-			},
-			{
-				setting_id = "override_peril_color",
-				type = "checkbox",
-				default_value = true,
 			},
 			{
 				setting_id = "group_comps",

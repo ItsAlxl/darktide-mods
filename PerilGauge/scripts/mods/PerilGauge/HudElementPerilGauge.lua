@@ -17,10 +17,12 @@ local appear_delay = mod:get("appear_delay")
 local appear_speed = mod:get("appear_speed")
 
 local override_peril_color = mod:get("override_peril_color")
+local override_peril_alpha = mod:get("override_peril_alpha")
 
 local next_update_refresh_style = false
 local prev_vis_instruction = nil
 local current_alpha = 0.0
+local is_peril_driven = nil
 
 local bar_size_empty = { 0, 0 }
 local bar_size_full = { 0, 0 }
@@ -68,6 +70,10 @@ end
 mod.on_setting_changed = function(id)
     if id == "override_peril_color" then
         override_peril_color = mod:get(id)
+    elseif id == "override_peril_alpha" then
+        override_peril_alpha = mod:get(id)
+        mod.override_alpha_heat = nil
+        mod.override_alpha_peril = nil
     elseif id == "vis_behavior" then
         vis_behavior = mod:get(id)
     elseif id == "vanish_speed" then
@@ -97,6 +103,8 @@ HudElementPerilGauge.init = function(self, parent, draw_layer, start_scale)
     end
     self._weapon_slots = weapon_slots
 
+    mod.override_alpha_heat = nil
+    mod.override_alpha_peril = nil
     next_update_refresh_style = true
 end
 
@@ -108,12 +116,13 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
     if next_update_refresh_style then
         next_update_refresh_style = false
         local label_style = gauge_widget_style.name_text
+        local bracket_style = gauge_widget_style.bracket
 
         -- Because this section only runs once after settings are
         -- changed, I think it's fine to use mod:get(...) a few times.
         -- Ideally, this would go in its own function which would only be
         -- called after settings change, but this is easier for me so :)
-        gauge_widget_style.bracket.visible = mod:get("comp_bracket")
+        bracket_style.visible = mod:get("comp_bracket")
 
         local lbl_text = mod:get("lbl_text")
         if lbl_text == "lbl_text_none" then
@@ -123,13 +132,23 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             label_style.visible = true
         end
 
+        local bar_size = { mod:get("gauge_length"), mod:get("gauge_thick") }
         local orientation = mod:get("comp_orientation")
         local bar_direction = mod:get("bar_direction")
         local lbl_vert = mod:get("lbl_vert")
         local lbl_horiz = mod:get("lbl_horiz")
-        gauge_widget_style.bracket.angle = orientation * math.pi * 0.5
+        local text_offset = 5 * Definitions.default_values.bar_bracket_spacing
+
+        bracket_style.size = { bar_size[1] + 2.0 * Definitions.default_values.bar_bracket_spacing, bar_size[2] }
+        bracket_style.pivot = { 0.5 * bracket_style.size[1], 0.5 * bracket_style.size[2] }
+        bracket_style.angle = orientation * math.pi * 0.5
 
         if orientation == 0 or orientation == 2 then
+            bar_size_full[1] = bar_size[1]
+            bar_size_full[2] = bar_size[2]
+            bar_size_empty[1] = 0
+            bar_size_empty[2] = bar_size_full[2]
+
             label_style.text_vertical_alignment = "center"
             if lbl_horiz == -1 then
                 label_style.text_horizontal_alignment = "left"
@@ -138,26 +157,33 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             else
                 label_style.text_horizontal_alignment = "center"
             end
+
             label_style.offset[1] = 0
-            label_style.offset[2] = 2 * Definitions.default_values.bar_size[2]
+            label_style.offset[2] = 0.5 * bar_size[2] + text_offset
             if lbl_vert == -1 then
                 label_style.offset[2] = -label_style.offset[2]
             end
+            label_style.size[1] = bar_size_full[1]
+            label_style.size[2] = bar_size_full[2]
 
+            segment_style.offset[1] = 0.5 * (Definitions.default_values.area_side - bar_size[1])
+            segment_style.offset[2] = 0
             segment_style.vertical_alignment = "center"
             if bar_direction == 0 then
                 segment_style.horizontal_alignment = "center"
+                segment_style.offset[1] = 0
             elseif (bar_direction == -1 and orientation == 0) or (bar_direction == 1 and orientation == 2) then
                 segment_style.horizontal_alignment = "right"
+                segment_style.offset[1] = -segment_style.offset[1]
             else
                 segment_style.horizontal_alignment = "left"
             end
-
-            bar_size_full[1] = Definitions.default_values.bar_size[1]
-            bar_size_full[2] = Definitions.default_values.bar_size[2]
-            bar_size_empty[1] = 0
-            bar_size_empty[2] = bar_size_full[2]
         else
+            bar_size_full[1] = bar_size[2]
+            bar_size_full[2] = bar_size[1]
+            bar_size_empty[1] = bar_size_full[1]
+            bar_size_empty[2] = 0
+
             if lbl_vert == -1 then
                 label_style.text_vertical_alignment = "top"
             elseif lbl_vert == 1 then
@@ -165,7 +191,8 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             else
                 label_style.text_vertical_alignment = "center"
             end
-            label_style.offset[1] = Definitions.default_values.bar_size[1] * 0.5 + 2 * Definitions.default_values.bar_size[2]
+
+            label_style.offset[1] = 0.5 * (bar_size[1] + bar_size[2]) + text_offset
             label_style.offset[2] = 0
             if lbl_horiz == -1 then
                 label_style.text_horizontal_alignment = "right"
@@ -173,20 +200,21 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             else
                 label_style.text_horizontal_alignment = "left"
             end
+            label_style.size[1] = bar_size_full[2]
+            label_style.size[2] = bar_size_full[2]
 
+            segment_style.offset[1] = 0
+            segment_style.offset[2] = 0.5 * (Definitions.default_values.area_side - bar_size[1])
             segment_style.horizontal_alignment = "center"
             if bar_direction == 0 then
                 segment_style.vertical_alignment = "center"
+                segment_style.offset[2] = 0
             elseif (bar_direction == -1 and orientation == 1) or (bar_direction == 1 and orientation == 3) then
                 segment_style.vertical_alignment = "top"
             else
                 segment_style.vertical_alignment = "bottom"
+                segment_style.offset[2] = -segment_style.offset[2]
             end
-
-            bar_size_full[1] = Definitions.default_values.bar_size[2]
-            bar_size_full[2] = Definitions.default_values.bar_size[1]
-            bar_size_empty[1] = bar_size_full[1]
-            bar_size_empty[2] = 0
         end
     end
 
@@ -196,9 +224,9 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
     local player_extensions = self._parent:player_extensions()
     local player_unit_data = player_extensions and player_extensions.unit_data
 
-    local warp_charge_level = player_unit_data and player_unit_data:read_component("warp_charge").current_percentage or 0
+    local warp_charge_level = (is_peril_driven or is_peril_driven == nil) and player_unit_data and player_unit_data:read_component("warp_charge").current_percentage or 0
     local overheat_level = 0
-    if player_unit_data then
+    if player_unit_data and (not is_peril_driven or is_peril_driven == nil) then
         local weapon_extension = player_extensions.weapon
         local weapon_template = weapon_extension:weapon_template()
 
@@ -217,7 +245,10 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             end
         end
     end
-    local peril_fraction = math.max(warp_charge_level, overheat_level)
+    if warp_charge_level ~= overheat_level then
+        is_peril_driven = warp_charge_level > overheat_level
+    end
+    local peril_fraction = is_peril_driven and warp_charge_level or overheat_level
 
     -- Update visibility
     if vis_behavior > 0 then
@@ -266,6 +297,13 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             end
         end
         current_alpha = alpha_multiplier
+    end
+    if override_peril_alpha and is_peril_driven ~= nil then
+        if is_peril_driven then
+            mod.override_alpha_peril = current_alpha
+        else
+            mod.override_alpha_heat = current_alpha
+        end
     end
 
     -- Set bar size & color

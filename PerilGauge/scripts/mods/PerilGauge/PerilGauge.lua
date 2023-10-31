@@ -29,6 +29,24 @@ mod:hook_safe(CLASS.HudElementOvercharge, "_animate_widget_warnings", function(s
     end
 end)
 
+local _override_widget_vis = function(alpha, widget, text_prefix)
+    if alpha and widget and not widget.visible then
+        widget.content.warning_text = text_prefix .. "0%"
+        widget.alpha_multiplier = alpha * 0.5
+        widget.visible = true
+    end
+end
+
+mod:hook(CLASS.HudElementOvercharge, "update", function(func, self, ...)
+    func(self, ...)
+    _override_widget_vis(mod.override_alpha_peril, self._widgets_by_name.overcharge, "")
+    _override_widget_vis(mod.override_alpha_heat, self._widgets_by_name.overheat, "")
+end)
+
+mod:hook(CLASS.HudElementOvercharge, "_update_visibility", function(func, ...)
+    return mod.override_alpha_peril or mod.override_alpha_heat or func(...)
+end)
+
 --[[ Useful for debugging (h/t Fracticality)
 local recreate_hud = function()
     local ui_manager = Managers.ui

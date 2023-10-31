@@ -4,8 +4,15 @@ The format for a threshold is as follows:
         before = { a, r, g, b },
         after = { a, r, g, b }
     },
-only one of `before` or `after` need to be defined,
-but defining both allows for a sudden color change
+Only one of either `before` or `after` need to be defined,
+but defining both allows for a sudden color change.
+
+`before` is the color to transition to while approaching the threshold
+`after` is the color to transition from after the threshold
+`a` = Alpha/opacity, 0-255
+`r` = Red, 0-255
+`g` = Green, 0-255
+`b` = Blue, 0-255
 
 Make sure to back this file up before updating the mod if
 you want to bring your thresholds into the new version
