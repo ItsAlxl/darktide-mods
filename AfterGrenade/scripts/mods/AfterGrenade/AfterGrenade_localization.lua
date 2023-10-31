@@ -1,3 +1,7 @@
+local _localize_class_action_en = function(class_loc_key, action_loc_key)
+	return Localize(class_loc_key) .. " " .. Localize(action_loc_key)
+end
+
 return {
 	mod_name = {
 		en = "AfterBlitz",
@@ -20,30 +24,35 @@ return {
 		ru = "Экипировать гранаты",
 	},
 	after_previous = {
-		en = "Equip Previous",
+		en = "Wield Previous Weapon",
 		["zh-cn"] = "装备上次的武器",
 		ru = "Экипировать предыдущее",
 	},
 	after_primary = {
-		en = "Equip Primary",
-		["zh-cn"] = "装备主武器",
-		ru = "Экипировать основное оружие",
+		en = Localize("loc_ingame_wield_1"),
 	},
 	after_secondary = {
-		en = "Equip Secondary",
-		["zh-cn"] = "装备副武器",
-		ru = "Экипировать дополнительное оружие",
+		en = Localize("loc_ingame_wield_2"),
 	},
 	ag_zealot = {
 		en = Localize("loc_class_zealot_title"),
 	},
+	ag_zealot_quickswap = {
+		en = _localize_class_action_en("loc_class_zealot_title", "loc_ingame_quick_wield"),
+	},
 	ag_veteran = {
 		en = Localize("loc_class_veteran_title"),
+	},
+	ag_veteran_quickswap = {
+		en = _localize_class_action_en("loc_class_veteran_title", "loc_ingame_quick_wield"),
 	},
 	ag_ogryn = {
 		en = Localize("loc_class_ogryn_title"),
 	},
-	ag_psyker = {
-		en = Localize("loc_class_psyker_title"),
+	ag_ogryn_quickswap = {
+		en = _localize_class_action_en("loc_class_ogryn_title", "loc_ingame_quick_wield"),
+	},
+	ag_psyker_quickswap = {
+		en = _localize_class_action_en("loc_class_psyker_title", "loc_ingame_quick_wield"),
 	},
 }

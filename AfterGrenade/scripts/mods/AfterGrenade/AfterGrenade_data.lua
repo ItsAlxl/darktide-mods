@@ -21,21 +21,39 @@ return {
 				options       = table.clone(dropdown_options),
 			},
 			{
+				setting_id    = "ag_zealot_quickswap",
+				type          = "dropdown",
+				default_value = "PREVIOUS",
+				options       = table.clone(dropdown_options),
+			},
+			{
 				setting_id    = "ag_veteran",
 				type          = "dropdown",
 				default_value = "grenade_ability_pressed",
 				options       = table.clone(dropdown_options),
 			},
 			{
-				setting_id    = "ag_ogryn",
+				setting_id    = "ag_veteran_quickswap",
 				type          = "dropdown",
-				default_value = "",
+				default_value = "PREVIOUS",
 				options       = table.clone(dropdown_options),
 			},
 			{
-				setting_id    = "ag_psyker",
+				setting_id    = "ag_ogryn",
 				type          = "dropdown",
-				default_value = "",
+				default_value = "PREVIOUS",
+				options       = table.clone(dropdown_options),
+			},
+			{
+				setting_id    = "ag_ogryn_quickswap",
+				type          = "dropdown",
+				default_value = "PREVIOUS",
+				options       = table.clone(dropdown_options),
+			},
+			{
+				setting_id    = "ag_psyker_quickswap",
+				type          = "dropdown",
+				default_value = "PREVIOUS",
 				options       = dropdown_options,
 			},
 		}
