@@ -2,10 +2,12 @@ return {
 	mod_name = {
 		en = "PerilGauge",
 		["zh-cn"] = "危机值指示器",
+		ru = "Индикатор Угрозы",
 	},
 	mod_description = {
 		en = "Adds a configurable HUD bar for your current peril/heat.",
 		["zh-cn"] = "添加一个可配置的 HUD 指示条，用于显示当前危机值/热量。",
+		ru = "Peril Gauge - Добавляет в интерфейс настраиваемую полоску текущего уровня угрозы/перегрева.",
 	},
 	vis_behavior = {
 		en = "Visibility Behavior",
@@ -70,6 +72,7 @@ return {
 	override_peril_color = {
 		en = "Override Vanilla Peril Text Color",
 		["zh-cn"] = "覆盖原版危机值文本颜色",
+		ru = "Заменить стандартный цвет текста Угрозы",
 	},
 	group_comps = {
 		en = "Components",
@@ -84,11 +87,12 @@ return {
 	lbl_text = {
 		en = "Label",
 		["zh-cn"] = "文字标签",
-		ru = "Название",
+		ru = "Ярлык",
 	},
 	lbl_text_none = {
 		en = "<Hide Label>",
 		["zh-cn"] = "<隐藏标签>",
+		ru = "<Скрыть ярлык>",
 	},
 	lbl_text_peril = {
 		en = Utf8.upper(Localize("loc_ranged_warp_charge")),
@@ -102,69 +106,86 @@ return {
 	comp_orientation = {
 		en = "Orientation",
 		["zh-cn"] = "方向",
+		ru = "Ориентация",
 	},
 	orientation_horizontal = {
 		en = "Horizontal",
 		["zh-cn"] = "水平",
+		ru = "Горизонтальная",
 	},
 	orientation_vertical = {
 		en = "Vertical",
 		["zh-cn"] = "垂直",
+		ru = "Вертикальная",
 	},
 	orientation_horizontal_flipped = {
 		en = "Horizontal (Flipped)",
 		["zh-cn"] = "水平（翻转）",
+		ru = "Горизонтальная (Перевёрнутая)",
 	},
 	orientation_vertical_flipped = {
 		en = "Vertical (Flipped)",
 		["zh-cn"] = "垂直（翻转）",
+		ru = "Вертикальная (Перевёрнутая)",
 	},
 	bar_direction = {
 		en = "Bar Grow Direction",
 		["zh-cn"] = "指示条延伸方向",
+		ru = "Направление роста полоски",
 	},
 	bar_dir_start = {
 		en = "Start to End",
 		["zh-cn"] = "从头至尾",
+		ru = "От начала к концу",
 	},
 	bar_dir_center = {
 		en = "Center to Edges",
 		["zh-cn"] = "从中心至两边",
+		ru = "От центра к краям",
 	},
 	bar_dir_end = {
 		en = "End to Start",
 		["zh-cn"] = "从尾至头",
+		ru = "От конца к началу",
 	},
 	lbl_vert = {
 		en = "Label Vertical Position",
 		["zh-cn"] = "文字标签垂直位置",
+		ru = "Вертикальное положение ярлыка",
 	},
 	vert_top = {
 		en = "Top",
 		["zh-cn"] = "顶部",
+		ru = "Сверху",
 	},
 	vert_center = {
 		en = "Middle",
 		["zh-cn"] = "中心",
+		ru = "Посередине",
 	},
 	vert_bottom = {
 		en = "Bottom",
 		["zh-cn"] = "底部",
+		ru = "Снизу",
 	},
 	lbl_horiz = {
 		en = "Label Horizontal Position",
 		["zh-cn"] = "文字标签水平位置",
+		ru = "Горизонтальное положение ярлыка",
 	},
 	horiz_left = {
 		en = "Left",
 		["zh-cn"] = "左侧",
+		ru = "Слева",
 	},
 	horiz_center = {
 		en = "Center",
 		["zh-cn"] = "中心",
+		ru = "По центру",
 	},
 	horiz_right = {
 		en = "Right",
 		["zh-cn"] = "右侧",
+		ru = "Справа",
 	},
 }
