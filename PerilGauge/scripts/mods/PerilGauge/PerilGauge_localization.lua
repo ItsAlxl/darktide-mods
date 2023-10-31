@@ -1,9 +1,11 @@
 return {
 	mod_name = {
 		en = "PerilGauge",
+		["zh-cn"] = "危机值指示器",
 	},
 	mod_description = {
 		en = "Adds a configurable HUD bar for your current peril/heat.",
+		["zh-cn"] = "添加一个可配置的 HUD 指示条，用于显示当前危机值/热量。",
 	},
 	vis_behavior = {
 		en = "Visibility Behavior",
@@ -32,7 +34,7 @@ return {
 	},
 	vanish_delay_description = {
 		en = "How many seconds pass before the bar vanishes (default 0.0).",
-		["zh-cn"] = "条隐藏前等待的秒数（默认 0.0）。",
+		["zh-cn"] = "指示条隐藏前等待的秒数（默认 0.0）。",
 		ru = "Сколько секунд должно пройти, прежде чем полоса исчезнет (по умолчанию 0,0).",
 	},
 	vanish_speed = {
@@ -42,7 +44,7 @@ return {
 	},
 	vanish_speed_description = {
 		en = "How quickly the bar fades out (default 3.0). A value of 1.0 makes it vanish over 1 second. A value of 2.0 makes it vanish over 0.5 seconds. A value of 0.0 causes it to vanish instantly.",
-		["zh-cn"] = "条隐藏的速度（默认 3.0）。1.0 表示完全隐藏需要 1 秒。2.0 表示完全隐藏需要 0.5 秒。0.0 表示立刻隐藏。",
+		["zh-cn"] = "指示条隐藏的速度（默认 3.0）。1.0 表示完全隐藏需要 1 秒。2.0 表示完全隐藏需要 0.5 秒。0.0 表示立刻隐藏。",
 		ru = "Как быстро исчезает полоса (по умолчанию 3.0). Значение 1.0 заставляет её исчезать в течение 1 секунды. При значении 2,0 она исчезает через полсекунды. Значение 0.0 заставляет её мгновенно исчезать.",
 	},
 	appear_delay = {
@@ -52,7 +54,7 @@ return {
 	},
 	appear_delay_description = {
 		en = "How many seconds pass before the bar appears (default 0.0).",
-		["zh-cn"] = "条显示前等待的秒数（默认 0.0）。",
+		["zh-cn"] = "指示条显示前等待的秒数（默认 0.0）。",
 		ru = "Сколько секунд должно пройти до появления полосы (по умолчанию 0,0).",
 	},
 	appear_speed = {
@@ -62,11 +64,12 @@ return {
 	},
 	appear_speed_description = {
 		en = "How quickly the bar fades in (default 3.0). A value of 1.0 makes it appear over 1 second. A value of 2.0 makes it appear over 0.5 seconds. A value of 0.0 causes it to appear instantly.",
-		["zh-cn"] = "条显示的速度（默认 3.0）。1.0 表示完全显示需要 1 秒。2.0 表示完全显示需要 0.5 秒。0.0 表示立刻显示。",
+		["zh-cn"] = "指示条显示的速度（默认 3.0）。1.0 表示完全显示需要 1 秒。2.0 表示完全显示需要 0.5 秒。0.0 表示立刻显示。",
 		ru = "Как быстро появляется полоса (по умолчанию 3.0). Значение 1.0 заставляет её появляться через 1 секунду. При значении 2,0 она появляется через полсекунды. Значение 0.0 заставляет её появляться мгновенно.",
 	},
 	override_peril_color = {
 		en = "Override Vanilla Peril Text Color",
+		["zh-cn"] = "覆盖原版危机值文本颜色",
 	},
 	group_comps = {
 		en = "Components",
@@ -75,7 +78,7 @@ return {
 	},
 	comp_bracket = {
 		en = "Bar Bracket",
-		["zh-cn"] = "条边框",
+		["zh-cn"] = "指示条边框",
 		ru = "Скоба под полосой",
 	},
 	lbl_text = {
@@ -85,6 +88,7 @@ return {
 	},
 	lbl_text_none = {
 		en = "<Hide Label>",
+		["zh-cn"] = "<隐藏标签>",
 	},
 	lbl_text_peril = {
 		en = Utf8.upper(Localize("loc_ranged_warp_charge")),
@@ -97,53 +101,70 @@ return {
 	},
 	comp_orientation = {
 		en = "Orientation",
+		["zh-cn"] = "方向",
 	},
 	orientation_horizontal = {
 		en = "Horizontal",
+		["zh-cn"] = "水平",
 	},
 	orientation_vertical = {
 		en = "Vertical",
+		["zh-cn"] = "垂直",
 	},
 	orientation_horizontal_flipped = {
 		en = "Horizontal (Flipped)",
+		["zh-cn"] = "水平（翻转）",
 	},
 	orientation_vertical_flipped = {
 		en = "Vertical (Flipped)",
+		["zh-cn"] = "垂直（翻转）",
 	},
 	bar_direction = {
 		en = "Bar Grow Direction",
+		["zh-cn"] = "指示条延伸方向",
 	},
 	bar_dir_start = {
 		en = "Start to End",
+		["zh-cn"] = "从头至尾",
 	},
 	bar_dir_center = {
 		en = "Center to Edges",
+		["zh-cn"] = "从中心至两边",
 	},
 	bar_dir_end = {
 		en = "End to Start",
+		["zh-cn"] = "从尾至头",
 	},
 	lbl_vert = {
 		en = "Label Vertical Position",
+		["zh-cn"] = "文字标签垂直位置",
 	},
 	vert_top = {
 		en = "Top",
+		["zh-cn"] = "顶部",
 	},
 	vert_center = {
 		en = "Middle",
+		["zh-cn"] = "中心",
 	},
 	vert_bottom = {
 		en = "Bottom",
+		["zh-cn"] = "底部",
 	},
 	lbl_horiz = {
 		en = "Label Horizontal Position",
+		["zh-cn"] = "文字标签水平位置",
 	},
 	horiz_left = {
 		en = "Left",
+		["zh-cn"] = "左侧",
 	},
 	horiz_center = {
 		en = "Center",
+		["zh-cn"] = "中心",
 	},
 	horiz_right = {
 		en = "Right",
+		["zh-cn"] = "右侧",
 	},
 }
