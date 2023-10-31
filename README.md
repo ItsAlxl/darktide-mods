@@ -90,6 +90,11 @@ Penances provide more details about your current progress.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/122).
 
+## PerilGauge
+Adds a configurable bar to display your current peril/heat.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/243).
+
 ## Perspectives aka Perspectives Mod
 Switch between first and third person perspectives.
 
