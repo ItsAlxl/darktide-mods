@@ -32,6 +32,7 @@ local using_melee = false
 
 local prev_fade_instruction = nil
 local upd_component_style = true
+local current_alpha = 0
 
 mod.on_setting_changed = function(id)
     if string.find(id, COMP_BASE_PREFIX) then
@@ -106,9 +107,9 @@ end)
 
 mod:hook(CLASS.HudElementBlocking, "_update_visibility", function(func, self, dt)
     if vis_behavior > 0 then
-        self._alpha_multiplier = 1.0
+        current_alpha = 1.0
     elseif vis_behavior < 0 then
-        self._alpha_multiplier = 0.0
+        current_alpha = 0.0
     else
         -- modified from "scripts/ui/hud/elements/blocking/hud_element_blocking"
         local draw = false
@@ -154,7 +155,7 @@ mod:hook(CLASS.HudElementBlocking, "_update_visibility", function(func, self, dt
             appear = true
         end
 
-        local alpha_multiplier = self._alpha_multiplier or 0.0
+        local alpha_multiplier = current_alpha
         if appear then
             if appear_speed > 0.0 then
                 alpha_multiplier = math.min(alpha_multiplier + dt * appear_speed, 1.0)
@@ -168,6 +169,11 @@ mod:hook(CLASS.HudElementBlocking, "_update_visibility", function(func, self, dt
                 alpha_multiplier = 0.0
             end
         end
-        self._alpha_multiplier = alpha_multiplier
+        current_alpha = alpha_multiplier
     end
+end)
+
+mod:hook(CLASS.HudElementBlocking, "_draw_widgets", function(func, self, dt, t, input_service, ui_renderer, render_settings)
+    self._alpha_multiplier = current_alpha * render_settings.alpha_multiplier
+    func(self, dt, t, input_service, ui_renderer, render_settings)
 end)
