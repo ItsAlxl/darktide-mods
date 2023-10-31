@@ -36,7 +36,7 @@ return {
 	},
 	vanish_delay_description = {
 		en = "How many seconds pass before the bar vanishes (default 0.0).",
-		["zh-cn"] = "条隐藏前等待的秒数（默认 0.0）。",
+		["zh-cn"] = "指示条隐藏前等待的秒数（默认 0.0）。",
 		ru = "Сколько секунд должно пройти, прежде чем полоса исчезнет (по умолчанию 0,0).",
 	},
 	vanish_speed = {
@@ -46,7 +46,7 @@ return {
 	},
 	vanish_speed_description = {
 		en = "How quickly the bar fades out (default 3.0). A value of 1.0 makes it vanish over 1 second. A value of 2.0 makes it vanish over 0.5 seconds. A value of 0.0 causes it to vanish instantly.",
-		["zh-cn"] = "条隐藏的速度（默认 3.0）。1.0 表示完全隐藏需要 1 秒。2.0 表示完全隐藏需要 0.5 秒。0.0 表示立刻隐藏。",
+		["zh-cn"] = "指示条隐藏的速度（默认 3.0）。1.0 表示完全隐藏需要 1 秒。2.0 表示完全隐藏需要 0.5 秒。0.0 表示立刻隐藏。",
 		ru = "Как быстро исчезает полоса (по умолчанию 3.0). Значение 1.0 заставляет её исчезать в течение 1 секунды. При значении 2,0 она исчезает через полсекунды. Значение 0.0 заставляет её мгновенно исчезать.",
 	},
 	appear_delay = {
@@ -56,7 +56,7 @@ return {
 	},
 	appear_delay_description = {
 		en = "How many seconds pass before the bar appears (default 0.0).",
-		["zh-cn"] = "条显示前等待的秒数（默认 0.0）。",
+		["zh-cn"] = "指示条显示前等待的秒数（默认 0.0）。",
 		ru = "Сколько секунд должно пройти до появления полосы (по умолчанию 0,0).",
 	},
 	appear_speed = {
@@ -66,7 +66,7 @@ return {
 	},
 	appear_speed_description = {
 		en = "How quickly the bar fades in (default 3.0). A value of 1.0 makes it appear over 1 second. A value of 2.0 makes it appear over 0.5 seconds. A value of 0.0 causes it to appear instantly.",
-		["zh-cn"] = "条显示的速度（默认 3.0）。1.0 表示完全显示需要 1 秒。2.0 表示完全显示需要 0.5 秒。0.0 表示立刻显示。",
+		["zh-cn"] = "指示条显示的速度（默认 3.0）。1.0 表示完全显示需要 1 秒。2.0 表示完全显示需要 0.5 秒。0.0 表示立刻显示。",
 		ru = "Как быстро появляется полоса (по умолчанию 3.0). Значение 1.0 заставляет её появляться через 1 секунду. При значении 2,0 она появляется через полсекунды. Значение 0.0 заставляет её появляться мгновенно.",
 	},
 	override_peril_color = {
@@ -81,7 +81,7 @@ return {
 	},
 	comp_bracket = {
 		en = "Bar Bracket",
-		["zh-cn"] = "条边框",
+		["zh-cn"] = "指示条边框",
 		ru = "Скоба под полосой",
 	},
 	lbl_text = {
