@@ -155,6 +155,7 @@ return {
 	},
 	lbl_vert_description = {
 		en = "'Middle' is the same as 'Bottom' for horizontal gauges.",
+		ru = "«Посередине» тоже самое, что «Снизу» для горизонтальных датчиков.",
 	},
 	vert_top = {
 		en = "Top",
@@ -178,6 +179,7 @@ return {
 	},
 	lbl_horiz_description = {
 		en = "'Center' is the same as 'Right' for vertical gauges.",
+		ru = "«По центру» тоже самое, что «Справа» для вертикальных датчиков.",
 	},
 	horiz_left = {
 		en = "Left",
@@ -196,11 +198,14 @@ return {
 	},
 	override_peril_alpha = {
 		en = "Override Vanilla Peril Text Visibility",
+		ru = "Заменить стандартную видимость текста Угрозы",
 	},
 	gauge_thick = {
 		en = "Gauge Thickness",
+		ru = "Толщина датчика",
 	},
 	gauge_length = {
 		en = "Gauge Length",
+		ru = "Длина датчика",
 	},
 }
