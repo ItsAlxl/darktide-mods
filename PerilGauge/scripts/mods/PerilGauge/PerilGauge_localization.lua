@@ -155,6 +155,7 @@ return {
 	},
 	lbl_vert_description = {
 		en = "'Middle' is the same as 'Bottom' for horizontal gauges.",
+		["zh-cn"] = "对于水平指示器来说，“中心”与“底部”效果相同。",
 	},
 	vert_top = {
 		en = "Top",
@@ -178,6 +179,7 @@ return {
 	},
 	lbl_horiz_description = {
 		en = "'Center' is the same as 'Right' for vertical gauges.",
+		["zh-cn"] = "对于垂直指示器来说，“中心”与“右侧”效果相同。",
 	},
 	horiz_left = {
 		en = "Left",
@@ -196,11 +198,14 @@ return {
 	},
 	override_peril_alpha = {
 		en = "Override Vanilla Peril Text Visibility",
+		["zh-cn"] = "覆盖原版危机值文本可见度",
 	},
 	gauge_thick = {
 		en = "Gauge Thickness",
+		["zh-cn"] = "指示器厚度",
 	},
 	gauge_length = {
 		en = "Gauge Length",
+		["zh-cn"] = "指示器长度",
 	},
 }
