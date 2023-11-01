@@ -155,6 +155,7 @@ return {
 	},
 	lbl_vert_description = {
 		en = "'Middle' is the same as 'Bottom' for horizontal gauges.",
+		["zh-cn"] = "对于水平指示器来说，“中心”与“底部”效果相同。",
 		ru = "«Посередине» тоже самое, что «Снизу» для горизонтальных датчиков.",
 	},
 	vert_top = {
@@ -179,6 +180,7 @@ return {
 	},
 	lbl_horiz_description = {
 		en = "'Center' is the same as 'Right' for vertical gauges.",
+		["zh-cn"] = "对于垂直指示器来说，“中心”与“右侧”效果相同。",
 		ru = "«По центру» тоже самое, что «Справа» для вертикальных датчиков.",
 	},
 	horiz_left = {
@@ -198,14 +200,17 @@ return {
 	},
 	override_peril_alpha = {
 		en = "Override Vanilla Peril Text Visibility",
+		["zh-cn"] = "覆盖原版危机值文本可见度",
 		ru = "Заменить стандартную видимость текста Угрозы",
 	},
 	gauge_thick = {
 		en = "Gauge Thickness",
+		["zh-cn"] = "指示器厚度",
 		ru = "Толщина датчика",
 	},
 	gauge_length = {
 		en = "Gauge Length",
+		["zh-cn"] = "指示器长度",
 		ru = "Длина датчика",
 	},
 }
