@@ -7,6 +7,7 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local HudElementPerilGauge = class("HudElementPerilGauge", "HudElementBase")
 
 local vis_behavior = mod:get("vis_behavior")
+local perc_num_format = ""
 
 local vanish_timeout = 0.0
 local vanish_delay = mod:get("vanish_delay")
@@ -18,11 +19,11 @@ local appear_speed = mod:get("appear_speed")
 
 local override_peril_color = mod:get("override_peril_color")
 local override_peril_alpha = mod:get("override_peril_alpha")
+local override_peril_text = mod:get("override_peril_text")
 
 local next_update_refresh_style = false
 local prev_vis_instruction = nil
 local current_alpha = 0.0
-local is_peril_driven = nil
 
 local bar_size_empty = { 0, 0 }
 local bar_size_full = { 0, 0 }
@@ -70,10 +71,15 @@ end
 mod.on_setting_changed = function(id)
     if id == "override_peril_color" then
         override_peril_color = mod:get(id)
+        mod.override_color = nil
     elseif id == "override_peril_alpha" then
         override_peril_alpha = mod:get(id)
-        mod.override_alpha_heat = nil
-        mod.override_alpha_peril = nil
+        mod.override_alpha = nil
+    elseif id == "override_peril_text" then
+        override_peril_text = mod:get(id)
+        mod.override_text = nil
+    elseif id == "perc_num_decimals" then
+        perc_num_format = "%." .. mod:get(id) .. "f%%"
     elseif id == "vis_behavior" then
         vis_behavior = mod:get(id)
     elseif id == "vanish_speed" then
@@ -90,6 +96,7 @@ mod.on_setting_changed = function(id)
         next_update_refresh_style = true
     end
 end
+mod.on_setting_changed("perc_num_decimals")
 
 HudElementPerilGauge.init = function(self, parent, draw_layer, start_scale)
     HudElementPerilGauge.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -103,19 +110,62 @@ HudElementPerilGauge.init = function(self, parent, draw_layer, start_scale)
     end
     self._weapon_slots = weapon_slots
 
-    mod.override_alpha_heat = nil
-    mod.override_alpha_peril = nil
+    mod.override_alpha = nil
+    mod.override_color = nil
+    mod.override_text = nil
     next_update_refresh_style = true
 end
 
+local _apply_hgauge_label_spot = function(label_style, vert, horiz, bar_size, text_offset)
+    label_style.text_vertical_alignment = "center"
+    if horiz == -1 then
+        label_style.text_horizontal_alignment = "left"
+    elseif horiz == 1 then
+        label_style.text_horizontal_alignment = "right"
+    else
+        label_style.text_horizontal_alignment = "center"
+    end
+
+    label_style.offset[1] = 0
+    label_style.offset[2] = 0.5 * bar_size[2] + text_offset
+    if vert == -1 then
+        label_style.offset[2] = -label_style.offset[2]
+    end
+    label_style.size[1] = bar_size[1]
+    label_style.size[2] = bar_size[2]
+end
+
+local _apply_vgauge_label_spot = function(label_style, vert, horiz, bar_size, text_offset)
+    if vert == -1 then
+        label_style.text_vertical_alignment = "top"
+    elseif vert == 1 then
+        label_style.text_vertical_alignment = "bottom"
+    else
+        label_style.text_vertical_alignment = "center"
+    end
+
+    label_style.offset[1] = 0.5 * (bar_size[1] + bar_size[2]) + text_offset
+    label_style.offset[2] = 0
+    if horiz == -1 then
+        label_style.text_horizontal_alignment = "right"
+        label_style.offset[1] = -label_style.offset[1]
+    else
+        label_style.text_horizontal_alignment = "left"
+    end
+    label_style.size[1] = bar_size[1]
+    label_style.size[2] = bar_size[1]
+end
+
 HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings, input_service)
-    local gauge_widget_style = self._widgets_by_name.gauge.style
-    local segment_style = gauge_widget_style.segment
+    local gauge_widget = self._widgets_by_name.gauge
+    local gauge_widget_style = gauge_widget.style
+    local bar_style = gauge_widget_style.bar
 
     -- Update component settings
     if next_update_refresh_style then
         next_update_refresh_style = false
         local label_style = gauge_widget_style.name_text
+        local perc_style = gauge_widget_style.perc_text
         local bracket_style = gauge_widget_style.bracket
 
         -- Because this section only runs once after settings are
@@ -128,13 +178,16 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
         if lbl_text == "lbl_text_none" then
             label_style.visible = false
         else
-            self._widgets_by_name.gauge.content.name_text = mod:localize(lbl_text)
+            gauge_widget.content.name_text = mod:localize(lbl_text)
             label_style.visible = true
         end
+        perc_style.visible = mod:get("show_perc")
 
         local bar_size = { mod:get("gauge_length"), mod:get("gauge_thick") }
         local orientation = mod:get("comp_orientation")
         local bar_direction = mod:get("bar_direction")
+        local perc_vert = mod:get("perc_vert")
+        local perc_horiz = mod:get("perc_horiz")
         local lbl_vert = mod:get("lbl_vert")
         local lbl_horiz = mod:get("lbl_horiz")
         local text_offset = 5 * Definitions.default_values.bar_bracket_spacing
@@ -149,34 +202,20 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             bar_size_empty[1] = 0
             bar_size_empty[2] = bar_size_full[2]
 
-            label_style.text_vertical_alignment = "center"
-            if lbl_horiz == -1 then
-                label_style.text_horizontal_alignment = "left"
-            elseif lbl_horiz == 1 then
-                label_style.text_horizontal_alignment = "right"
-            else
-                label_style.text_horizontal_alignment = "center"
-            end
+            _apply_hgauge_label_spot(perc_style, perc_vert, perc_horiz, bar_size, text_offset)
+            _apply_hgauge_label_spot(label_style, lbl_vert, lbl_horiz, bar_size, text_offset)
 
-            label_style.offset[1] = 0
-            label_style.offset[2] = 0.5 * bar_size[2] + text_offset
-            if lbl_vert == -1 then
-                label_style.offset[2] = -label_style.offset[2]
-            end
-            label_style.size[1] = bar_size_full[1]
-            label_style.size[2] = bar_size_full[2]
-
-            segment_style.offset[1] = 0.5 * (Definitions.default_values.area_side - bar_size[1])
-            segment_style.offset[2] = 0
-            segment_style.vertical_alignment = "center"
+            bar_style.offset[1] = 0.5 * (Definitions.default_values.area_side - bar_size[1])
+            bar_style.offset[2] = 0
+            bar_style.vertical_alignment = "center"
             if bar_direction == 0 then
-                segment_style.horizontal_alignment = "center"
-                segment_style.offset[1] = 0
+                bar_style.horizontal_alignment = "center"
+                bar_style.offset[1] = 0
             elseif (bar_direction == -1 and orientation == 0) or (bar_direction == 1 and orientation == 2) then
-                segment_style.horizontal_alignment = "right"
-                segment_style.offset[1] = -segment_style.offset[1]
+                bar_style.horizontal_alignment = "right"
+                bar_style.offset[1] = -bar_style.offset[1]
             else
-                segment_style.horizontal_alignment = "left"
+                bar_style.horizontal_alignment = "left"
             end
         else
             bar_size_full[1] = bar_size[2]
@@ -184,36 +223,20 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             bar_size_empty[1] = bar_size_full[1]
             bar_size_empty[2] = 0
 
-            if lbl_vert == -1 then
-                label_style.text_vertical_alignment = "top"
-            elseif lbl_vert == 1 then
-                label_style.text_vertical_alignment = "bottom"
-            else
-                label_style.text_vertical_alignment = "center"
-            end
+            _apply_vgauge_label_spot(perc_style, perc_vert, perc_horiz, bar_size, text_offset)
+            _apply_vgauge_label_spot(label_style, lbl_vert, lbl_horiz, bar_size, text_offset)
 
-            label_style.offset[1] = 0.5 * (bar_size[1] + bar_size[2]) + text_offset
-            label_style.offset[2] = 0
-            if lbl_horiz == -1 then
-                label_style.text_horizontal_alignment = "right"
-                label_style.offset[1] = -label_style.offset[1]
-            else
-                label_style.text_horizontal_alignment = "left"
-            end
-            label_style.size[1] = bar_size_full[2]
-            label_style.size[2] = bar_size_full[2]
-
-            segment_style.offset[1] = 0
-            segment_style.offset[2] = 0.5 * (Definitions.default_values.area_side - bar_size[1])
-            segment_style.horizontal_alignment = "center"
+            bar_style.offset[1] = 0
+            bar_style.offset[2] = 0.5 * (Definitions.default_values.area_side - bar_size[1])
+            bar_style.horizontal_alignment = "center"
             if bar_direction == 0 then
-                segment_style.vertical_alignment = "center"
-                segment_style.offset[2] = 0
+                bar_style.vertical_alignment = "center"
+                bar_style.offset[2] = 0
             elseif (bar_direction == -1 and orientation == 1) or (bar_direction == 1 and orientation == 3) then
-                segment_style.vertical_alignment = "top"
+                bar_style.vertical_alignment = "top"
             else
-                segment_style.vertical_alignment = "bottom"
-                segment_style.offset[2] = -segment_style.offset[2]
+                bar_style.vertical_alignment = "bottom"
+                bar_style.offset[2] = -bar_style.offset[2]
             end
         end
     end
@@ -224,9 +247,9 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
     local player_extensions = self._parent:player_extensions()
     local player_unit_data = player_extensions and player_extensions.unit_data
 
-    local warp_charge_level = (is_peril_driven or is_peril_driven == nil) and player_unit_data and player_unit_data:read_component("warp_charge").current_percentage or 0
+    local warp_charge_level = (mod.is_peril_driven or mod.is_peril_driven == nil) and player_unit_data and player_unit_data:read_component("warp_charge").current_percentage or 0
     local overheat_level = 0
-    if player_unit_data and (not is_peril_driven or is_peril_driven == nil) then
+    if player_unit_data and (not mod.is_peril_driven or mod.is_peril_driven == nil) then
         local weapon_extension = player_extensions.weapon
         local weapon_template = weapon_extension:weapon_template()
 
@@ -246,9 +269,9 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
         end
     end
     if warp_charge_level ~= overheat_level then
-        is_peril_driven = warp_charge_level > overheat_level
+        mod.is_peril_driven = warp_charge_level > overheat_level
     end
-    local peril_fraction = is_peril_driven and warp_charge_level or overheat_level
+    local peril_fraction = mod.is_peril_driven and warp_charge_level or overheat_level
 
     -- Update visibility
     if vis_behavior > 0 then
@@ -257,53 +280,48 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
         current_alpha = 0.0
     else
         local vis_instruction = peril_fraction > 0
-        if vis_instruction ~= prev_vis_instruction then
-            if vis_instruction then
-                appear_timeout = appear_delay
-                vanish_timeout = 0.0
-            else
-                vanish_timeout = vanish_delay
-                appear_timeout = 0.0
+        if prev_vis_instruction ~= nil then
+            if vis_instruction ~= prev_vis_instruction then
+                if vis_instruction then
+                    appear_timeout = appear_delay
+                    vanish_timeout = 0.0
+                else
+                    vanish_timeout = vanish_delay
+                    appear_timeout = 0.0
+                end
             end
+
+            if vanish_timeout > 0.0 then
+                vanish_timeout = vanish_timeout - dt
+            end
+            if appear_timeout > 0.0 then
+                appear_timeout = appear_timeout - dt
+            end
+
+            local appear = vis_instruction
+            if vanish_timeout <= 0.0 and appear_timeout > 0.0 then
+                appear = false
+            elseif appear_timeout <= 0.0 and vanish_timeout > 0.0 then
+                appear = true
+            end
+
+            local alpha_multiplier = current_alpha or 0.0
+            if appear then
+                if appear_speed > 0.0 then
+                    alpha_multiplier = math.min(alpha_multiplier + dt * appear_speed, 1.0)
+                else
+                    alpha_multiplier = 1.0
+                end
+            else
+                if vanish_speed > 0.0 then
+                    alpha_multiplier = math.max(alpha_multiplier - dt * vanish_speed, 0.0)
+                else
+                    alpha_multiplier = 0.0
+                end
+            end
+            current_alpha = alpha_multiplier
         end
         prev_vis_instruction = vis_instruction
-
-        if vanish_timeout > 0.0 then
-            vanish_timeout = vanish_timeout - dt
-        end
-        if appear_timeout > 0.0 then
-            appear_timeout = appear_timeout - dt
-        end
-
-        local appear = vis_instruction
-        if vanish_timeout <= 0.0 and appear_timeout > 0.0 then
-            appear = false
-        elseif appear_timeout <= 0.0 and vanish_timeout > 0.0 then
-            appear = true
-        end
-
-        local alpha_multiplier = current_alpha or 0.0
-        if appear then
-            if appear_speed > 0.0 then
-                alpha_multiplier = math.min(alpha_multiplier + dt * appear_speed, 1.0)
-            else
-                alpha_multiplier = 1.0
-            end
-        else
-            if vanish_speed > 0.0 then
-                alpha_multiplier = math.max(alpha_multiplier - dt * vanish_speed, 0.0)
-            else
-                alpha_multiplier = 0.0
-            end
-        end
-        current_alpha = alpha_multiplier
-    end
-    if override_peril_alpha and is_peril_driven ~= nil then
-        if is_peril_driven then
-            mod.override_alpha_peril = current_alpha
-        else
-            mod.override_alpha_heat = current_alpha
-        end
     end
 
     -- Set bar size & color
@@ -319,11 +337,17 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             ColorUtilities.color_lerp(_get_threshold_after_color(thresh_idx - 1), _get_threshold_before_color(thresh_idx), _get_threshold_lerp(thresh_idx, peril_fraction), color, false)
         end
     end
+    bar_style.color = color
+    bar_style.size[1] = math.lerp(bar_size_empty[1], bar_size_full[1], peril_fraction)
+    bar_style.size[2] = math.lerp(bar_size_empty[2], bar_size_full[2], peril_fraction)
 
-    mod.override_peril_color = override_peril_color and color
-    segment_style.color = color
-    segment_style.size[1] = math.lerp(bar_size_empty[1], bar_size_full[1], peril_fraction)
-    segment_style.size[2] = math.lerp(bar_size_empty[2], bar_size_full[2], peril_fraction)
+    -- Set percentage text & overrides
+    local perc_text = string.format(perc_num_format, peril_fraction * 100)
+    gauge_widget.content.perc_text = perc_text
+
+    mod.override_alpha = override_peril_alpha and current_alpha
+    mod.override_color = override_peril_color and color
+    mod.override_text = override_peril_text and perc_text
 end
 
 HudElementPerilGauge._draw_widgets = function(self, dt, t, input_service, ui_renderer, render_settings)

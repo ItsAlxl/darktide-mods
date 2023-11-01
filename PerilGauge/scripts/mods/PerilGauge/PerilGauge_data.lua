@@ -16,7 +16,7 @@ return {
 			{
 				setting_id = "gauge_length",
 				type = "numeric",
-				default_value = 200,
+				default_value = 210,
 				range = { 100, 450 },
 				decimals_number = 0,
 			},
@@ -27,6 +27,11 @@ return {
 			},
 			{
 				setting_id = "override_peril_alpha",
+				type = "checkbox",
+				default_value = true,
+			},
+			{
+				setting_id = "override_peril_text",
 				type = "checkbox",
 				default_value = true,
 			},
@@ -91,6 +96,17 @@ return {
 						},
 					},
 					{
+						setting_id = "show_perc",
+						type = "checkbox",
+						default_value = false,
+					},
+					{
+						setting_id    = "perc_num_decimals",
+						type          = "numeric",
+						default_value = 1,
+						range         = { 0, 2 },
+					},
+					{
 						setting_id = "comp_orientation",
 						type = "dropdown",
 						default_value = 0,
@@ -113,6 +129,7 @@ return {
 					},
 					{
 						setting_id = "lbl_vert",
+						tooltip = "vert_hint",
 						type = "dropdown",
 						default_value = 1,
 						options = {
@@ -123,8 +140,31 @@ return {
 					},
 					{
 						setting_id = "lbl_horiz",
+						tooltip = "horiz_hint",
 						type = "dropdown",
 						default_value = 1,
+						options = {
+							{ text = "horiz_left",   value = -1 },
+							{ text = "horiz_center", value = 0 },
+							{ text = "horiz_right",  value = 1 },
+						},
+					},
+					{
+						setting_id = "perc_vert",
+						tooltip = "vert_hint",
+						type = "dropdown",
+						default_value = 1,
+						options = {
+							{ text = "vert_top",    value = -1 },
+							{ text = "vert_center", value = 0 },
+							{ text = "vert_bottom", value = 1 },
+						},
+					},
+					{
+						setting_id = "perc_horiz",
+						tooltip = "horiz_hint",
+						type = "dropdown",
+						default_value = -1,
 						options = {
 							{ text = "horiz_left",   value = -1 },
 							{ text = "horiz_center", value = 0 },

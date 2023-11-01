@@ -23,28 +23,28 @@ end
 mod:hook_require("scripts/ui/hud/hud_elements_player_onboarding", _add_hud_element)
 mod:hook_require("scripts/ui/hud/hud_elements_player", _add_hud_element)
 
-mod:hook_safe(CLASS.HudElementOvercharge, "_animate_widget_warnings", function(self, widget, ...)
-    if mod.override_peril_color then
-        widget.style.warning_text.text_color = table.clone(mod.override_peril_color)
-    end
-end)
-
-local _override_widget_vis = function(alpha, widget, text_prefix)
-    if alpha and widget and not widget.visible then
-        widget.content.warning_text = text_prefix .. "0%"
-        widget.alpha_multiplier = alpha * 0.5
-        widget.visible = true
-    end
-end
-
 mod:hook(CLASS.HudElementOvercharge, "update", function(func, self, ...)
     func(self, ...)
-    _override_widget_vis(mod.override_alpha_peril, self._widgets_by_name.overcharge, "")
-    _override_widget_vis(mod.override_alpha_heat, self._widgets_by_name.overheat, "")
+    if mod.is_peril_driven ~= nil then
+        local widget = mod.is_peril_driven and self._widgets_by_name.overcharge or self._widgets_by_name.overheat
+        local text_prefix = mod.is_peril_driven and "" or ""
+
+        if mod.override_alpha and mod.override_alpha > 0 and not widget.visible then
+            widget.content.warning_text = text_prefix .. "0%"
+            widget.alpha_multiplier = mod.override_alpha * 0.5 -- this 0.5 comes from vanilla peril alpha behavior
+            widget.visible = true
+        end
+        if mod.override_text then
+            widget.content.warning_text = text_prefix .. mod.override_text
+        end
+        if mod.override_color then
+            widget.style.warning_text.text_color = table.clone(mod.override_color)
+        end
+    end
 end)
 
 mod:hook(CLASS.HudElementOvercharge, "_update_visibility", function(func, ...)
-    return mod.override_alpha_peril or mod.override_alpha_heat or func(...)
+    return mod.override_alpha or func(...)
 end)
 
 --[[ Useful for debugging (h/t Fracticality)

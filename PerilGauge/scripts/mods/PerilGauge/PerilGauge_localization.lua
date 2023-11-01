@@ -153,7 +153,7 @@ return {
 		["zh-cn"] = "文字标签垂直位置",
 		ru = "Вертикальное положение ярлыка",
 	},
-	lbl_vert_description = {
+	vert_hint = {
 		en = "'Middle' is the same as 'Bottom' for horizontal gauges.",
 		["zh-cn"] = "对于水平指示器来说，“中心”与“底部”效果相同。",
 		ru = "«Посередине» тоже самое, что «Снизу» для горизонтальных датчиков.",
@@ -178,7 +178,7 @@ return {
 		["zh-cn"] = "文字标签水平位置",
 		ru = "Горизонтальное положение ярлыка",
 	},
-	lbl_horiz_description = {
+	horiz_hint = {
 		en = "'Center' is the same as 'Right' for vertical gauges.",
 		["zh-cn"] = "对于垂直指示器来说，“中心”与“右侧”效果相同。",
 		ru = "«По центру» тоже самое, что «Справа» для вертикальных датчиков.",
@@ -212,5 +212,22 @@ return {
 		en = "Gauge Length",
 		["zh-cn"] = "指示器长度",
 		ru = "Длина датчика",
+	},
+	override_peril_text = {
+		en = "Override Vanilla Peril Percentage Text",
+	},
+	show_perc = {
+		en = "Show Gauge Percentage",
+	},
+	perc_horiz = {
+		en = "Percentage Horizontal Position",
+	},
+	perc_vert = {
+		en = "Percentage Vertical Position",
+	},
+	perc_num_decimals = {
+		en = "Number of Decimal Digits",
+		["zh-cn"] = "显示小数位数",
+		ru = "Количество десятичных цифр",
 	},
 }
