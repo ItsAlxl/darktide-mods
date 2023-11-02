@@ -247,9 +247,9 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
     local player_extensions = self._parent:player_extensions()
     local player_unit_data = player_extensions and player_extensions.unit_data
 
-    local warp_charge_level = (mod.is_peril_driven or mod.is_peril_driven == nil) and player_unit_data and player_unit_data:read_component("warp_charge").current_percentage or 0
+    local warp_charge_level = player_unit_data and player_unit_data:read_component("warp_charge").current_percentage or 0
     local overheat_level = 0
-    if player_unit_data and (not mod.is_peril_driven or mod.is_peril_driven == nil) then
+    if player_unit_data then
         local weapon_extension = player_extensions.weapon
         local weapon_template = weapon_extension:weapon_template()
 
