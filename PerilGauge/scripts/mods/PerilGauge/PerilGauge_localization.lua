@@ -215,15 +215,19 @@ return {
 	},
 	override_peril_text = {
 		en = "Override Vanilla Peril Percentage Text",
+		["zh-cn"] = "覆盖原版危机值百分比文本",
 	},
 	show_perc = {
 		en = "Show Gauge Percentage",
+		["zh-cn"] = "显示指示器百分比",
 	},
 	perc_horiz = {
 		en = "Percentage Horizontal Position",
+		["zh-cn"] = "百分比水平位置",
 	},
 	perc_vert = {
 		en = "Percentage Vertical Position",
+		["zh-cn"] = "百分比垂直位置",
 	},
 	perc_num_decimals = {
 		en = "Number of Decimal Digits",
