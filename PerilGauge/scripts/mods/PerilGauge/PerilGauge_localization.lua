@@ -156,7 +156,7 @@ return {
 	vert_hint = {
 		en = "'Middle' is the same as 'Bottom' for horizontal gauges.",
 		["zh-cn"] = "对于水平指示器来说，“中心”与“底部”效果相同。",
-		ru = "«Посередине» тоже самое, что «Снизу» для горизонтальных датчиков.",
+		ru = "«Посередине» тоже самое, что «Снизу» для горизонтальных индикаторов.",
 	},
 	vert_top = {
 		en = "Top",
@@ -181,7 +181,7 @@ return {
 	horiz_hint = {
 		en = "'Center' is the same as 'Right' for vertical gauges.",
 		["zh-cn"] = "对于垂直指示器来说，“中心”与“右侧”效果相同。",
-		ru = "«По центру» тоже самое, что «Справа» для вертикальных датчиков.",
+		ru = "«По центру» тоже самое, что «Справа» для вертикальных индикаторов.",
 	},
 	horiz_left = {
 		en = "Left",
@@ -206,24 +206,28 @@ return {
 	gauge_thick = {
 		en = "Gauge Thickness",
 		["zh-cn"] = "指示器厚度",
-		ru = "Толщина датчика",
+		ru = "Толщина индикатора",
 	},
 	gauge_length = {
 		en = "Gauge Length",
 		["zh-cn"] = "指示器长度",
-		ru = "Длина датчика",
+		ru = "Длина индикатора",
 	},
 	override_peril_text = {
 		en = "Override Vanilla Peril Percentage Text",
+		ru = "Заменить стандартный текст процентов Угрозы",
 	},
 	show_perc = {
 		en = "Show Gauge Percentage",
+		ru = "Показывать проценты на индикаторе",
 	},
 	perc_horiz = {
 		en = "Percentage Horizontal Position",
+		ru = "Горизонтальное положение процентов",
 	},
 	perc_vert = {
 		en = "Percentage Vertical Position",
+		ru = "Вертикальное положение процентов",
 	},
 	perc_num_decimals = {
 		en = "Number of Decimal Digits",
