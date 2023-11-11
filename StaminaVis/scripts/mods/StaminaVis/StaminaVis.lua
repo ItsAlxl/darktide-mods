@@ -174,6 +174,6 @@ mod:hook(CLASS.HudElementBlocking, "_update_visibility", function(func, self, dt
 end)
 
 mod:hook(CLASS.HudElementBlocking, "_draw_widgets", function(func, self, dt, t, input_service, ui_renderer, render_settings)
-    self._alpha_multiplier = current_alpha * render_settings.alpha_multiplier
+    self._alpha_multiplier = current_alpha * (render_settings.alpha_multiplier or 1)
     func(self, dt, t, input_service, ui_renderer, render_settings)
 end)
