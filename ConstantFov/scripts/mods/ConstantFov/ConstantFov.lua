@@ -1,5 +1,5 @@
 local mod = get_mod("ConstantFov")
-local DEFAULT_BASE_MULT = 1.1344640137963142
+local DEFAULT_BASE_MULT = math.degrees_to_radians(65)
 
 local fov_data = {
     base = mod:get("apply_baseline") and DEFAULT_BASE_MULT or 1.0,
