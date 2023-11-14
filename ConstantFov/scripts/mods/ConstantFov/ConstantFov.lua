@@ -32,16 +32,16 @@ mod.on_setting_changed = function(id)
     end
 end
 
-mod:hook(CLASS.CameraManager, "_update_camera_properties", function(func, self, camera, shadow_cull_camera, current_node, camera_data, ...)
+mod:hook(CLASS.CameraManager, "_update_camera_properties", function(func, self, camera, shadow_cull_camera, camera_nodes, camera_data, ...)
     if camera_data.vertical_fov then
-        local check = allow_nodes[current_node._name]
+        local check = allow_nodes[self:_current_node(camera_nodes)._name]
         if check == nil or check then
             camera_data.vertical_fov = fov_data.base * math.clamp(1.0 + fov_data.change_multiplier * ((camera_data.vertical_fov / DEFAULT_BASE_MULT) - 1.0), fov_data.limit_lower, fov_data.limit_upper)
         else
             camera_data.vertical_fov = fov_data.base
         end
     end
-    func(self, camera, shadow_cull_camera, current_node, camera_data, ...)
+    func(self, camera, shadow_cull_camera, camera_nodes, camera_data, ...)
 end)
 
 mod:hook(CLASS.Buff, "update_stat_buffs", function(func, self, current_stat_buffs, ...)
