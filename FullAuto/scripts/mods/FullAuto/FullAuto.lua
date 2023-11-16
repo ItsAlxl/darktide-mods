@@ -34,8 +34,9 @@ local next_autofire = -1.0
 local last_charge_level = 0.0
 local chargeup_stage = CHARGEUP_SHOT_STAGE.holding
 
-local include_psyker_bees = mod:get("include_psyker_bees")
+local remember_per_wep = mod:get("remember_per_wep")
 local starting_default_autofire = mod:get("default_autofire")
+local include_psyker_bees = mod:get("include_psyker_bees")
 local chargeup_autofire = mod:get("chargeup_autofire")
 local chargeup_amt = 0.01 * mod:get("chargeup_autofire_amt")
 
@@ -58,16 +59,18 @@ mod.on_setting_changed = function(id)
         if firemode_element then
             firemode_element:update_vis(mod:get(id))
         end
-    elseif id == "include_psyker_bees" then
-        include_psyker_bees = mod:get(id)
+    elseif id == "remember_per_wep" then
+        remember_per_wep = mod:get(id)
     elseif id == "default_autofire" then
         starting_default_autofire = mod:get(id)
+    elseif id == "include_psyker_bees" then
+        include_psyker_bees = mod:get(id)
+    elseif id == "chargeup_autofire" then
+        chargeup_autofire = mod:get(id)
     elseif id == "chargeup_autofire_amt" then
         chargeup_amt = 0.01 * mod:get(id)
     elseif id == "shoot_for_me" then
         shoot_for_me = mod:get(id)
-    elseif id == "chargeup_autofire" then
-        chargeup_autofire = mod:get(id)
     end
 end
 
@@ -120,7 +123,7 @@ end
 
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
     if self._player == Managers.player:local_player(1) then
-        if wep_template_name and (track_autofire or track_natural) then
+        if remember_per_wep and wep_template_name and (track_autofire or track_natural) then
             mod.set_weapon_default(wep_template_name, select_autofire)
         end
 
@@ -135,7 +138,7 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
         track_natural = (natural_autofire_normal or natural_autofire_aim) and true or false
         natural_current = natural_autofire_normal
 
-        if track_autofire or track_natural then
+        if remember_per_wep and (track_autofire or track_natural) then
             if cached_default_autofires[wep_template_name] == nil then
                 mod.set_weapon_default(wep_template_name, mod:get(wep_template_name))
             end

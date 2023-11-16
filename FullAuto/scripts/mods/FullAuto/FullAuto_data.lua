@@ -22,6 +22,11 @@ return {
 				default_value = true,
 			},
 			{
+				setting_id    = "remember_per_wep",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
 				setting_id      = "pressed_autoshoot",
 				type            = "keybind",
 				default_value   = {},
