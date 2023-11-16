@@ -27,5 +27,5 @@ mod:hook_require("scripts/ui/hud/hud_elements_player", _add_hud_element)
 
 mod.get_hud_element = function()
     local hud = Managers.ui:get_hud()
-    return hud and hud:element("HudElementFullAutoFireMode")
+    return hud and hud:element(firemode_hud_element.class_name)
 end

@@ -29,4 +29,7 @@ return {
 	chargeup_autofire = {
 		en = Localize("loc_weapon_keyword_charged_attack"),
 	},
+	chargeup_autofire_amt = {
+		en = Localize("loc_weapon_keyword_charged_attack") .. " %%",
+	},
 }
