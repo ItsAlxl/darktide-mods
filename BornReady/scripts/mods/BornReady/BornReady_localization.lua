@@ -5,8 +5,33 @@ return {
 		["zh-cn"] = "自动准备",
 	},
 	mod_description = {
-		en = "Automatically readies up when joining a lobby.",
-		["zh-cn"] = "加入小队时自动准备就绪。",
-		ru = "Автоматическая готовность при присоединении к лобби.",
+		en = "Options to auto-accept matchmaking, lobbies, and party invites.",
+	},
+	leave_party = {
+		en = "Leave Current Party",
+	},
+	autoready = {
+		en = "Ready up in lobby",
+	},
+	autoskip = {
+		en = "Skip end-of-mission screen",
+	},
+	automatch = {
+		en = "Accept mission prompt",
+	},
+	autojoin = {
+		en = "Party invites",
+	},
+	autowelcome = {
+		en = "Requests to join your party",
+	},
+	none = {
+		en = "Prompt",
+	},
+	auto_yes = {
+		en = "Automatically Accept",
+	},
+	auto_no = {
+		en = "Automatically Decline",
 	},
 }
