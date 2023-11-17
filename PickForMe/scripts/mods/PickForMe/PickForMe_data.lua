@@ -1,5 +1,27 @@
 local mod = get_mod("PickForMe")
 
+local quick_randomize_subwidgets = {
+	{
+		setting_id      = "quick_randomize_keybind",
+		type            = "keybind",
+		default_value   = {},
+		keybind_global  = true,
+		keybind_trigger = "pressed",
+		keybind_type    = "function_call",
+		function_name   = "quick_randomize",
+	},
+}
+
+for _, arg in ipairs(mod.arg_order) do
+	if mod.slot_data[arg] then
+		table.insert(quick_randomize_subwidgets, {
+			setting_id    = arg,
+			type          = "checkbox",
+			default_value = mod.slot_data[arg].default or false,
+		})
+	end
+end
+
 return {
 	name = "PickForMe",
 	description = mod:localize("mod_description"),
@@ -19,37 +41,7 @@ return {
 			{
 				setting_id  = "quick_randomize",
 				type        = "group",
-				sub_widgets = {
-					{
-						setting_id      = "quick_randomize_keybind",
-						type            = "keybind",
-						default_value   = {},
-						keybind_global  = true,
-						keybind_trigger = "pressed",
-						keybind_type    = "function_call",
-						function_name   = "quick_randomize",
-					},
-					{
-						setting_id    = "random_primary",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "random_secondary",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "random_curios",
-						type          = "checkbox",
-						default_value = false,
-					},
-					{
-						setting_id    = "random_talents",
-						type          = "checkbox",
-						default_value = false,
-					},
-				}
+				sub_widgets = quick_randomize_subwidgets
 			},
 		}
 	}

@@ -1,4 +1,84 @@
-return {
+local mod = get_mod("PickForMe")
+
+mod.slot_data = {
+	primary = {
+		slot = "slot_primary",
+		loc = "loc_inventory_title_slot_primary",
+		default = true,
+	},
+	secondary = {
+		slot = "slot_secondary",
+		loc = "loc_inventory_title_slot_primary",
+		default = true,
+	},
+	curios = {
+		slot = "slot_curio",
+		filter_slot = "slot_attachment_1",
+		loc = "loc_inventory_loadout_group_attachments",
+		default = true,
+	},
+	hat = {
+		slot = "slot_gear_head",
+		loc = "loc_inventory_title_slot_gear_head",
+	},
+	shirt = {
+		slot = "slot_gear_upperbody",
+		loc = "loc_inventory_title_slot_gear_upperbody",
+	},
+	pants = {
+		slot = "slot_gear_lowerbody",
+		loc = "loc_inventory_title_slot_gear_lowerbody",
+	},
+	back = {
+		slot = "slot_gear_extra_cosmetic",
+		loc = "loc_inventory_title_slot_gear_extra_cosmetic",
+	},
+	frame = {
+		slot = "slot_portrait_frame",
+		loc = "loc_inventory_title_slot_portrait_frame",
+	},
+	insignia = {
+		slot = "slot_insignia",
+		loc = "loc_inventory_title_slot_insignia",
+	},
+	pose = {
+		slot = "slot_animation_end_of_round",
+		loc = "loc_inventory_title_slot_animation_end_of_round",
+	},
+}
+mod.arg_order = {
+	"primary",
+	"secondary",
+	"weapons",
+	"curios",
+	"gear",
+	"hat",
+	"shirt",
+	"pants",
+	"back",
+	"clothes",
+	"frame",
+	"insignia",
+	"portrait",
+	"pose",
+	"cosmetics",
+	"all",
+}
+
+local build_arg_list = function(separator, quote, final_separator)
+	local list = ""
+	local num_args = #mod.arg_order
+	for i = 1, num_args - 1 do
+		if i > 1 then
+			list = list .. separator
+		end
+		list = list .. quote .. mod.arg_order[i] .. quote
+	end
+
+	return list .. final_separator .. quote .. mod.arg_order[num_args] .. quote
+end
+
+local localization = {
 	mod_description = {
 		en = "Easily randomize your current loadout. Try '/pickforme help' in the chat.",
 		["zh-cn"] = "快速随机选择配装。试着在聊天框输入 /pickforme help",
@@ -8,12 +88,15 @@ return {
 		["zh-cn"] = "随机选择当前配装",
 	},
 	cmd_help = {
-		en = "/pickforme [args...]\nArgs can include 'gear', 'weapons', 'primary', 'secondary', 'curios', 'talents', or 'all'. For example, '/pickforme secondary curios' will randomize your secondary weapon and curios. '/pickforme' without arguments is equivalent to the Quick Randomize configured in the mod settings.",
-		["zh-cn"] = "/pickforme [参数...]\n参数可以是 'gear', 'weapons', 'primary', 'secondary', 'curios', 'talents' 或者 'all'。例如，'/pickforme secondary curios' 会随机选择副武器和珍品。不带任何参数的 '/pickforme' 命令效果等同于模组选项中设置的快速随机。",
+		en = "/pickforme [args...]\nArgs can include " .. build_arg_list(", ", "'", ", or ") .. ". For example, '/pickforme secondary curios' will randomize your secondary weapon and curios. '/pickforme' without arguments is equivalent to the Quick Randomize configured in the mod settings.",
+		["zh-cn"] = "/pickforme [参数...]\n参数可以是 " .. build_arg_list(", ", "'", " 或者 ") .. "。例如，'/pickforme secondary curios' 会随机选择副武器和珍品。不带任何参数的 '/pickforme' 命令效果等同于模组选项中设置的快速随机。",
 	},
 	msg_invalid = {
-		en = "Message on invalid use",
+		en = "Notify on invalid use",
 		["zh-cn"] = "用法错误时发送消息",
+	},
+	wait_a_sec = {
+		en = "Please wait a moment before randomizing again",
 	},
 	bad_circumstance = {
 		en = "You can't use PickForMe during a mission",
@@ -24,7 +107,7 @@ return {
 		["zh-cn"] = "配装随机失败",
 	},
 	random_character = {
-		en = "Select random character",
+		en = "Start on a random character in character select",
 		["zh-cn"] = "选择随机角色",
 	},
 	quick_randomize = {
@@ -35,20 +118,12 @@ return {
 		en = "Keybind",
 		["zh-cn"] = "快捷键",
 	},
-	random_primary = {
-		en = "Randomizes primary",
-		["zh-cn"] = "随机主武器",
-	},
-	random_secondary = {
-		en = "Randomizes secondary",
-		["zh-cn"] = "随机副武器",
-	},
-	random_curios = {
-		en = "Randomizes curios",
-		["zh-cn"] = "随机珍品",
-	},
-	random_talents = {
-		en = "Randomizes talents",
-		["zh-cn"] = "随机技能",
-	},
 }
+
+for key, data in pairs(mod.slot_data) do
+	localization[key] = {
+		en = Localize(data.loc)
+	}
+end
+
+return localization
