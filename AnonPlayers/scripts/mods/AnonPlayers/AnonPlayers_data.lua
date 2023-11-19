@@ -27,6 +27,11 @@ return {
 				options       = table.clone(anon_mode_dropdown),
 			},
 			{
+				setting_id    = "show_other_platform",
+				type          = "checkbox",
+				default_value = false,
+			},
+			{
 				setting_id    = "anon_me",
 				type          = "dropdown",
 				default_value = 0,
@@ -37,6 +42,11 @@ return {
 				type          = "dropdown",
 				default_value = 1,
 				options       = table.clone(anon_mode_dropdown),
+			},
+			{
+				setting_id    = "show_my_platform",
+				type          = "checkbox",
+				default_value = false,
 			},
 		}
 	}

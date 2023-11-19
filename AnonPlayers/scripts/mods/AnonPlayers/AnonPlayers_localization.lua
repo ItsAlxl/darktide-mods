@@ -19,6 +19,9 @@ return {
 		en = "Other Account Names",
 		["zh-cn"] = "其他账户名称",
 	},
+	show_other_platform = {
+		en = "Show Others' Platforms",
+	},
 	anon_me = {
 		en = "You",
 		["zh-cn"] = "你自己",
@@ -26,6 +29,9 @@ return {
 	anon_my_account = {
 		en = "Your Account Name",
 		["zh-cn"] = "你的账户名称",
+	},
+	show_my_platform = {
+		en = "Show Your Platform",
 	},
 	am_none = {
 		en = "Don't Anonymize",
