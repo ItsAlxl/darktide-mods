@@ -22,12 +22,19 @@ return {
 				function_name   = "_leave_party",
 			},
 			{
-				setting_id    = "autoready",
+				setting_id    = "autoskip",
 				type          = "checkbox",
 				default_value = true,
 			},
 			{
-				setting_id    = "autoskip",
+				setting_id      = "end_skip_time",
+				type            = "numeric",
+				default_value   = 0.2,
+				range           = { 0.0, 10.0 },
+				decimals_number = 1,
+			},
+			{
+				setting_id    = "autoready",
 				type          = "checkbox",
 				default_value = true,
 			},

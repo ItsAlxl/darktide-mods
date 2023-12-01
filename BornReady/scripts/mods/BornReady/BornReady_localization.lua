@@ -24,6 +24,9 @@ return {
 		["zh-cn"] = "跳过任务结束界面",
 		ru = "Пропустить экран окончания миссии",
 	},
+	end_skip_time = {
+		en = "Skip end-of-mission delay (seconds)",
+	},
 	automatch = {
 		en = "Accept mission prompt",
 		["zh-cn"] = "接受任务请求",

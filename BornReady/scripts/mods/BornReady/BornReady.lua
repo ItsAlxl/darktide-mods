@@ -1,20 +1,32 @@
 local mod = get_mod("BornReady")
 
+local end_skip_time = nil
+
 mod._leave_party = function()
     Managers.party_immaterium:leave_party()
 end
+
+-- Automatically skip end screen
+mod:hook_safe(CLASS.EndView, "on_enter", function(...)
+    if mod:get("autoskip") then
+        end_skip_time = mod:get("end_skip_time")
+    end
+end)
+
+mod:hook_safe(CLASS.EndView, "update", function(self, dt, ...)
+    if end_skip_time then
+        end_skip_time = end_skip_time - dt
+        if end_skip_time <= 0 then
+            end_skip_time = nil
+            Managers.multiplayer_session:leave("skip_end_of_round")
+        end
+    end
+end)
 
 -- Automatically ready up in lobbies
 mod:hook_safe(CLASS.LobbyView, "on_enter", function(self)
     if mod:get("autoready") then
         self:_set_own_player_ready_status(true)
-    end
-end)
-
--- Automatically skip end screen
-mod:hook_safe(CLASS.EndView, "on_enter", function(...)
-    if mod:get("autoskip") then
-        Managers.multiplayer_session:leave("skip_end_of_round")
     end
 end)
 
