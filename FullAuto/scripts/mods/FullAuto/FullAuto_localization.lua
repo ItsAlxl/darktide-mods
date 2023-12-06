@@ -29,11 +29,6 @@ return {
 		["zh-cn"] = "自动开火模式下始终开火",
 		ru = "Постоянно стрелять в автоматическом режиме",
 	},
-	hud_element = {
-		en = "HUD Indicator",
-		["zh-cn"] = "HUD 指示器",
-		ru = "Индикатор в интерфейсе",
-	},
 	remember_per_wep = {
 		en = "Remember firemode per-weapon",
 		["zh-cn"] = "分武器记住开火模式",
@@ -47,5 +42,19 @@ return {
 	},
 	chargeup_autofire_amt = {
 		en = Localize("loc_weapon_keyword_charged_attack") .. " %%",
+	},
+	hud_element = {
+		en = "HUD Indicator",
+		["zh-cn"] = "HUD 指示器",
+		ru = "Индикатор в интерфейсе",
+	},
+	hud_element_size = {
+		en = "Indicator Size",
+	},
+	group_select = {
+		en = "Firemode Selection",
+	},
+	group_extra = {
+		en = "Misc",
 	},
 }

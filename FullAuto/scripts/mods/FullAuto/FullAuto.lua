@@ -57,7 +57,12 @@ mod.on_setting_changed = function(id)
     if id == "hud_element" then
         local firemode_element = mod.get_hud_element()
         if firemode_element then
-            firemode_element:update_vis(mod:get(id))
+            firemode_element:set_enabled(mod:get(id))
+        end
+    elseif id == "hud_element_size" then
+        local firemode_element = mod.get_hud_element()
+        if firemode_element then
+            firemode_element:set_side_length(mod:get(id))
         end
     elseif id == "remember_per_wep" then
         remember_per_wep = mod:get(id)
@@ -106,7 +111,7 @@ mod.set_firemode_selection = function(asf)
 
     local firemode_element = mod.get_hud_element()
     if firemode_element then
-        firemode_element:update_firemode(select_autofire)
+        firemode_element:set_firemode(select_autofire)
     end
 end
 

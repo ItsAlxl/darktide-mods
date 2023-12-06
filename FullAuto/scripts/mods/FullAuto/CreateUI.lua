@@ -2,7 +2,6 @@ local mod = get_mod("FullAuto")
 
 local firemode_hud_element = {
     package = "packages/ui/views/inventory_background_view/inventory_background_view",
-    use_retained_mode = true,
     use_hud_scale = true,
     class_name = "HudElementFullAutoFireMode",
     filename = "FullAuto/scripts/mods/FullAuto/HudElementFullAutoFireMode",
