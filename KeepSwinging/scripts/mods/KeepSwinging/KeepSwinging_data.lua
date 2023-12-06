@@ -7,42 +7,62 @@ return {
 	options = {
 		widgets = {
 			{
-				setting_id    = "hud_element",
-				type          = "checkbox",
-				default_value = true,
+				setting_id  = "group_select",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id      = "pressed_keybind",
+						type            = "keybind",
+						default_value   = {},
+						keybind_global  = false,
+						keybind_trigger = "pressed",
+						keybind_type    = "function_call",
+						function_name   = "_toggle_swinging",
+					},
+					{
+						setting_id      = "held_keybind",
+						type            = "keybind",
+						default_value   = {},
+						keybind_global  = false,
+						keybind_trigger = "held",
+						keybind_type    = "function_call",
+						function_name   = "_toggle_swinging",
+					},
+					{
+						setting_id    = "default_mode",
+						type          = "checkbox",
+						default_value = false,
+					},
+					{
+						setting_id    = "as_modifier",
+						type          = "checkbox",
+						default_value = false,
+					},
+
+					{
+						setting_id    = "include_gauntlets",
+						type          = "checkbox",
+						default_value = true,
+					},
+				}
 			},
 			{
-				setting_id    = "as_modifier",
-				type          = "checkbox",
-				default_value = false,
-			},
-			{
-				setting_id    = "default_mode",
-				type          = "checkbox",
-				default_value = false,
-			},
-			{
-				setting_id      = "pressed_keybind",
-				type            = "keybind",
-				default_value   = {},
-				keybind_global  = false,
-				keybind_trigger = "pressed",
-				keybind_type    = "function_call",
-				function_name   = "_toggle_swinging",
-			},
-			{
-				setting_id      = "held_keybind",
-				type            = "keybind",
-				default_value   = {},
-				keybind_global  = false,
-				keybind_trigger = "held",
-				keybind_type    = "function_call",
-				function_name   = "_toggle_swinging",
-			},
-			{
-				setting_id    = "include_gauntlets",
-				type          = "checkbox",
-				default_value = true,
+				setting_id  = "group_hud",
+				title       = "hud_element",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "hud_element",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id = "hud_element_size",
+						type = "numeric",
+						default_value = 56,
+						range = { 10, 80 },
+					},
+				}
 			},
 			{
 				setting_id  = "group_disable_acts",
@@ -70,6 +90,17 @@ return {
 					},
 					{
 						setting_id    = "disable_weapon_extra_hold",
+						type          = "checkbox",
+						default_value = true,
+					},
+				}
+			},
+			{
+				setting_id  = "group_extra",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "include_ranged_bash",
 						type          = "checkbox",
 						default_value = true,
 					},

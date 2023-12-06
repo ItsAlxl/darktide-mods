@@ -47,7 +47,6 @@ end
 
 local mode_hud_element = {
     package = "packages/ui/views/inventory_background_view/inventory_background_view",
-    use_retained_mode = true,
     use_hud_scale = true,
     class_name = "HudElementKeepSwingingMode",
     filename = "KeepSwinging/scripts/mods/KeepSwinging/HudElementKeepSwingingMode",
@@ -79,7 +78,12 @@ mod.on_setting_changed = function(id)
     if id == "hud_element" then
         local mode_element = _get_hud_element()
         if mode_element then
-            mode_element:update_vis(mod:get(id))
+            mode_element:set_enabled(mod:get(id))
+        end
+    elseif id == "hud_element_size" then
+        local mode_element = _get_hud_element()
+        if mode_element then
+            mode_element:set_side_length(mod:get(id))
         end
     elseif id == "as_modifier" then
         as_modifier = mod:get(id)
@@ -122,7 +126,7 @@ local _set_autoswing = function(auto_swinging)
 
     local mode_element = _get_hud_element()
     if mode_element then
-        mode_element:update_mode(is_swinging)
+        mode_element:set_mode(is_swinging)
     end
 end
 

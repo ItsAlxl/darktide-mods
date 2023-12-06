@@ -47,15 +47,24 @@ return {
 		en = "Weapon Extra",
 		["zh-cn"] = "武器特殊",
 	},
-	hud_element = {
-		en = "HUD Indicator",
-		["zh-cn"] = "HUD 指示器",
-	},
 	default_mode = {
 		en = "Default to Auto-Swing",
 		["zh-cn"] = "默认自动攻击",
 	},
 	include_gauntlets = {
 		en = Localize("loc_weapon_pattern_name_ogryn_gauntlet_p1"),
+	},
+	hud_element = {
+		en = "HUD Indicator",
+		["zh-cn"] = "HUD 指示器",
+	},
+	hud_element_size = {
+		en = "Indicator Size",
+	},
+	group_select = {
+		en = "Auto-Swinging",
+	},
+	group_extra = {
+		en = "Misc",
 	},
 }
