@@ -213,6 +213,9 @@ return {
 		["zh-cn"] = "指示器长度",
 		ru = "Длина индикатора",
 	},
+	gauge_alpha = {
+		en = "Gauge Opacity",
+	},
 	override_peril_text = {
 		en = "Override Vanilla Peril Percentage Text",
 		["zh-cn"] = "覆盖原版危机值百分比文本",

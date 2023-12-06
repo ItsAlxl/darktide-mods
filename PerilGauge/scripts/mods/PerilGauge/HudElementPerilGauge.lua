@@ -24,6 +24,7 @@ local override_peril_text = mod:get("override_peril_text")
 local next_update_refresh_style = false
 local prev_vis_instruction = nil
 local current_alpha = 0.0
+local alpha_mult = mod:get("gauge_alpha")
 
 local bar_size_empty = { 0, 0 }
 local bar_size_full = { 0, 0 }
@@ -59,13 +60,7 @@ local _get_next_threshold_idx = function(value)
 end
 
 local _get_threshold_lerp = function(thresh_idx, value)
-    local prev_value = 0
-    if thresh_idx > 1 then
-        prev_value = threshold_keys[thresh_idx - 1]
-    end
-    local curr_value = threshold_keys[thresh_idx]
-
-    return math.ilerp_no_clamp(prev_value, curr_value, value)
+    return math.ilerp_no_clamp(thresh_idx > 1 and threshold_keys[thresh_idx - 1] or 0, threshold_keys[thresh_idx], value)
 end
 
 mod.on_setting_changed = function(id)
@@ -92,6 +87,8 @@ mod.on_setting_changed = function(id)
     elseif id == "appear_delay" then
         appear_timeout = 0.0
         appear_delay = mod:get(id)
+    elseif id == "gauge_alpha" then
+        alpha_mult = mod:get(id)
     else
         next_update_refresh_style = true
     end
@@ -185,7 +182,7 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 
         local bar_size = { mod:get("gauge_length"), mod:get("gauge_thick") }
         local orientation = mod:get("comp_orientation")
-        local bar_direction = mod:get("bar_direction")
+        local bar_dir = mod:get("bar_direction")
         local perc_vert = mod:get("perc_vert")
         local perc_horiz = mod:get("perc_horiz")
         local lbl_vert = mod:get("lbl_vert")
@@ -208,14 +205,14 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             bar_style.offset[1] = 0.5 * (Definitions.default_values.area_side - bar_size[1])
             bar_style.offset[2] = 0
             bar_style.vertical_alignment = "center"
-            if bar_direction == 0 then
+            if bar_dir == 3 then
                 bar_style.horizontal_alignment = "center"
                 bar_style.offset[1] = 0
-            elseif (bar_direction == -1 and orientation == 0) or (bar_direction == 1 and orientation == 2) then
+            elseif bar_dir == 1 then
+                bar_style.horizontal_alignment = "left"
+            else
                 bar_style.horizontal_alignment = "right"
                 bar_style.offset[1] = -bar_style.offset[1]
-            else
-                bar_style.horizontal_alignment = "left"
             end
         else
             bar_size_full[1] = bar_size[2]
@@ -229,14 +226,14 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
             bar_style.offset[1] = 0
             bar_style.offset[2] = 0.5 * (Definitions.default_values.area_side - bar_size[1])
             bar_style.horizontal_alignment = "center"
-            if bar_direction == 0 then
+            if bar_dir == 3 then
                 bar_style.vertical_alignment = "center"
                 bar_style.offset[2] = 0
-            elseif (bar_direction == -1 and orientation == 1) or (bar_direction == 1 and orientation == 3) then
-                bar_style.vertical_alignment = "top"
-            else
+            elseif bar_dir == 1 then
                 bar_style.vertical_alignment = "bottom"
                 bar_style.offset[2] = -bar_style.offset[2]
+            else
+                bar_style.vertical_alignment = "top"
             end
         end
     end
@@ -353,7 +350,7 @@ end
 HudElementPerilGauge._draw_widgets = function(self, dt, t, input_service, ui_renderer, render_settings)
     if current_alpha ~= 0 then
         local previous_alpha_multiplier = render_settings.alpha_multiplier or 1
-        render_settings.alpha_multiplier = previous_alpha_multiplier * current_alpha
+        render_settings.alpha_multiplier = previous_alpha_multiplier * current_alpha * alpha_mult
 
         HudElementPerilGauge.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 

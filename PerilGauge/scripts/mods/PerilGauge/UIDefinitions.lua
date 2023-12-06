@@ -69,7 +69,6 @@ return {
                 }
             },
             {
-                value = "content/ui/materials/hud/stamina_full",
                 style_id = "bar",
                 pass_type = "rect",
                 style = {

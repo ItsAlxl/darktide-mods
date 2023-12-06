@@ -1,5 +1,16 @@
 local mod = get_mod("PerilGauge")
 
+local vert_options = {
+	{ text = "vert_top",    value = -1 },
+	{ text = "vert_center", value = 0 },
+	{ text = "vert_bottom", value = 1 },
+}
+local horiz_options = {
+	{ text = "horiz_left",   value = -1 },
+	{ text = "horiz_center", value = 0 },
+	{ text = "horiz_right",  value = 1 },
+}
+
 return {
 	name = mod:localize("mod_name"),
 	description = mod:localize("mod_description"),
@@ -19,6 +30,13 @@ return {
 				default_value = 210,
 				range = { 100, 450 },
 				decimals_number = 0,
+			},
+			{
+				setting_id = "gauge_alpha",
+				type = "numeric",
+				default_value = 1,
+				range = { 0, 1 },
+				decimals_number = 2,
 			},
 			{
 				setting_id = "override_peril_color",
@@ -122,9 +140,9 @@ return {
 						type = "dropdown",
 						default_value = 1,
 						options = {
-							{ text = "bar_dir_start",  value = 1 },
-							{ text = "bar_dir_center", value = 0 },
-							{ text = "bar_dir_end",    value = -1 },
+							{ text = "bar_dir_start",     value = 1 },
+							{ text = "bar_dir_end",       value = 2 },
+							{ text = "bar_dir_center",    value = 3 },
 						},
 					},
 					{
@@ -132,44 +150,28 @@ return {
 						tooltip = "vert_hint",
 						type = "dropdown",
 						default_value = 1,
-						options = {
-							{ text = "vert_top",    value = -1 },
-							{ text = "vert_center", value = 0 },
-							{ text = "vert_bottom", value = 1 },
-						},
+						options = vert_options,
 					},
 					{
 						setting_id = "lbl_horiz",
 						tooltip = "horiz_hint",
 						type = "dropdown",
 						default_value = 1,
-						options = {
-							{ text = "horiz_left",   value = -1 },
-							{ text = "horiz_center", value = 0 },
-							{ text = "horiz_right",  value = 1 },
-						},
+						options = horiz_options,
 					},
 					{
 						setting_id = "perc_vert",
 						tooltip = "vert_hint",
 						type = "dropdown",
 						default_value = 1,
-						options = {
-							{ text = "vert_top",    value = -1 },
-							{ text = "vert_center", value = 0 },
-							{ text = "vert_bottom", value = 1 },
-						},
+						options = table.clone(vert_options),
 					},
 					{
 						setting_id = "perc_horiz",
 						tooltip = "horiz_hint",
 						type = "dropdown",
 						default_value = -1,
-						options = {
-							{ text = "horiz_left",   value = -1 },
-							{ text = "horiz_center", value = 0 },
-							{ text = "horiz_right",  value = 1 },
-						},
+						options = table.clone(horiz_options),
 					},
 				}
 			},

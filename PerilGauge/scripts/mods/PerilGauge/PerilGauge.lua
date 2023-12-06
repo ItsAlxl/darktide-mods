@@ -46,26 +46,3 @@ end)
 mod:hook(CLASS.HudElementOvercharge, "_update_visibility", function(func, ...)
     return mod.override_alpha or func(...)
 end)
-
---[[ Useful for debugging (h/t Fracticality)
-local recreate_hud = function()
-    local ui_manager = Managers.ui
-    if ui_manager then
-        local hud = ui_manager._hud
-        if hud then
-            local player = Managers.player:local_player(1)
-            local peer_id = player:peer_id()
-            local local_player_id = player:local_player_id()
-            local elements = hud._element_definitions
-            local visibility_groups = hud._visibility_groups
-
-            hud:destroy()
-            ui_manager:create_player_hud(peer_id, local_player_id, elements, visibility_groups)
-        end
-    end
-end
-
-mod.on_all_mods_loaded = function()
-    recreate_hud()
-end
---]]
