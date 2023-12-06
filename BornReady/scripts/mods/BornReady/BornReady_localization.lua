@@ -26,6 +26,7 @@ return {
 	},
 	end_skip_time = {
 		en = "Skip end-of-mission delay (seconds)",
+		ru = "Задержка перед пропуском экрана окончания миссии (сек)",
 	},
 	automatch = {
 		en = "Accept mission prompt",
