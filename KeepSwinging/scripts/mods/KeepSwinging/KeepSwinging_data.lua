@@ -38,7 +38,27 @@ return {
 						type          = "checkbox",
 						default_value = false,
 					},
-
+				}
+			},
+			{
+				setting_id  = "group_attack_types",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "include_melee_primary",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "include_melee_specials",
+						type          = "checkbox",
+						default_value = false,
+					},
+					{
+						setting_id    = "include_ranged_specials",
+						type          = "checkbox",
+						default_value = true,
+					},
 					{
 						setting_id    = "include_gauntlets",
 						type          = "checkbox",
@@ -59,7 +79,7 @@ return {
 					{
 						setting_id = "hud_element_size",
 						type = "numeric",
-						default_value = 56,
+						default_value = 50,
 						range = { 10, 80 },
 					},
 				}
@@ -76,7 +96,7 @@ return {
 					{
 						setting_id    = "disable_action_one_hold",
 						type          = "checkbox",
-						default_value = false,
+						default_value = true,
 					},
 					{
 						setting_id    = "disable_action_two_hold",
@@ -90,17 +110,6 @@ return {
 					},
 					{
 						setting_id    = "disable_weapon_extra_hold",
-						type          = "checkbox",
-						default_value = true,
-					},
-				}
-			},
-			{
-				setting_id  = "group_extra",
-				type        = "group",
-				sub_widgets = {
-					{
-						setting_id    = "include_ranged_bash",
 						type          = "checkbox",
 						default_value = true,
 					},

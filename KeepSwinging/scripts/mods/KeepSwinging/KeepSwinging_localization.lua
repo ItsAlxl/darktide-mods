@@ -51,9 +51,6 @@ return {
 		en = "Default to Auto-Swing",
 		["zh-cn"] = "默认自动攻击",
 	},
-	include_gauntlets = {
-		en = Localize("loc_weapon_pattern_name_ogryn_gauntlet_p1"),
-	},
 	hud_element = {
 		en = "HUD Indicator",
 		["zh-cn"] = "HUD 指示器",
@@ -66,5 +63,20 @@ return {
 	},
 	group_extra = {
 		en = "Misc",
+	},
+	group_attack_types = {
+		en = "Attack Types",
+	},
+	include_melee_primary = {
+		en = Localize("loc_item_type_weapon_melee") .. " " .. Localize("loc_weapon_action_title_light"),
+	},
+	include_melee_specials = {
+		en = Localize("loc_item_type_weapon_melee") .. " " .. Localize("loc_weapon_action_title_special"),
+	},
+	include_gauntlets = {
+		en = Localize("loc_weapon_pattern_name_ogryn_gauntlet_p1") .. " " .. Localize("loc_weapon_action_title_light"),
+	},
+	include_ranged_specials = {
+		en = Localize("loc_item_type_weapon_ranged") .. " " .. Localize("loc_weapon_special_weapon_bash"),
 	},
 }
