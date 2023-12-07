@@ -215,6 +215,7 @@ return {
 	},
 	gauge_alpha = {
 		en = "Gauge Opacity",
+		ru = "Прозрачность датчика",
 	},
 	override_peril_text = {
 		en = "Override Vanilla Peril Percentage Text",
