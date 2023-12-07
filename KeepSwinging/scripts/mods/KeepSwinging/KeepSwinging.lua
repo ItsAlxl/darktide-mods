@@ -170,7 +170,7 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
         local keywords = wep and wep.keywords
         if keywords then
             local is_melee = keywords and table.contains(keywords, "melee")
-            local special_attack = wep.displayed_attacks.special
+            local special_attack = wep.displayed_attacks and wep.displayed_attacks.special
 
             if is_melee then
                 allow_primary = include_melee_primary
