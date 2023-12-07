@@ -53,8 +53,8 @@ local include_gauntlets = mod:get("include_gauntlets")
 local include_ranged_specials = mod:get("include_ranged_specials")
 
 local _is_interrupted = function()
-    for _, t in pairs(disable_actions) do
-        if t.active and t.enabled then
+    for action, t in pairs(disable_actions) do
+        if (not as_modifier or action ~= current_action) and t.active and t.enabled then
             return true
         end
     end
