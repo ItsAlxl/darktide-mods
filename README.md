@@ -85,6 +85,11 @@ Provides the ability to freelook.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/115).
 
+## PanicStimm
+Switch to your Stimm and inject with one button press. Also dictate what you equip after injection.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/266).
+
 ## PenanceDetails
 Penances provide more details about your current progress.
 
