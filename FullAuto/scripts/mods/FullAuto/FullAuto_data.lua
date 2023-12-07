@@ -53,7 +53,7 @@ return {
 					{
 						setting_id = "hud_element_size",
 						type = "numeric",
-						default_value = 56,
+						default_value = 50,
 						range = { 10, 80 },
 					},
 				}

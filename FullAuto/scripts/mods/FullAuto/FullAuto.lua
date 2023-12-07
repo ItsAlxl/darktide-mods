@@ -12,7 +12,7 @@ local CHARGEUP_SHOT_STAGE = {
     delay = 4,
 }
 
-local STANDARD_MULTIPLIER = 0.5
+local STANDARD_MULTIPLIER = 0.45
 local SPRINT_MULTIPLIER = 1.1
 
 local select_autofire = true
