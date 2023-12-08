@@ -50,11 +50,14 @@ return {
 	},
 	hud_element_size = {
 		en = "Indicator Size",
+		["zh-cn"] = "指示器大小",
 	},
 	group_select = {
 		en = "Firemode Selection",
+		["zh-cn"] = "开火模式选择",
 	},
 	group_extra = {
 		en = "Misc",
+		["zh-cn"] = "杂项",
 	},
 }

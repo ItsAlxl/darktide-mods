@@ -108,7 +108,7 @@ local localization = {
 	},
 	random_character = {
 		en = "Start on a random character in character select",
-		["zh-cn"] = "选择随机角色",
+		["zh-cn"] = "在角色选择界面选择随机角色",
 	},
 	quick_randomize = {
 		en = "Quick Randomize",

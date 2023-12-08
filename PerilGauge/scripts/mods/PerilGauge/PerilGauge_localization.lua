@@ -215,6 +215,7 @@ return {
 	},
 	gauge_alpha = {
 		en = "Gauge Opacity",
+		["zh-cn"] = "指示器不透明度",
 		ru = "Прозрачность датчика",
 	},
 	override_peril_text = {

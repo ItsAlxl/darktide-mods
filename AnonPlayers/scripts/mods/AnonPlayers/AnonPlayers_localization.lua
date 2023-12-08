@@ -21,6 +21,7 @@ return {
 	},
 	show_other_platform = {
 		en = "Show Others' Platforms",
+		["zh-cn"] = "显示其他玩家的平台",
 	},
 	anon_me = {
 		en = "You",
@@ -32,6 +33,7 @@ return {
 	},
 	show_my_platform = {
 		en = "Show Your Platform",
+		["zh-cn"] = "显示你自己的平台",
 	},
 	am_none = {
 		en = "Don't Anonymize",

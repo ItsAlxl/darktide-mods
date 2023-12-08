@@ -57,15 +57,19 @@ return {
 	},
 	hud_element_size = {
 		en = "Indicator Size",
+		["zh-cn"] = "指示器大小",
 	},
 	group_select = {
 		en = "Auto-Swinging",
+		["zh-cn"] = "自动攻击",
 	},
 	group_extra = {
 		en = "Misc",
+		["zh-cn"] = "杂项",
 	},
 	group_attack_types = {
 		en = "Attack Types",
+		["zh-cn"] = "攻击类型",
 	},
 	include_melee_primary = {
 		en = Localize("loc_item_type_weapon_melee") .. " " .. Localize("loc_weapon_action_title_light"),
