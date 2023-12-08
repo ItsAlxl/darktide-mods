@@ -115,6 +115,11 @@ Replaces X-Box BYXA button prompts with Playstation O▲■X button prompts.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/153).
 
+## RecolorStimms
+Recolor stimms and their cases, and swap the syringe stickers.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/267).
+
 ## ReorderChars aka Reorder Characters
 Allows you to reorder your characters on the character select screen.
 
