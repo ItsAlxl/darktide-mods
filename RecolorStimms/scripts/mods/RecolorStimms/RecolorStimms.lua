@@ -1,8 +1,18 @@
 local mod = get_mod("RecolorStimms")
-local SyringeCaseColor = require("scripts/components/syringe_case_color")
 
 mod.get_stimm_color = function(stimm_name)
-    return mod.stimm_data[stimm_name].custom_color
+    local stimm_data = mod.stimm_data[stimm_name]
+    return stimm_data and stimm_data.custom_color
+end
+
+mod.get_stimm_argb_255 = function(stimm_name)
+    local custom_color = mod.get_stimm_color(stimm_name)
+    local math_floor = math.floor
+    return custom_color and { 255,
+        math_floor(custom_color[1] * 255),
+        math_floor(custom_color[2] * 255),
+        math_floor(custom_color[3] * 255)
+    }
 end
 
 mod.set_stimm_color = function(stimm_name, color)
@@ -68,9 +78,11 @@ mod:hook(CLASS.SyringeEffects, "_set_color", function(func, self)
     end
 end)
 
-mod:hook(SyringeCaseColor.events, "set_colors", function(func, self, pickup_settings)
-    local custom_color = mod.get_stimm_color(pickup_settings.name)
-    local color_vec3 = Vector3(custom_color[1], custom_color[2], custom_color[3])
+mod:hook_require("scripts/components/syringe_case_color", function(SyringeCaseColor)
+    mod:hook(SyringeCaseColor.events, "set_colors", function(func, self, pickup_settings)
+        local custom_color = mod.get_stimm_color(pickup_settings.name)
+        local color_vec3 = Vector3(custom_color[1], custom_color[2], custom_color[3])
 
-    self:_set_colors(self._unit, color_vec3, color_vec3, 1)
+        self:_set_colors(self._unit, color_vec3, color_vec3, 1)
+    end)
 end)
