@@ -9,7 +9,7 @@ local localization = {
 	},
 	decal = {
 		en = "Sticker",
-		["zh-cn"] = "贴图",
+		["zh-cn"] = "图案",
 	},
 	red = {
 		en = "Red",
