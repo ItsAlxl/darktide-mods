@@ -51,13 +51,16 @@ return {
 	hud_element_size = {
 		en = "Indicator Size",
 		["zh-cn"] = "指示器大小",
+		ru = "Размер индикатора",
 	},
 	group_select = {
 		en = "Firemode Selection",
 		["zh-cn"] = "开火模式选择",
+		ru = "Выбор режима огня",
 	},
 	group_extra = {
 		en = "Misc",
 		["zh-cn"] = "杂项",
+		ru = "Разное",
 	},
 }
