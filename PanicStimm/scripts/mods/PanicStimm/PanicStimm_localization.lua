@@ -6,13 +6,28 @@ return {
 		en = "Inject your stimm with one button press.",
 	},
 	key_autostimm = {
-		en = "Instant Injection",
+		en = "Quick-Inject",
+	},
+	autostimm_hold_behavior = {
+		en = "Quick-Inject Timing",
+	},
+	press_to_inject = {
+		en = "Instantly Inject",
+	},
+	hold_to_inject = {
+		en = "Hold to Inject",
+	},
+	hold_to_not_inject = {
+		en = "Hold to Not Inject",
+	},
+	autostimm_held_delay = {
+		en = "Quick-Inject Hold Duration",
 	},
 	after_inject = {
 		en = "After Injection",
 	},
 	after_inject_description = {
-		en = "What to wield after using a stimm. This also applies to normal, non-instant stimm uses.",
+		en = "What to wield after using a stimm. This also applies to normal stimm uses, not just Quick-Inject.",
 	},
 	after_normal = {
 		en = "Default Behavior",

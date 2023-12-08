@@ -11,6 +11,7 @@ local AUTO_STIMM_STAGES = {
 }
 
 local auto_stimm_stage = 0
+local stop_after_switching = false
 
 local current_wield_slot = nil
 local unwield_to_slot = nil
@@ -18,12 +19,20 @@ local unwield_to_slot = nil
 local after_request_type = nil
 local input_request = nil
 
+local autostimm_hold_behavior = mod:get("autostimm_hold_behavior")
+local autostimm_held_delay = mod:get("autostimm_held_delay")
+local hold_threshold_t = nil
+
 mod.on_setting_changed = function(id)
     if id == "after_inject" then
         after_request_type = mod:get(id)
         if after_request_type == "" then
             after_request_type = nil
         end
+    elseif id == "autostimm_held_delay" then
+        autostimm_held_delay = mod:get(id)
+    elseif id == "autostimm_hold_behavior" then
+        autostimm_hold_behavior = mod:get(id)
     end
 end
 mod.on_setting_changed("after_inject")
@@ -33,19 +42,51 @@ local _get_player_unit = function()
     return plr and plr.player_unit
 end
 
-mod._quick_inject = function()
-    if auto_stimm_stage ~= AUTO_STIMM_STAGES.NONE then
-        auto_stimm_stage = AUTO_STIMM_STAGES.NONE
-        input_request = nil
-        return
-    end
-
+local _start_quick_inject = function(stop_after_switch)
     local plr_unit = _get_player_unit()
     local unit_data_extension = plr_unit and ScriptUnit.extension(plr_unit, "unit_data_system")
     local inventory_component = unit_data_extension and unit_data_extension:read_component("inventory")
     local pocketable_name = inventory_component and inventory_component[STIMM_SLOT_NAME]
     if pocketable_name and pocketable_name ~= "not_equipped" then
-        auto_stimm_stage = current_wield_slot == STIMM_SLOT_NAME and AUTO_STIMM_STAGES.CANCEL_RMB or AUTO_STIMM_STAGES.SWITCH_TO
+        stop_after_switching = stop_after_switch
+        auto_stimm_stage = current_wield_slot == STIMM_SLOT_NAME and (stop_after_switching and AUTO_STIMM_STAGES.NONE or AUTO_STIMM_STAGES.CANCEL_RMB) or AUTO_STIMM_STAGES.SWITCH_TO
+    end
+end
+
+mod.quick_inject = function()
+    hold_threshold_t = nil
+    if auto_stimm_stage ~= AUTO_STIMM_STAGES.NONE then
+        auto_stimm_stage = AUTO_STIMM_STAGES.NONE
+        input_request = nil
+        return
+    end
+    _start_quick_inject(false)
+end
+
+mod._hold_to_inject = function(pressed)
+    if autostimm_hold_behavior == 0 and pressed then
+        mod.quick_inject()
+        return
+    end
+    local this_t = Managers.time and Managers.time:time("main")
+    if pressed then
+        hold_threshold_t = (autostimm_hold_behavior == -1 and this_t or 0) + autostimm_held_delay
+        _start_quick_inject(true)
+    else
+        if autostimm_hold_behavior == 1 then
+            hold_threshold_t = nil
+        elseif autostimm_hold_behavior == -1 and this_t <= hold_threshold_t then
+            mod.quick_inject()
+        end
+    end
+end
+
+mod.update = function(dt)
+    if hold_threshold_t then
+        hold_threshold_t = hold_threshold_t - dt
+        if hold_threshold_t <= 0 then
+            mod.quick_inject()
+        end
     end
 end
 
@@ -58,7 +99,7 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
                 input_request = nil
             end
         else
-            auto_stimm_stage = auto_stimm_stage == AUTO_STIMM_STAGES.SWITCH_TO and slot_name == STIMM_SLOT_NAME and AUTO_STIMM_STAGES.CANCEL_RMB or AUTO_STIMM_STAGES.NONE
+            auto_stimm_stage = auto_stimm_stage == AUTO_STIMM_STAGES.SWITCH_TO and slot_name == STIMM_SLOT_NAME and (stop_after_switching and AUTO_STIMM_STAGES.NONE or AUTO_STIMM_STAGES.CANCEL_RMB) or AUTO_STIMM_STAGES.NONE
         end
     end
 end)
