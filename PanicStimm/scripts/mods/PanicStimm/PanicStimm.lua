@@ -63,7 +63,10 @@ mod.quick_inject = function()
     _start_quick_inject(false)
 end
 
-mod._hold_to_inject = function(pressed)
+mod._kb_hold_to_inject = function(pressed)
+    if Managers.input and Managers.input:cursor_active() then
+        return
+    end
     if autostimm_hold_behavior == 0 and pressed then
         mod.quick_inject()
         return

@@ -13,7 +13,7 @@ return {
 				keybind_global  = false,
 				keybind_trigger = "held",
 				keybind_type    = "function_call",
-				function_name   = "_hold_to_inject",
+				function_name   = "_kb_hold_to_inject",
 			},
 			{
 				setting_id    = "autostimm_hold_behavior",
