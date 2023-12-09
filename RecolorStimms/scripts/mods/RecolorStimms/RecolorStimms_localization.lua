@@ -1,6 +1,6 @@
 local localization = {
 	mod_name = {
-		en = "Recolor Stimms",
+		en = "RecolorStimms",
 		["zh-cn"] = "兴奋剂染色",
 	},
 	mod_description = {
@@ -8,8 +8,14 @@ local localization = {
 		["zh-cn"] = "自定义兴奋剂颜色。",
 	},
 	decal = {
-		en = "Sticker",
+		en = "Symbol",
 		["zh-cn"] = "图案",
+	},
+	reset = {
+		en = Localize("loc_settings_menu_reset_to_default"),
+	},
+	reset_none = {
+		en = "",
 	},
 	red = {
 		en = "Red",

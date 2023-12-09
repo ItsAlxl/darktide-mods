@@ -5,6 +5,11 @@ mod.get_stimm_color = function(stimm_name)
     return stimm_data and stimm_data.custom_color
 end
 
+mod.get_stimm_color_default = function(stimm_name)
+    local stimm_data = mod.stimm_data[stimm_name]
+    return stimm_data and stimm_data.default_color
+end
+
 mod.get_stimm_argb_255 = function(stimm_name)
     local custom_color = mod.get_stimm_color(stimm_name)
     local math_floor = math.floor
@@ -16,7 +21,12 @@ mod.get_stimm_argb_255 = function(stimm_name)
 end
 
 mod.set_stimm_color = function(stimm_name, color)
-    local custom_color = mod.stimm_data[stimm_name].custom_color
+    local stimm_data = mod.stimm_data[stimm_name]
+    if not stimm_data then
+        return
+    end
+
+    local custom_color = stimm_data.custom_color
     if color then
         mod:set(stimm_name .. "_red", color[1])
         mod:set(stimm_name .. "_green", color[2])
@@ -31,17 +41,36 @@ mod.set_stimm_color = function(stimm_name, color)
     end
 end
 
+mod.reset_stimm_color_to_default = function(stimm_name)
+    mod.set_stimm_color(stimm_name, mod.get_stimm_color_default(stimm_name))
+end
+
 mod.get_stimm_decal_index = function(stimm_name)
-    return mod.stimm_data[stimm_name].custom_decal
+    local stimm_data = mod.stimm_data[stimm_name]
+    return stimm_data.custom_decal
+end
+
+mod.get_stimm_decal_index_default = function(stimm_name)
+    local stimm_data = mod.stimm_data[stimm_name]
+    return stimm_data.default_decal
 end
 
 mod.set_stimm_decal_index = function(stimm_name, idx)
+    local stimm_data = mod.stimm_data[stimm_name]
+    if not stimm_data then
+        return
+    end
+
     if idx then
         mod:set(stimm_name .. "_decal", idx)
     else
         idx = mod:get(stimm_name .. "_decal")
     end
-    mod.stimm_data[stimm_name].custom_decal = idx
+    stimm_data.custom_decal = idx
+end
+
+mod.reset_stimm_decal_index_to_default = function(stimm_name)
+    mod.set_stimm_decal_index(stimm_name, mod.get_stimm_decal_index_default(stimm_name))
 end
 
 mod.refresh_all_colors = function()
@@ -56,11 +85,24 @@ mod.refresh_all_decals = function()
     end
 end
 
-mod.on_setting_changed = function(id)
+local _refresh_all = function()
     mod.refresh_all_colors()
     mod.refresh_all_decals()
 end
-mod.on_setting_changed()
+_refresh_all()
+
+mod.on_setting_changed = function(id)
+    if id == "reset" then
+        local stimm_to_reset = mod:get(id)
+        if mod.stimm_data[stimm_to_reset] then
+            mod.reset_stimm_color_to_default(stimm_to_reset)
+            mod.reset_stimm_decal_index_to_default(stimm_to_reset)
+        end
+        mod:set(id, "")
+    else
+        _refresh_all()
+    end
+end
 
 mod:hook(CLASS.SyringeEffects, "_set_color", function(func, self)
     local weapon_template_name = self._weapon_template.name

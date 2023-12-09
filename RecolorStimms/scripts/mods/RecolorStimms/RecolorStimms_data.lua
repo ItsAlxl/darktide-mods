@@ -1,31 +1,19 @@
 local mod = get_mod("RecolorStimms")
 
-mod.stimm_data = {
-	syringe_corruption_pocketable = {
-		default_color = { 0.15, 0.8, 0.1 },
-		custom_color = { 0.15, 0.8, 0.1 },
-		default_decal = 1,
-		custom_decal = 1,
-	},
-	syringe_ability_boost_pocketable = {
-		default_color = { 0.9, 0.5, 0.05 },
-		custom_color = { 0.9, 0.5, 0.05 },
-		default_decal = 4,
-		custom_decal = 4,
-	},
-	syringe_power_boost_pocketable = {
-		default_color = { 0.9, 0.2, 0.1 },
-		custom_color = { 0.9, 0.2, 0.1 },
-		default_decal = 3,
-		custom_decal = 3,
-	},
-	syringe_speed_boost_pocketable = {
-		default_color = { 0.0, 0.25, 0.75 },
-		custom_color = { 0.0, 0.25, 0.75 },
-		default_decal = 2,
-		custom_decal = 2,
-	},
-}
+mod.stimm_data = {}
+
+mod.register_stimm = function(stimm_name, default_color, default_decal_idx)
+	mod.stimm_data[stimm_name] = {
+		default_color = default_color,
+		custom_color = table.clone(default_color),
+		default_decal = default_decal_idx,
+		custom_decal = default_decal_idx,
+	}
+end
+mod.register_stimm("syringe_corruption_pocketable", { 0.15, 0.8, 0.1 }, 1)
+mod.register_stimm("syringe_speed_boost_pocketable", { 0.0, 0.25, 0.75 }, 2)
+mod.register_stimm("syringe_power_boost_pocketable", { 0.9, 0.2, 0.1 }, 3)
+mod.register_stimm("syringe_ability_boost_pocketable", { 0.9, 0.5, 0.05 }, 4)
 
 local _create_color_channel = function(channel_prefix, channel, default)
 	return {
@@ -62,9 +50,20 @@ local _create_stimm_group = function(group_name, data)
 	}
 end
 
-local widgets = {}
+local reset_options = {
+	{ text = "reset_none", value = "" }
+}
+local widgets = {
+	{
+		setting_id    = "reset",
+		type          = "dropdown",
+		default_value = "",
+		options       = reset_options,
+	}
+}
 for name, data in pairs(mod.stimm_data) do
 	table.insert(widgets, _create_stimm_group(name, data))
+	table.insert(reset_options, { text = name, value = name })
 end
 
 return {
