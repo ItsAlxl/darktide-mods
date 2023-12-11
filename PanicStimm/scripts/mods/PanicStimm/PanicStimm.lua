@@ -122,7 +122,7 @@ mod:hook_safe(CLASS.ActionHandler, "start_action", function(self, id, action_obj
         elseif action_name == "action_wield" then
             local slot_name = self._inventory_component.wielded_slot
             unwield_to_slot = slot_name ~= STIMM_SLOT_NAME and slot_name or unwield_to_slot
-        elseif auto_stimm_stage == AUTO_STIMM_STAGES.INJECT and (action_name == "action_flair" or action_name == "action_use_self") then
+        elseif current_wield_slot == STIMM_SLOT_NAME and (action_name == "action_flair" or action_name == "action_use_self") then
             auto_stimm_stage = AUTO_STIMM_STAGES.SWITCH_BACK
         end
     end

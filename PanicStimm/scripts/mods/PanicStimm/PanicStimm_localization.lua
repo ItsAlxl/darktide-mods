@@ -1,6 +1,6 @@
 return {
 	mod_name = {
-		en = "Panic Stimm",
+		en = "Quick-Inject Stimms",
 		["zh-cn"] = "紧急兴奋剂",
 	},
 	mod_description = {
