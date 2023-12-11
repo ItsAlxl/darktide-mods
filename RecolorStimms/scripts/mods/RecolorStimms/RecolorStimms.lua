@@ -11,13 +11,17 @@ mod.get_stimm_color_default = function(stimm_name)
 end
 
 mod.get_stimm_argb_255 = function(stimm_name)
-    local custom_color = mod.get_stimm_color(stimm_name)
-    local math_floor = math.floor
-    return custom_color and { 255,
-        math_floor(custom_color[1] * 255),
-        math_floor(custom_color[2] * 255),
-        math_floor(custom_color[3] * 255)
-    }
+    local stimm_data = mod.stimm_data[stimm_name]
+    local custom_color = stimm_data and stimm_data.custom_color
+    if custom_color and not stimm_data.custom_rgb_255 then
+        local math_floor = math.floor
+        stimm_data.custom_rgb_255 = { 255,
+            math_floor(custom_color[1] * 255),
+            math_floor(custom_color[2] * 255),
+            math_floor(custom_color[3] * 255)
+        }
+    end
+    return stimm_data and stimm_data.custom_rgb_255
 end
 
 mod.set_stimm_color = function(stimm_name, color)
@@ -28,17 +32,19 @@ mod.set_stimm_color = function(stimm_name, color)
 
     local custom_color = stimm_data.custom_color
     if color then
-        mod:set(stimm_name .. "_red", color[1])
-        mod:set(stimm_name .. "_green", color[2])
-        mod:set(stimm_name .. "_blue", color[3])
+        local math_floor = math.floor
+        mod:set(stimm_name .. "_red", math_floor(color[1] * 255))
+        mod:set(stimm_name .. "_green", math_floor(color[2] * 255))
+        mod:set(stimm_name .. "_blue", math_floor(color[3] * 255))
         custom_color[1] = color[1]
         custom_color[2] = color[2]
         custom_color[3] = color[3]
     else
-        custom_color[1] = mod:get(stimm_name .. "_red")
-        custom_color[2] = mod:get(stimm_name .. "_green")
-        custom_color[3] = mod:get(stimm_name .. "_blue")
+        custom_color[1] = mod:get(stimm_name .. "_red") / 255
+        custom_color[2] = mod:get(stimm_name .. "_green") / 255
+        custom_color[3] = mod:get(stimm_name .. "_blue") / 255
     end
+    stimm_data.custom_rgb_255 = nil
 end
 
 mod.reset_stimm_color_to_default = function(stimm_name)

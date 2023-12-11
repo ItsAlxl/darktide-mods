@@ -21,19 +21,19 @@ local _create_color_channel = function(channel_prefix, channel, default)
 		type = "numeric",
 		title = channel,
 		default_value = default,
-		decimals_number = 2,
-		range = { 0, 1 },
+		range = { 0, 255 },
 	}
 end
 
 local _create_stimm_group = function(group_name, data)
+	local math_floor = math.floor
 	return {
 		setting_id  = group_name,
 		type        = "group",
 		sub_widgets = {
-			_create_color_channel(group_name, "red", data.default_color[1]),
-			_create_color_channel(group_name, "green", data.default_color[2]),
-			_create_color_channel(group_name, "blue", data.default_color[3]),
+			_create_color_channel(group_name, "red", math_floor(255 * data.default_color[1])),
+			_create_color_channel(group_name, "green", math_floor(255 * data.default_color[2])),
+			_create_color_channel(group_name, "blue", math_floor(255 * data.default_color[3])),
 			{
 				setting_id    = group_name .. "_decal",
 				title         = "decal",
