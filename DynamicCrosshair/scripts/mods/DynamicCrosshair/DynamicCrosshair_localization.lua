@@ -3,14 +3,6 @@ return {
 		en = "Your crosshair reacts to what you're aiming at.",
 		["zh-cn"] = "根据所瞄准的对象调整准星。",
 	},
-	compat_custom_color = {
-		en = "'Custom Crosshair Color' Compatibility",
-		["zh-cn"] = "Custom Crosshair Color 兼容",
-	},
-	compat_custom_color_description = {
-		en = "The mod 'Custom Crosshair Color' can be used alongside this mod if this mod is later in the load order and this option is enabled. Otherwise, leave this option disabled.",
-		["zh-cn"] = "Custom Crosshair Color 模组可以与此模组共存，此模组必须在模组顺序中排在后面，并启用此选项。否则请保持禁用。",
-	},
 	group_villains_rgba = {
 		en = "Enemy Color",
 		["zh-cn"] = "敌人颜色",
@@ -22,6 +14,9 @@ return {
 	group_props_rgba = {
 		en = "Barrel Color",
 		["zh-cn"] = "爆炸物颜色",
+	},
+	group_ghost_rgba = {
+		en = "World Crosshair Color",
 	},
 	red = {
 		en = "Red",
@@ -38,5 +33,27 @@ return {
 	alpha = {
 		en = "Alpha (Opacity)",
 		["zh-cn"] = "不透明度",
+	},
+	perspectives_reposition = {
+		en = "[Perspectives Mod] Reposition During",
+	},
+	show_ghost_crosshair = {
+		en = "Show World Crosshair Position"
+	},
+	both = {
+		en = "Always",
+		["zh-cn"] = "总是",
+	},
+	only_1p = {
+		en = "1st Person",
+		["zh-cn"] = "第一人称",
+	},
+	only_3p = {
+		en = "3rd Person",
+		["zh-cn"] = "第三人称",
+	},
+	never = {
+		en = "Never",
+		["zh-cn"] = "从不",
 	},
 }
