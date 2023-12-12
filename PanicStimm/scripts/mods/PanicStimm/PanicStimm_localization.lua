@@ -1,7 +1,7 @@
 return {
 	mod_name = {
 		en = "Quick-Inject Stimms",
-		["zh-cn"] = "紧急兴奋剂",
+		["zh-cn"] = "快速注射兴奋剂",
 	},
 	mod_description = {
 		en = "Inject your stimm with one button press.",

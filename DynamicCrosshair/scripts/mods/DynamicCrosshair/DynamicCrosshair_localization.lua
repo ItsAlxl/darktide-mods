@@ -17,6 +17,7 @@ return {
 	},
 	group_ghost_rgba = {
 		en = "World Crosshair Color",
+		["zh-cn"] = "世界准星颜色",
 	},
 	red = {
 		en = "Red",
@@ -36,9 +37,11 @@ return {
 	},
 	perspectives_reposition = {
 		en = "[Perspectives Mod] Reposition During",
+		["zh-cn"] = "[Perspectives 模组] 复位时机",
 	},
 	show_ghost_crosshair = {
-		en = "Show World Crosshair Position"
+		en = "Show World Crosshair Position",
+		["zh-cn"] = "显示世界准星位置",
 	},
 	both = {
 		en = "Always",
