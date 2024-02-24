@@ -37,7 +37,6 @@ return {
         end
 
         return math.clamp(plr:profile().archetype.base_critical_strike_chance + additional_chance, 0, 1)
-    
     end,
 
     crit_dmg = function(stat_buffs, wep_template)

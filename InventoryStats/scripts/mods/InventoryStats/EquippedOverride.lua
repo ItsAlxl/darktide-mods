@@ -1,6 +1,6 @@
 local mod = get_mod("InventoryStats")
 
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local Weapon = require("scripts/extension_systems/weapon/weapon")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 
