@@ -20,6 +20,36 @@ invstat_data_font_style.text_vertical_alignment = "center"
 local STAT_WIDTH = 300
 local BG_PADDING = 10
 
+local widget_position = {
+    -75,
+    -360,
+    2
+}
+
+mod.set_widget_pos = function(x, y, z)
+    if x then
+        widget_position[1] = x or widget_position[1]
+    end
+    if y then
+        widget_position[2] = y or widget_position[2]
+    end
+    if z then
+        widget_position[3] = z or widget_position[3]
+    end
+end
+
+mod.move_widget_pos = function(x, y, z)
+    if x then
+        widget_position[1] = widget_position[1] + x
+    end
+    if y then
+        widget_position[2] = widget_position[2] + y
+    end
+    if z then
+        widget_position[3] = widget_position[3] + z
+    end
+end
+
 mod:hook_require("scripts/ui/views/inventory_view/inventory_view_definitions", function(defs)
     defs.scenegraph_definition.invstat_entry = {
         vertical_alignment = "center",
@@ -29,11 +59,7 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_definitions", f
             STAT_WIDTH,
             40
         },
-        position = {
-            -75,
-            -360,
-            2
-        }
+        position = widget_position
     }
 
     defs.visbtn_definition = UIWidget.create_definition(ButtonPassTemplates.terminal_button_small, "invstat_entry", {
@@ -41,7 +67,7 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_definitions", f
     }, {
         STAT_WIDTH,
         40
-    }) -- ButtonPassTemplates.tab_menu_button
+    })
     defs.pagenav_definition = UIWidget.create_definition(ButtonPassTemplates.terminal_button_small, "invstat_entry", {
         text = "-",
     }, {

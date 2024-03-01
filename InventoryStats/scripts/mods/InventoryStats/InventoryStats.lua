@@ -27,6 +27,13 @@ local num_allowed_stats = 0
 
 local allow_equip_forces = mod:get("force_equip")
 
+mod.on_all_mods_loaded = function()
+    local loadout_names_mod = get_mod("LoadoutNames")
+    if loadout_names_mod then
+        mod.move_widget_pos(nil, 50, nil)
+    end
+end
+
 mod.on_setting_changed = function(id)
     if id == "force_equip" then
         allow_equip_forces = mod:get(id)
