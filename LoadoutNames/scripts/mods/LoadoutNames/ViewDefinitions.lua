@@ -5,7 +5,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 
 local tbox_definition = table.clone(TextInputPassTemplates.simple_input_field)
 
-mod:hook_require("scripts/ui/views/inventory_background_view/inventory_background_view_definitions", function(defs)
+mod:hook_require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_definitions", function(defs)
     defs.scenegraph_definition.loadout_name = {
         vertical_alignment = "center",
         parent = "screen",

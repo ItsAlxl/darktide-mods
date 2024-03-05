@@ -27,29 +27,30 @@ mod.end_typing = function()
     end
 end
 
-local _set_loadout_name_from_ibv = function(inv_back_view, deletion)
+local _set_loadout_name_from_iv = function(inv_view, deletion)
     if tbox_content then
-        mod.set_loadout_name(inv_back_view._active_profile_preset_id, not deletion and tbox_content.input_text or nil)
+        mod.set_loadout_name(inv_view._active_profile_preset_id, not deletion and tbox_content.input_text or nil)
     end
 end
 
-local _display_loadout_name_to_ibv = function(inv_back_view)
-    tbox_content = tbox_content or inv_back_view._widgets_by_name.loadout_tbox.content
+local _display_loadout_name_to_iv = function(inv_view)
+    mod.DBG = inv_view._elements.profile_presets
+    tbox_content = tbox_content or (inv_view._elements and inv_view._elements.profile_presets and inv_view._elements.profile_presets._widgets_by_name.loadout_tbox and inv_view._elements.profile_presets._widgets_by_name.loadout_tbox.content)
     if tbox_content then
-        tbox_content.input_text = mod.get_loadout_name(inv_back_view._active_profile_preset_id, "")
+        tbox_content.input_text = mod.get_loadout_name(inv_view._active_profile_preset_id, "")
     end
 end
 
 mod:hook(CLASS.InventoryBackgroundView, "on_enter", function(func, self)
     func(self)
-    _display_loadout_name_to_ibv(self)
+    _display_loadout_name_to_iv(self)
 end)
 
 mod:hook(CLASS.InventoryBackgroundView, "event_on_profile_preset_changed", function(func, self, profile_preset, on_preset_deleted)
-    _set_loadout_name_from_ibv(self, on_preset_deleted)
+    _set_loadout_name_from_iv(self, on_preset_deleted)
     mod.end_typing()
     func(self, profile_preset, on_preset_deleted)
-    _display_loadout_name_to_ibv(self)
+    _display_loadout_name_to_iv(self)
 end)
 
 mod:hook(CLASS.InventoryBackgroundView, "_handle_input", function(func, self, input_service, dt, t)
@@ -60,7 +61,7 @@ mod:hook(CLASS.InventoryBackgroundView, "_handle_input", function(func, self, in
 end)
 
 mod:hook(CLASS.InventoryBackgroundView, "on_exit", function(func, self)
-    _set_loadout_name_from_ibv(self)
+    _set_loadout_name_from_iv(self)
     func(self)
     tbox_content = nil
 end)
