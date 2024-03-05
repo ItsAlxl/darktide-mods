@@ -53,7 +53,7 @@ mod:hook(CLASS.InventoryBackgroundView, "event_on_profile_preset_changed", funct
 end)
 
 mod:hook(CLASS.InventoryBackgroundView, "_handle_input", function(func, self, input_service, dt, t)
-    if mod.is_user_typing() and input_service:get("send_chat_message") then
+    if mod.is_user_typing() and (input_service:get("send_chat_message") or input_service:get("back")) then
         mod.end_typing()
     end
     func(self, input_service, dt, t)
@@ -76,8 +76,16 @@ mod.on_all_mods_loaded = function()
     end
 end
 
-mod:hook(CLASS.InventoryBackgroundView, "cb_on_weapon_swap_pressed", function(func, self)
+local _restrict_cb = function(func, ...)
     if not mod.is_user_typing() then
-        func(self)
+        func(...)
+    end
+end
+mod:hook(CLASS.InventoryBackgroundView, "cb_on_weapon_swap_pressed", _restrict_cb)
+mod:hook(CLASS.ViewElementMenuPanel, "_select_next_tab", _restrict_cb)
+
+mod:hook(CLASS.UIManager, "close_view", function(func, self, view_name, force)
+    if force or not mod.is_user_typing() or (view_name ~= "inventory_view" and view_name ~= "inventory_background_view" and view_name ~= "talent_builder_view") then
+        func(self, view_name, force)
     end
 end)

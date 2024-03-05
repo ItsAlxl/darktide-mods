@@ -17,7 +17,7 @@ mod:hook_require("scripts/ui/views/inventory_background_view/inventory_backgroun
         position = {
             -75,
             -360,
-            2
+            50
         }
     }
 
