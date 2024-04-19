@@ -3,7 +3,7 @@ local mod = get_mod("BetterMelk")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 
-local CONTRACTS_TEXT_OFFSET = { 173, 40, 10 }
+local CONTRACTS_TEXT_OFFSET = { 400, 30, 10 }
 
 local contracts_text_style = table.clone(UIFontSettings.body_small)
 contracts_text_style.text_horizontal_alignment = "left"
