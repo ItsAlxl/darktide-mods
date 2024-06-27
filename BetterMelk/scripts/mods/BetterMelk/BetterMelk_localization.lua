@@ -2,16 +2,19 @@ return {
 	mod_name = {
 		en = "Character Screen Contracts",
 		["zh-cn"] = "梅尔克协议优化",
-		ru = "Лучший Мелк",
+		ru = "Индикатор контрактов",
 	},
 	mod_description = {
 		en = "Displays contract progress on character select.",
+		ru = "Character Screen Contracts - Показывает индикатор контрактов на экране выбора персонажей.",
 	},
 	offset_x = {
 		en = "Horizontal Offset",
+		ru = "Горизонтальное смещение",
 	},
 	offset_y = {
 		en = "Vertical Offset",
+		ru = "Вертикальное смещение",
 	},
 	msg_error = {
 		en = "Unable to fetch weekly contracts",
