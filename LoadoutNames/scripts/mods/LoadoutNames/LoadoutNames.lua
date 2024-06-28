@@ -1,4 +1,5 @@
 local mod = get_mod("LoadoutNames")
+local HubHotkeys = require("scripts/settings/game_mode/game_mode_settings").hub.hotkeys
 
 mod:io_dofile("LoadoutNames/scripts/mods/LoadoutNames/ViewDefinitions")
 
@@ -7,6 +8,8 @@ local MAX_NAME_LENGTH = 50
 local is_typing = false
 local tooltip_widget = nil
 local tbox_widget = nil
+
+local stored_hotkeys = {}
 
 mod.set_loadout_name = function(loadout_id, name)
 	if loadout_id then
@@ -22,9 +25,29 @@ mod.is_user_typing = function()
 	return tbox_widget and is_typing
 end
 
+local _remove_vanilla_hotkeys = function()
+	stored_hotkeys = {
+		hotkey_inventory = HubHotkeys.hotkeys.hotkey_inventory,
+		inventory_background_view = HubHotkeys.lookup.inventory_background_view
+	}
+	HubHotkeys.hotkeys.hotkey_inventory = nil
+	HubHotkeys.lookup.inventory_background_view = nil
+end
+
+local _restore_vanilla_hotkeys = function()
+	HubHotkeys.hotkeys.hotkey_inventory = stored_hotkeys.hotkey_inventory or HubHotkeys.hotkeys.hotkey_inventory
+	HubHotkeys.lookup.inventory_background_view = stored_hotkeys.inventory_background_view or HubHotkeys.lookup.inventory_background_view
+end
+
 local set_is_typing = function(t)
 	if t ~= is_typing then
 		is_typing = t
+
+		if t then
+			_remove_vanilla_hotkeys()
+		else
+			_restore_vanilla_hotkeys()
+		end
 
 		local tbox_content = tbox_widget and tbox_widget.content
 		if tbox_content then
@@ -37,7 +60,7 @@ local set_is_typing = function(t)
 
 		local tbox_style = tbox_widget and tbox_widget.style
 		if tbox_style then
-			tbox_style.background.color[1] = t and 255 or 0
+			tbox_style.background.visible = t
 			tbox_style.display_text.text_horizontal_alignment = t and "left" or "right"
 		end
 	end
@@ -57,7 +80,6 @@ local _set_loadout_name_from_iv = function(inv_view, deletion)
 end
 
 local _display_loadout_name_to_iv = function(inv_view)
-	mod.DBG_tbox = mod.DBG_tbox or (inv_view._elements and inv_view._elements.profile_presets and inv_view._elements.profile_presets._widgets_by_name.loadout_name_tbox)
 	tbox_widget = tbox_widget or (inv_view._elements and inv_view._elements.profile_presets and inv_view._elements.profile_presets._widgets_by_name.loadout_name_tbox)
 	tooltip_widget = tooltip_widget or (inv_view._elements and inv_view._elements.profile_presets and inv_view._elements.profile_presets._widgets_by_name.loadout_name_tooltip)
 	if tbox_widget and tbox_widget.content then
@@ -90,7 +112,7 @@ end)
 mod:hook(CLASS.ViewElementProfilePresets, "update", function(func, self, dt, t, input_service)
 	func(self, dt, t, input_service)
 
-	set_is_typing(tbox_widget and tbox_widget.content and tbox_widget.content.is_writing)
+	set_is_typing(tbox_widget and tbox_widget.content and tbox_widget.content.is_writing or false)
 
 	local profile_buttons_widgets = self._profile_buttons_widgets
 	if tooltip_widget and tooltip_widget.content.text and profile_buttons_widgets then

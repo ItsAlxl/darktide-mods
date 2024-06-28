@@ -36,10 +36,17 @@ mod:hook_require("scripts/ui/view_elements/view_element_profile_presets/view_ele
 		table.clone(TextInputPassTemplates.simple_input_field),
 		"loadout_name_tbox_area", {
 			placeholder_text = mod:localize("name_placeholder"),
+			hide_baseline = true,
 		},
 		nil, {
 			active_placeholder = {
 				text_horizontal_alignment = "right"
+			},
+			display_text = {
+				text_horizontal_alignment = "right"
+			},
+			background = {
+				visible = false
 			}
 		}
 	)
