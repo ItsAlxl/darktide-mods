@@ -10,18 +10,23 @@ return {
 	},
 	corner = {
 		en = "Corner",
+		ru = "Угол",
 	},
 	corner_tl = {
 		en = "Top-Left",
+		ru = "Сверху слева",
 	},
 	corner_tr = {
 		en = "Top-Right",
+		ru = "Сверху справа",
 	},
 	corner_bl = {
 		en = "Bottom-Left",
+		ru = "Снизу слева",
 	},
 	corner_br = {
 		en = "Bottom-Right",
+		ru = "Снизу справа",
 	},
 	offset_x = {
 		en = "Horizontal Offset",
