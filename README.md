@@ -20,8 +20,8 @@ Anonymize player names.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/117).
 
-## BetterMelk aka Better Melk
-Automatically accept new contracts and collect the weekly completion bonus.
+## BetterMelk aka Character Screen Contracts
+Display contract progress on the character select screen.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/71).
 

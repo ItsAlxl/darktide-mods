@@ -8,6 +8,21 @@ return {
 		en = "Displays contract progress on character select.",
 		ru = "Character Screen Contracts - Показывает индикатор контрактов на экране выбора персонажей.",
 	},
+	corner = {
+		en = "Corner",
+	},
+	corner_tl = {
+		en = "Top-Left",
+	},
+	corner_tr = {
+		en = "Top-Right",
+	},
+	corner_bl = {
+		en = "Bottom-Left",
+	},
+	corner_br = {
+		en = "Bottom-Right",
+	},
 	offset_x = {
 		en = "Horizontal Offset",
 		ru = "Горизонтальное смещение",

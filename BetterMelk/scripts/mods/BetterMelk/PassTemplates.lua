@@ -3,7 +3,7 @@ local mod = get_mod("BetterMelk")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 
-local CONTRACTS_TEXT_OFFSET = { -20, 10, 10 }
+local CONTRACTS_TEXT_OFFSET = { 20, 10, 100 }
 
 local contracts_text_style = table.clone(UIFontSettings.body_small)
 contracts_text_style.text_horizontal_alignment = "right"
@@ -40,10 +40,23 @@ mod:hook_require("scripts/ui/pass_templates/character_select_pass_templates", fu
 end)
 
 local _get_style_update = function()
+	local corner = mod:get("corner")
+	local left = corner == "tl" or corner == "bl"
+	local top = corner == "tl" or corner == "tr"
+	local align_h = left and "left" or "right"
+	local align_v = top and "top" or "bottom"
 	return {
 		contracts_text = {
-			visible = mod:is_enabled() and mod:get("show_contracts"),
-			offset = { CONTRACTS_TEXT_OFFSET[1] - mod:get("offset_x"), CONTRACTS_TEXT_OFFSET[2] + mod:get("offset_y"), CONTRACTS_TEXT_OFFSET[3] }
+			text_horizontal_alignment = align_h,
+			text_vertical_alignment = align_v,
+			horizontal_alignment = align_h,
+			vertical_alignment = align_v,
+			visible = mod:is_enabled(),
+			offset = {
+				(left and 1 or -1) * (CONTRACTS_TEXT_OFFSET[1] + mod:get("offset_x")),
+				(top and 1 or -1) * (CONTRACTS_TEXT_OFFSET[2] + mod:get("offset_y")),
+				CONTRACTS_TEXT_OFFSET[3]
+			}
 		}
 	}
 end
