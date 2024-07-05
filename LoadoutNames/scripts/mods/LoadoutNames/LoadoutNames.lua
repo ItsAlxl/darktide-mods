@@ -137,17 +137,6 @@ end)
 -- |||
 -- prevent hotkey callbacks while typing
 
-mod.on_all_mods_loaded = function()
-	local hub_hotkeys_mod = get_mod("hub_hotkey_menus")
-	if hub_hotkeys_mod then
-		mod:hook(hub_hotkeys_mod, "activate_inventory_view", function(func, self)
-			if not mod.is_user_typing() then
-				func(self)
-			end
-		end)
-	end
-end
-
 local _restrict_cb = function(func, ...)
 	if not mod.is_user_typing() then
 		func(...)
