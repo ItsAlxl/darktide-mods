@@ -1,4 +1,6 @@
-return {
+local mod = get_mod("Perspectives")
+
+local loc = {
 	mod_description = {
 		en = "Switch between first and third person perspectives.",
 		["zh-cn"] = "在第一人称和第三人称视角之间切换。",
@@ -75,18 +77,6 @@ return {
 		en = "Custom Viewpoint",
 		["zh-cn"] = "自定义视角",
 	},
-	custom_viewpoint_apply = {
-		en = "Apply Changes",
-		["zh-cn"] = "应用更改",
-	},
-	custom_viewpoint_apply_description = {
-		en = "Whenever changing any camera distance/offset values, you must set this to On to apply those changes.",
-		["zh-cn"] = "修改任何摄像机距离/偏移值时，你必须将此选项设置为开启才能应用更改。",
-	},
-	changes_applied_notif = {
-		en = "Custom Viewpoint Applied",
-		["zh-cn"] = "已应用自定义视角",
-	},
 	custom_distance = {
 		en = "Camera Distance (Non-Aiming)",
 		["zh-cn"] = "摄像机距离（非瞄准）",
@@ -110,6 +100,9 @@ return {
 	custom_offset_zoom = {
 		en = "Camera Offset (Aiming)",
 		["zh-cn"] = "摄像机偏移（瞄准）",
+	},
+	xhair_fallback = {
+		en = "'No Crosshair' in 3rd Person",
 	},
 	use_lookaround_node = {
 		en = "[LookAround] 3rd Person Inspect",
@@ -158,10 +151,16 @@ return {
 		en = Localize("loc_ingame_wield_2")
 	},
 	autoswitch_slot_grenade_ability = {
-		en = Localize("loc_pickup_consumable_small_grenade_01") .. " / " .. Localize("loc_ability_psyker_smite")
+		en = Localize("loc_ingame_grenade_ability")
 	},
 	autoswitch_slot_pocketable = {
-		en = Localize("loc_ingame_wield_3")
+		en = Localize("loc_ingame_wield_3_v2")
+	},
+	autoswitch_slot_pocketable_small = {
+		en = Localize("loc_ingame_wield_4_v2")
+	},
+	autoswitch_slot_device = {
+		en = Localize("loc_ingame_wield_5")
 	},
 	autoswitch_slot_luggable = {
 		en = Localize("loc_item_type_luggable")
@@ -207,3 +206,22 @@ return {
 		["zh-cn"] = "第三人称",
 	},
 }
+
+local crosshair_remap = get_mod("crosshair_remap")
+if crosshair_remap and crosshair_remap.all_crosshair_names then
+	mod._xhair_types = crosshair_remap.all_crosshair_names
+	for _, type in ipairs(mod._xhair_types) do
+		loc["xhair_" .. type] = {
+			en = crosshair_remap:localize(type .. "_crosshair")
+		}
+	end
+else
+	mod._xhair_types = { "none", "cross", "assault", "bfg", "shotgun", "spray_n_pray", "dot" }
+	for _, type in ipairs(mod._xhair_types) do
+		loc["xhair_" .. type] = {
+			en = Localize(type == "none" and "loc_setting_notification_type_none" or ("loc_setting_crosshair_type_override_" .. (type ~= "cross" and type or "killshot"))),
+		}
+	end
+end
+
+return loc
