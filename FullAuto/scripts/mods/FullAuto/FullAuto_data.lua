@@ -17,7 +17,7 @@ return {
 						keybind_global  = false,
 						keybind_trigger = "pressed",
 						keybind_type    = "function_call",
-						function_name   = "_toggle_select",
+						function_name   = "_kb_toggle_select",
 					},
 					{
 						setting_id      = "held_autoshoot",
@@ -26,7 +26,7 @@ return {
 						keybind_global  = false,
 						keybind_trigger = "held",
 						keybind_type    = "function_call",
-						function_name   = "_toggle_select",
+						function_name   = "_kb_toggle_select",
 					},
 					{
 						setting_id    = "default_autofire",

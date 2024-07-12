@@ -119,19 +119,22 @@ mod.set_firemode_selection = function(asf)
 	end
 end
 
-mod._toggle_select = function(held)
+mod._kb_toggle_select = function(held)
 	if not (track_autofire or track_natural) then
 		ignore_next_autofire_default = true
 	end
 	mod.set_firemode_selection(not select_autofire)
 end
 
+local _cache_current_wep_firemode = function()
+	if remember_per_wep and wep_template_name and (track_autofire or track_natural) then
+		mod.set_weapon_default(wep_template_name, select_autofire)
+	end
+end
+
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
 	if self._player == Managers.player:local_player(1) then
-		if remember_per_wep and wep_template_name and (track_autofire or track_natural) then
-			mod.set_weapon_default(wep_template_name, select_autofire)
-		end
-
+		_cache_current_wep_firemode()
 		_disable_autofire()
 		local wep_template = self._weapons[slot_name].weapon_template
 		wep_template_name = wep_template.name
@@ -156,10 +159,15 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
 end)
 
 mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, game_mode_name, ...)
+	_cache_current_wep_firemode()
 	for template_name, autofire in pairs(cached_default_autofires) do
 		mod:set(template_name, autofire)
 	end
 	table.clear(cached_default_autofires)
+
+	if not remember_per_wep then
+		mod.set_firemode_selection(starting_default_autofire)
+	end
 end)
 
 local _get_player_unit = function()
