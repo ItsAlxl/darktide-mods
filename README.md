@@ -25,6 +25,11 @@ Display contract progress on the character select screen.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/71).
 
+## BioPage
+Adds a bio page that lists out the choices you made during character creation. Also works when inspecting other players.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/341).
+
 ## BornReady
 Automatically readies up when joining a lobby.
 
