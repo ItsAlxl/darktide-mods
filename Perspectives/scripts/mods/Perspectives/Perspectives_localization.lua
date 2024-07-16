@@ -101,6 +101,14 @@ local loc = {
 		en = "Camera Offset (Aiming)",
 		["zh-cn"] = "摄像机偏移（瞄准）",
 	},
+	custom_distance_ogryn = {
+		en = "Camera Distance (Ogryn)",
+		["zh-cn"] = "摄像机距离（欧格林）",
+	},
+	custom_offset_ogryn = {
+		en = "Camera Offset (Ogryn)",
+		["zh-cn"] = "摄像机偏移（欧格林）",
+	},
 	xhair_fallback = {
 		en = "'No Crosshair' in 3rd Person",
 	},

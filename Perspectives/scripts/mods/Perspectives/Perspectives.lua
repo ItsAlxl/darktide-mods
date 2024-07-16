@@ -22,6 +22,7 @@ local use_3p_freelook_node = false
 local holding_primary = false
 local holding_secondary = false
 local is_spectating = false
+local is_in_hub = false
 local xhair_fallback = nil
 
 local _get_followed_unit = function()
@@ -185,11 +186,6 @@ local _autoswitch_from_event = function(reason, event, condition)
 	return mod.mux_3p_due_to(reason, autoswitch_mode == 2, autoswitch_mode == 1)
 end
 
-local _apply_viewpoint_changes = function()
-	mod.apply_custom_viewpoint(mod:get("custom_distance"), mod:get("custom_offset"), mod:get("custom_distance_zoom"), mod:get("custom_offset_zoom"))
-end
-_apply_viewpoint_changes()
-
 mod.on_setting_changed = function(id)
 	local val = mod:get(id)
 
@@ -212,8 +208,14 @@ mod.on_setting_changed = function(id)
 	elseif id == "perspective_transition_time" then
 		CameraTransitionTemplates.to_third_person.position.duration = val
 		CameraTransitionTemplates.to_first_person.position.duration = val
-	elseif id == "custom_distance" or id == "custom_offset" or id == "custom_distance_zoom" or id == "custom_offset_zoom" then
-		_apply_viewpoint_changes()
+	elseif id == "custom_distance"
+		or id == "custom_offset"
+		or id == "custom_distance_zoom"
+		or id == "custom_offset_zoom"
+		or id == "custom_distance_ogryn"
+		or id == "custom_offset_ogryn"
+		then
+		mod.apply_custom_viewpoint()
 	elseif string.find(id, OPT_PREFIX_AUTOSWITCH) then
 		local key = string.sub(id, string.len(OPT_PREFIX_AUTOSWITCH))
 		autoswitch_events[key] = val
@@ -338,7 +340,7 @@ mod:hook(CLASS.PlayerUnitCameraExtension, "_evaluate_camera_tree", function(func
 	local is_grabbed = disabling_type == "grabbed"
 	local is_consumed = disabling_type == "consumed"
 	local alternate_fire_is_active = self._alternate_fire_component.is_active
-	local tree, node = nil
+	local tree, node = nil, nil
 
 	local is_ogryn = self._breed.name == "ogryn"
 	mod.disable_3p_due_to("aim", _should_aim_to_1p(alternate_fire_is_active, is_ogryn))
@@ -486,7 +488,17 @@ mod:hook(CLASS.PlayerHuskFirstPersonExtension, "_update_first_person_mode", func
 	return func(self, t)
 end)
 
-mod:hook(CLASS.HudElementCrosshair, "_get_current_crosshair_type", function(func, ...)
-	local type = func(...)
-	return (type == "none" or type == "ironsight") and mod.is_requesting_third_person() and xhair_fallback or type
+mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, game_mode_name, ...)
+    is_in_hub = game_mode_name == "hub"
+end)
+
+mod:hook(CLASS.HudElementCrosshair, "_get_current_crosshair_type", function(func, self, crosshair_settings)
+	local type = func(self, crosshair_settings)
+	mod.DBG = {
+		crosshair_settings = crosshair_settings,
+		xhair_fallback = xhair_fallback,
+		type = type,
+		xhair_elm = self,
+	}
+	return crosshair_settings and xhair_fallback ~= "none" and (type == "none" or type == "ironsight") and not is_in_hub and mod.is_requesting_third_person() and xhair_fallback or type
 end)

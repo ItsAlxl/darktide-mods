@@ -161,6 +161,20 @@ return {
 						range           = { -1.0, 1.0 },
 						decimals_number = 2,
 					},
+					{
+						setting_id      = "custom_distance_ogryn",
+						type            = "numeric",
+						default_value   = 0.0,
+						range           = { -1.0, 1.0 },
+						decimals_number = 2,
+					},
+					{
+						setting_id      = "custom_offset_ogryn",
+						type            = "numeric",
+						default_value   = 0.0,
+						range           = { -1.0, 1.0 },
+						decimals_number = 2,
+					},
 				}
 			},
 			{

@@ -13,11 +13,19 @@ local custom_offset_zoom = 0.0
 -- +x/-x = right/left
 -- +y/-y = forward/back
 -- +z/-z = up/down
-local OFFSET_TO_OGRYN = {
+local ogryn_offset = {
 	x = 0.0,
-	y = -0.75,
-	z = -0.1,
+	y = 0.0,
+	z = 0.0,
 }
+local shoulder_offset = {
+	x = 0.5,
+	y = 0.0,
+	z = 0.0,
+}
+
+-- this gets baked when tree refreshes
+local ogryn_shoulder_bake = { x = 0.0, y = 0.0, z = 0.0 }
 
 -- flip is either true (flip), false (don't flip), or nil (it's a center viewpoint)
 local _transform_offset = function(offset, flip, is_zoom, ignore_custom_offset)
@@ -42,11 +50,7 @@ local _transform_offset = function(offset, flip, is_zoom, ignore_custom_offset)
 end
 
 local _get_shoulder_offset = function(left)
-	return _transform_offset({
-		x = 0.5,
-		y = 0,
-		z = 0,
-	}, left)
+	return _transform_offset(table.clone(shoulder_offset), left)
 end
 
 local _get_shoulder_zoom_offset = function(left)
@@ -57,15 +61,11 @@ local _get_shoulder_zoom_offset = function(left)
 	}, left, true)
 end
 
-local _get_shoulder_ogryn_offset = function(left)
-	return _transform_offset({
-		x = OFFSET_TO_OGRYN.x + 0.5,
-		y = OFFSET_TO_OGRYN.y + 0.0,
-		z = OFFSET_TO_OGRYN.z + 0.0,
-	}, left, false, true)
+local _get_ogryn_shoulder_offset = function(left)
+	return _transform_offset(table.clone(ogryn_shoulder_bake), left, false, true)
 end
 
-local _get_shoulder_zoom_ogryn_offset = function(left)
+local _get_ogryn_shoulder_zoom_offset = function(left)
 	return _transform_offset({
 		x = -0.1,
 		y = 0.65,
@@ -106,9 +106,9 @@ local function _alter_third_person_tree(node)
 				{
 					{
 						{
-							_node = _create_node("pspv_right_zoom_ogryn", _get_shoulder_zoom_ogryn_offset(false), FOV_ZOOM)
+							_node = _create_node("pspv_right_zoom_ogryn", _get_ogryn_shoulder_zoom_offset(false), FOV_ZOOM)
 						},
-						_node = _create_node("pspv_right_ogryn", _get_shoulder_ogryn_offset(false))
+						_node = _create_node("pspv_right_ogryn", _get_ogryn_shoulder_offset(false))
 					},
 					{
 						_node = _create_node("pspv_right_zoom", _get_shoulder_zoom_offset(false), FOV_ZOOM)
@@ -118,9 +118,9 @@ local function _alter_third_person_tree(node)
 				{
 					{
 						{
-							_node = _create_node("pspv_left_zoom_ogryn", _get_shoulder_zoom_ogryn_offset(true), FOV_ZOOM)
+							_node = _create_node("pspv_left_zoom_ogryn", _get_ogryn_shoulder_zoom_offset(true), FOV_ZOOM)
 						},
-						_node = _create_node("pspv_left_ogryn", _get_shoulder_ogryn_offset(true))
+						_node = _create_node("pspv_left_ogryn", _get_ogryn_shoulder_offset(true))
 					},
 					{
 						_node = _create_node("pspv_left_zoom", _get_shoulder_zoom_offset(true), FOV_ZOOM)
@@ -136,7 +136,7 @@ local function _alter_third_person_tree(node)
 								z = -0.2,
 							}, nil, true), FOV_ZOOM)
 						},
-						_node = _create_node("pspv_center_ogryn", _transform_offset(OFFSET_TO_OGRYN, nil, false, true))
+						_node = _create_node("pspv_center_ogryn", _transform_offset(ogryn_offset, nil, false, true))
 					},
 					{
 						_node = _create_node("pspv_center_zoom", _transform_offset({
@@ -153,7 +153,7 @@ local function _alter_third_person_tree(node)
 				},
 				{
 					{
-						_node = _create_node("pspv_lookaround_ogryn", OFFSET_TO_OGRYN)
+						_node = _create_node("pspv_lookaround_ogryn", ogryn_offset)
 					},
 					_node = _create_node("pspv_lookaround", {
 						x = 0.0,
@@ -179,6 +179,9 @@ end
 
 
 local _refresh_camera_trees = function()
+	ogryn_shoulder_bake.x = ogryn_offset.x + shoulder_offset.x
+	ogryn_shoulder_bake.y = ogryn_offset.y + shoulder_offset.y
+	ogryn_shoulder_bake.z = ogryn_offset.z + shoulder_offset.z
 	_alter_third_person_tree(CameraSettings.player_third_person)
 	local camera_handler = mod.get_camera_handler()
 	if camera_handler then
@@ -187,10 +190,12 @@ local _refresh_camera_trees = function()
 end
 _refresh_camera_trees()
 
-mod.apply_custom_viewpoint = function(distance, offset, distance_zoom, offset_zoom)
-	custom_distance = distance * CUSTOM_MULT
-	custom_offset = offset * CUSTOM_MULT
-	custom_distance_zoom = distance_zoom * CUSTOM_MULT
-	custom_offset_zoom = offset_zoom * CUSTOM_MULT
+mod.apply_custom_viewpoint = function()
+	ogryn_offset.y = -mod:get("custom_distance_ogryn") * CUSTOM_MULT - 0.75
+	ogryn_offset.z = mod:get("custom_offset_ogryn") * CUSTOM_MULT - 0.1
+	custom_distance = mod:get("custom_distance") * CUSTOM_MULT
+	custom_offset = mod:get("custom_offset") * CUSTOM_MULT
+	custom_distance_zoom = mod:get("custom_distance_zoom") * CUSTOM_MULT
+	custom_offset_zoom = mod:get("custom_offset_zoom") * CUSTOM_MULT
 	_refresh_camera_trees()
 end
