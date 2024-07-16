@@ -12,17 +12,23 @@ local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 
-local text_style = table.clone(UIFontSettings.body)
-text_style.offset = {
-	0,
-	0,
-	100
-}
-
-local bg_padding = 10
+local bg_x_pad = 50
+local bg_y_pad = 10
 local bio_entry_size = { 750, 40 }
 local vert_spacing = 20 + bio_entry_size[2]
 local missing_text = Localize("loc_popup_header_service_unavailable_error")
+
+local text_style = table.clone(UIFontSettings.body_small)
+text_style.font_size = 22
+text_style.offset = {
+	bg_x_pad,
+	bg_y_pad * 0.75,
+	100
+}
+text_style.size_addition = {
+	-2 * bg_x_pad,
+	-2 * bg_y_pad,
+}
 
 local bio_btn_widgets = {}
 local bio_text_widget = nil
@@ -37,13 +43,14 @@ local show_bio_text_at_idx = function(idx)
 		bio_text_widget.visible = false
 	else
 		bio_text_widget.visible = true
-		bio_text_widget.offset[2] = vert_spacing * (idx + 1) - bg_padding
+		-- the `- 10` here comes from a gap in the material
+		bio_text_widget.offset[2] = vert_spacing * (idx + 1) - bg_y_pad - 10
 
 		local bio_data = bio_btn_widgets[idx].content.bio_data
 		bio_text_widget.content.text = bio_data and (Localize(bio_data.description) .. (bio_data.story_snippet and ("\n\n" .. Localize(bio_data.story_snippet)) or "")) or missing_text
 
-		text_height = bg_padding + UIRenderer.text_height(Managers.ui:ui_constant_elements():ui_renderer(), bio_text_widget.content.text, text_style.font_type, text_style.font_size, { bio_entry_size[1], 2000 }, UIFonts.get_font_options_by_style(text_style))
-		bio_text_widget.content.size[2] = text_height - bg_padding
+		text_height = 3 * bg_y_pad + UIRenderer.text_height(Managers.ui:ui_constant_elements():ui_renderer(), bio_text_widget.content.text, text_style.font_type, text_style.font_size, { bio_entry_size[1] - 2 * bg_x_pad, 2000 }, UIFonts.get_font_options_by_style(text_style))
+		bio_text_widget.content.size[2] = text_height - bg_y_pad
 	end
 
 	for btn_idx, widget in ipairs(bio_btn_widgets) do
@@ -93,31 +100,45 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_content_bluepri
 		size = bio_entry_size,
 		pass_template = {
 			{
-				style_id = "bg",
-				pass_type = "rect",
+				pass_type = "texture",
+				style_id = "background",
+				value = "content/ui/materials/backgrounds/terminal_basic",
 				style = {
+					scale_to_material = true,
 					offset = {
-						-bg_padding,
-						-bg_padding,
+						-9,
+						-13,
 						-2
 					},
+					color = Color.terminal_grid_background(255, true),
 					size_addition = {
-						2 * bg_padding,
-						2 * bg_padding,
-					},
-					color = {
-						128,
-						0,
-						0,
-						0
+						18,
+						26,
 					}
-				}
+				},
 			},
 			{
 				pass_type = "text",
 				value = missing_text,
 				value_id = "text",
 				style = text_style,
+			},
+			{
+				pass_type = "texture",
+				style_id = "frame_bottom",
+				value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+				style = {
+					vertical_alignment = "bottom",
+					size = {
+						nil,
+						36
+					},
+					offset = {
+						0,
+						15,
+						2
+					},
+				},
 			},
 		},
 		init = function(parent, widget, element, callback_name)
