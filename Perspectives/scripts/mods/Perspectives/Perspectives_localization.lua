@@ -111,6 +111,7 @@ local loc = {
 	},
 	xhair_fallback = {
 		en = "'No Crosshair' in 3rd Person",
+		["zh-cn"] = "第三人称下的“无准星时”设置",
 	},
 	use_lookaround_node = {
 		en = "[LookAround] 3rd Person Inspect",
