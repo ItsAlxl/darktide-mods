@@ -19,19 +19,7 @@ return {
 				keybind_global  = false,
 				keybind_trigger = "pressed",
 				keybind_type    = "function_call",
-				function_name   = "_leave_party",
-			},
-			{
-				setting_id    = "autoskip",
-				type          = "checkbox",
-				default_value = true,
-			},
-			{
-				setting_id      = "end_skip_time",
-				type            = "numeric",
-				default_value   = 0.2,
-				range           = { 0.0, 10.0 },
-				decimals_number = 1,
+				function_name   = "_kb_leave_party",
 			},
 			{
 				setting_id    = "autoready",
@@ -54,6 +42,47 @@ return {
 				type          = "dropdown",
 				default_value = 0,
 				options       = party_options,
+			},
+			{
+				setting_id  = "eom_skip",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "autoskip",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id      = "end_skip_time",
+						type            = "numeric",
+						default_value   = 0.2,
+						range           = { 0.0, 10.0 },
+						decimals_number = 1,
+					},
+					{
+						setting_id      = "eom_skip_now_kb",
+						type            = "keybind",
+						default_value   = {},
+						keybind_global  = false,
+						keybind_trigger = "pressed",
+						keybind_type    = "function_call",
+						function_name   = "_kb_skip_eom",
+					},
+					{
+						setting_id    = "eom_cancel_chat",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id      = "eom_cancel_kb",
+						type            = "keybind",
+						default_value   = {},
+						keybind_global  = false,
+						keybind_trigger = "pressed",
+						keybind_type    = "function_call",
+						function_name   = "_kb_cancel_eom_skip",
+					},
+				}
 			},
 		}
 	}

@@ -1,24 +1,70 @@
 local mod = get_mod("BornReady")
 
-local end_skip_time = nil
-
-mod._leave_party = function()
+mod.leave_party = function ()
     Managers.party_immaterium:leave_party()
 end
 
+mod._kb_leave_party = function()
+    if not Managers.ui:chat_using_input() then
+        mod.leave_party()
+    end
+end
+
 -- Automatically skip end screen
+
+local eom_time = nil
+local chat_cancels_eom_skip = nil
+
+mod.cancel_eom_skip = function (silent)
+    if eom_time then
+        if not silent then
+            mod:notify(mod:localize("msg_eom_cancel"))
+        end
+        eom_time = nil
+    end
+end
+
+mod._kb_cancel_eom_skip = function()
+    if not Managers.ui:chat_using_input() then
+        mod.cancel_eom_skip()
+    end
+end
+
+mod.skip_eom = function()
+    if Managers.ui:view_active("end_view") then
+        eom_time = nil
+        Managers.multiplayer_session:leave("skip_end_of_round")
+    end
+end
+
+mod._kb_skip_eom = function ()
+    if not Managers.ui:chat_using_input() then
+        mod.skip_eom()
+    end
+end
+
 mod:hook_safe(CLASS.EndView, "on_enter", function(...)
+    chat_cancels_eom_skip = mod:get("eom_cancel_chat")
     if mod:get("autoskip") then
-        end_skip_time = mod:get("end_skip_time")
+        if chat_cancels_eom_skip and Managers.ui:chat_using_input() then
+            mod.cancel_eom_skip()
+        else
+            eom_time = mod:get("end_skip_time")
+        end
+    else
+        eom_time = nil
     end
 end)
 
 mod:hook_safe(CLASS.EndView, "update", function(self, dt, ...)
-    if end_skip_time then
-        end_skip_time = end_skip_time - dt
-        if end_skip_time <= 0 then
-            end_skip_time = nil
-            Managers.multiplayer_session:leave("skip_end_of_round")
+    if eom_time then
+        if chat_cancels_eom_skip and Managers.ui:chat_using_input() then
+            mod.cancel_eom_skip()
+        else
+            eom_time = eom_time - dt
+            if eom_time <= 0 then
+                mod.skip_eom()
+            end
         end
     end
 end)

@@ -10,9 +10,7 @@ return {
 		ru = "Born Ready - Опции автовыбора в подборе, лобби и при приглашениях в группу.",
 	},
 	leave_party = {
-		en = "Leave Current Party",
-		["zh-cn"] = "离开当前小队",
-		ru = "Покинуть текущую команду",
+		en = Localize("loc_social_menu_leave_party"),
 	},
 	autoready = {
 		en = "Ready up in lobby",
@@ -20,12 +18,12 @@ return {
 		ru = "Автоготовность в лобби",
 	},
 	autoskip = {
-		en = "Skip end-of-mission screen",
+		en = "Automatically skip",
 		["zh-cn"] = "跳过任务结束界面",
 		ru = "Пропустить экран окончания миссии",
 	},
 	end_skip_time = {
-		en = "Skip end-of-mission delay (seconds)",
+		en = "Delay (seconds)",
 		["zh-cn"] = "跳过任务结束延迟（秒）",
 		ru = "Задержка перед пропуском экрана окончания миссии (сек)",
 	},
@@ -58,5 +56,20 @@ return {
 		en = "Automatically Decline",
 		["zh-cn"] = "自动拒绝",
 		ru = "Автоматически отклонять",
+	},
+	eom_skip = {
+		en = Localize("loc_item_type_end_of_round"),
+	},
+	eom_skip_now_kb = {
+		en = "Skip Now",
+	},
+	eom_cancel_chat = {
+		en = "Chat cancels skip",
+	},
+	eom_cancel_kb = {
+		en = "Cancel Current Skip",
+	},
+	msg_eom_cancel = {
+		en = "End-of-mission autoskip cancelled",
 	},
 }
