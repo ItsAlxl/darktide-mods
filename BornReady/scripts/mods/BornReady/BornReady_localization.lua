@@ -19,12 +19,12 @@ return {
 	},
 	autoskip = {
 		en = "Automatically skip",
-		["zh-cn"] = "跳过任务结束界面",
+		["zh-cn"] = "自动跳过",
 		ru = "Пропустить экран окончания миссии",
 	},
 	end_skip_time = {
 		en = "Delay (seconds)",
-		["zh-cn"] = "跳过任务结束延迟（秒）",
+		["zh-cn"] = "延迟（秒）",
 		ru = "Задержка перед пропуском экрана окончания миссии (сек)",
 	},
 	automatch = {
@@ -62,14 +62,18 @@ return {
 	},
 	eom_skip_now_kb = {
 		en = "Skip Now",
+		["zh-cn"] = "立即跳过",
 	},
 	eom_cancel_chat = {
 		en = "Chat cancels skip",
+		["zh-cn"] = "聊天取消跳过",
 	},
 	eom_cancel_kb = {
 		en = "Cancel Current Skip",
+		["zh-cn"] = "取消这次跳过",
 	},
 	msg_eom_cancel = {
 		en = "End-of-mission autoskip cancelled",
+		["zh-cn"] = "已取消任务结束自动跳过",
 	},
 }
