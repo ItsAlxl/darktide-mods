@@ -30,13 +30,12 @@ mod:hook_require("scripts/settings/buff/buff_templates", function(templates)
         "weapon_trait_ranged_increase_crit_damage",
         "weapon_trait_ranged_common_wield_increase_crit_chance_buff",
         "weapon_trait_reduce_sprint_cost",
-        "weapon_trait_ranged_reduce_sprint_cost",
     }
     for _, buff in pairs(OVERRIDE_WIELD_BUFFS) do
         if templates[buff] and templates[buff].conditional_stat_buffs_func then
             templates[buff].conditional_stat_buffs_func = _override_wield
         else
-            mod:warn("Invalid buff %s", buff)
+            mod:warning("Invalid buff %s", buff)
         end
     end
 end)

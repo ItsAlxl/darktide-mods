@@ -7,6 +7,7 @@ return {
         "tough_regen_still",
         "tough_regen_moving",
         "tough_bounty",
+        "total_score",
     },
     {
         "stamina",
