@@ -140,8 +140,8 @@ Takes your shirt off.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/193).
 
-## SortBrunt
-Sorts Brunt's Armory to keep similar items together.
+## SortBrunt aka Sort Mastery
+Sorts Brunt's Armory and Mastery lists to keep similar items together.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/109).
 
