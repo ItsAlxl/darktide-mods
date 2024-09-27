@@ -6,7 +6,7 @@ return {
 	},
 	mod_description = {
 		en = "Groups similar weapon types together in Brunt's Armory and Mastery.",
-		["zh-cn"] = "在布伦特的军备库中按物品分类排序。",
+		["zh-cn"] = "在布伦特的军备库和专精界面中，相似武器类型排列成组。",
 		ru = "SortBrunt - Группирует похожее оружие в Арсенале Бранта.",
 	},
 }
