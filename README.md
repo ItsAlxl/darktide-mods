@@ -100,6 +100,11 @@ Provides the ability to freelook.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/115).
 
+## MarkPreview
+See the difference between weapon marks in the mark menu.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/362).
+
 ## PanicStimm
 Switch to your Stimm and inject with one button press. Also dictate what you equip after injection.
 
