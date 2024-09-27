@@ -70,6 +70,11 @@ Make all possible ranged weapons fully automatic.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/87).
 
+## GoToMastery
+Adds a "Mastery" button to the inventory screen when selecting a weapon.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/361).
+
 ## IgnorePsykerGrenades
 Prevent Psyker blitzes from changing their grenade color in your HUD.
 
