@@ -8,20 +8,24 @@ return {
 		["zh-cn"] = "取消切换的动作",
 	},
 	action_reload = {
-		en = "Reload",
-		["zh-cn"] = "装填武器",
+		en = Localize("loc_ingame_weapon_reload")
 	},
 	action_start_reload = {
 		en = "One-At-a-Time Reload",
 		["zh-cn"] = "单发装填武器",
 	},
 	action_vent = {
-		en = "Vent Heat",
-		["zh-cn"] = "排出热量",
+		en = Localize("loc_weapon_special_weapon_vent")
 	},
-	action_sprint = {
-		en = "Sprint",
-		["zh-cn"] = "疾跑",
+	_sprint_base = {
+		en = Localize("loc_ingame_sprint")
+	},
+	_sprint_staff = {
+		en = Localize("loc_ingame_sprint") .. " - Force Staves",
+		["zh-cn"] = Localize("loc_ingame_sprint") .. " - 力场杖",
+	},
+	_sprint_blitz = {
+		en = Localize("loc_ingame_sprint") .. " - " .. Localize("loc_talents_category_tactical")
 	},
 	action_lunge = {
 		en = "Charge (Ogryn/Zealot Ability)",
@@ -102,5 +106,47 @@ return {
 	force_staff = {
 		en = "Force Staves",
 		["zh-cn"] = "力场杖",
+	},
+	optgroup_blitzes = {
+		en = Localize("loc_talents_category_tactical")
+	},
+	psyker_smite = {
+		en = Localize("loc_ability_psyker_smite")
+	},
+	psyker_chain_lightning = {
+		en = Localize("loc_ability_psyker_chain_lightning")
+	},
+	psyker_throwing_knives = {
+		en = Localize("loc_ability_psyker_blitz_throwing_knives")
+	},
+	frag_grenade = {
+		en = Localize("loc_ability_frag_grenade")
+	},
+	krak_grenade = {
+		en = Localize("loc_talent_ability_krak_grenade")
+	},
+	smoke_grenade = {
+		en = Localize("loc_ability_smoke_grenade")
+	},
+	shock_grenade = {
+		en = Localize("loc_ability_shock_grenade")
+	},
+	fire_grenade = {
+		en = Localize("loc_ability_fire_grenade")
+	},
+	zealot_throwing_knives = {
+		en = Localize("loc_ability_zealot_throwing_knifes")
+	},
+	ogryn_grenade_box = {
+		en = Localize("loc_ability_ogryn_grenade_box")
+	},
+	ogryn_grenade_box_cluster = {
+		en = Localize("loc_talent_bonebreaker_grenade_super_armor_explosion")
+	},
+	ogryn_grenade_frag = {
+		en = Localize("loc_ability_ogryn_grenade_demolition")
+	},
+	ogryn_grenade_friend_rock = {
+		en = Localize("loc_ability_ogryn_friend_rock")
 	},
 }

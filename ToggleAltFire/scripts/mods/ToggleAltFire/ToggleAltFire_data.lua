@@ -31,9 +31,19 @@ return {
 						default_value = true,
 					},
 					{
-						setting_id    = "action_sprint",
+						setting_id    = "_sprint_base",
 						type          = "checkbox",
 						default_value = true,
+					},
+					{
+						setting_id    = "_sprint_staff",
+						type          = "checkbox",
+						default_value = false,
+					},
+					{
+						setting_id    = "_sprint_blitz",
+						type          = "checkbox",
+						default_value = false,
 					},
 					{
 						setting_id    = "action_melee_extra",
@@ -49,6 +59,77 @@ return {
 						setting_id    = "action_shoot_braced",
 						type          = "checkbox",
 						default_value = false,
+					},
+				}
+			},
+			{
+				setting_id  = "optgroup_blitzes",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "psyker_smite",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "psyker_chain_lightning",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "psyker_throwing_knives",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "frag_grenade",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "krak_grenade",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "smoke_grenade",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "shock_grenade",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "fire_grenade",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "zealot_throwing_knives",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "ogryn_grenade_box",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "ogryn_grenade_box_cluster",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "ogryn_grenade_frag",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "ogryn_grenade_friend_rock",
+						type          = "checkbox",
+						default_value = true,
 					},
 				}
 			},
