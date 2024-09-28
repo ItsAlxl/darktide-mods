@@ -112,7 +112,6 @@ local function _is_toggleable_weapon(template)
 			else
 				untoggle_actions.action_sprint = mod:get("_sprint_base")
 			end
-			mod:notify("%s : %s", k, untoggle_actions.action_sprint)
 			return true
 		end
 	end
