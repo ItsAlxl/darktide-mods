@@ -72,7 +72,7 @@ mod:hook(CLASS.ViewElementWeaponActionsExtended, "present_grid_layout", function
 						display_units = "/s",
 						display_name = "loc_weapon_stats_display_rate_of_fire",
 					},
-					value = weapon_stats._rate_of_fire
+					value = 1.0 / weapon_stats._rate_of_fire
 				},
 			}
 		end
