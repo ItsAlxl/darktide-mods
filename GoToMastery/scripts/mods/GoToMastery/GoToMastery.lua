@@ -10,6 +10,8 @@ local back_to_inv_wep = false
 local back_to_rebless = false
 local target_item = nil
 
+local sacrifice_package_id = nil
+
 local safe_close_view = function(view_name)
 	local view = Managers.ui:view_instance(view_name)
 	if view then
@@ -47,6 +49,10 @@ end
 
 local target_wants_hadron = function(target)
 	return target == "hadron_wep"
+end
+
+local is_outside_hub = function()
+	return Managers.state.game_mode:game_mode_name() ~= "hub"
 end
 
 local cancel_travel = function()
@@ -259,9 +265,24 @@ mod:hook_safe(CLASS.CraftingView, "on_exit", function(self)
 			cancel_travel()
 		end
 	end
+
+	-- release the sacrifice package if outside the hub
+	if sacrifice_package_id then
+		Managers.package:release(sacrifice_package_id)
+		sacrifice_package_id = nil
+	end
 end)
 
 -- Update target item according to selection in crafting menu
 mod:hook_safe(CLASS.CraftingView, "start_present_item", function(self, item)
 	target_item = target_item and item
+end)
+
+-- prevent crash when sacrificing from outside the hub
+mod:hook(CLASS.CraftingMechanicusBarterItemsView, "_setup_background_world", function(func, self)
+	if is_outside_hub() then
+		sacrifice_package_id = not sacrifice_package_id and Managers.package:load("packages/ui/views/masteries_overview_view/masteries_overview_view", mod.name, nil, true)
+		return
+	end
+	func(self)
 end)
