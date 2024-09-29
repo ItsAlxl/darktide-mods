@@ -7,6 +7,7 @@ local widget_order = {
 	"kb_inspect",
 	"kb_mastery",
 	"kb_hadron",
+	"kb_sacrifice",
 }
 for _, key in ipairs(widget_order) do
 	local data = mod.hotkey_data[key]
@@ -15,7 +16,7 @@ for _, key in ipairs(widget_order) do
 		setting_id = key,
 		type = "keybind",
 		default_value = data.default or {},
-		keybind_global  = true,
+		keybind_global = true,
 		keybind_trigger = "pressed",
 		keybind_type = "function_call",
 		function_name = data.function_name,
@@ -27,6 +28,13 @@ return {
 	description = mod:localize("mod_description"),
 	is_togglable = true,
 	options = {
-		widgets = keybind_widgets,
+		widgets =
+		{
+			{
+				setting_id = "opt_group_keybinds",
+				type = "group",
+				sub_widgets = keybind_widgets
+			}
+		},
 	}
 }

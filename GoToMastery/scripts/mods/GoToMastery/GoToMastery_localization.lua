@@ -11,6 +11,9 @@ local loc = {
 		["zh-cn"] = "添加专精按钮，用来前往已选武器的专精菜单。",
 		ru = "Добавляет кнопку «Мастерство» для перехода в меню мастерства выбранного оружия.",
 	},
+	opt_group_keybinds = {
+		en = Localize("loc_settings_menu_category_keybind")
+	},
 }
 
 mod.hotkey_data = {
@@ -29,6 +32,9 @@ mod.hotkey_data = {
 	},
 	kb_hadron = {
 		display_name = Localize("loc_crafting_view_option_modify"),
+	},
+	kb_sacrifice = {
+		display_name = Localize("loc_mastery_crafting_sacrifice_weapon_title")
 	},
 }
 
