@@ -70,7 +70,6 @@ end)
 
 local select_inventory_background_tab = function(tab_view_name)
 	local inventory_bg = Managers.ui:view_instance(VIEW_NAMES.inventory_bg)
-	mod.DBG_inv_bg = inventory_bg
 	if inventory_bg and inventory_bg._views_settings then
 		for idx, settings in ipairs(inventory_bg._views_settings) do
 			if settings.view_name == tab_view_name then
@@ -330,7 +329,7 @@ mod:hook_safe(CLASS.CraftingMechanicusBarterItemsView, "_setup_menu_tabs", funct
 		for _, widget in ipairs(self._patterns_grid._grid_widgets) do
 			if widget.content.element.mastery_id == mastery_id then
 				self:cb_pattern_on_grid_entry_left_pressed(widget, widget.content.element)
-				self:_change_state("sacrifice_weapon")
+				--self:_change_state("sacrifice_weapon") -- this doesn't work and I dunno why
 				going_to_sacrifice = false
 				return
 			end
