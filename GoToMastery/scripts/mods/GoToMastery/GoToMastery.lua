@@ -281,7 +281,7 @@ end)
 -- prevent crash when sacrificing from outside the hub
 mod:hook(CLASS.CraftingMechanicusBarterItemsView, "_setup_background_world", function(func, self)
 	if is_outside_hub() then
-		sacrifice_package_id = not sacrifice_package_id and Managers.package:load("packages/ui/views/masteries_overview_view/masteries_overview_view", mod.name, nil, true)
+		sacrifice_package_id = sacrifice_package_id or Managers.package:load("packages/ui/views/masteries_overview_view/masteries_overview_view", mod.name, nil, true)
 		return
 	end
 	func(self)
