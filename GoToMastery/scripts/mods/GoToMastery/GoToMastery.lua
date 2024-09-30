@@ -90,7 +90,9 @@ local target_wants_hadron = function(target)
 end
 
 local is_outside_hub = function()
-	return Managers.state.game_mode:game_mode_name() ~= "hub"
+	local game_mode_manager = Managers.state.game_mode
+	local gamemode_name = game_mode_manager and game_mode_manager:game_mode_name() or "unknown"
+	return gamemode_name ~= "hub"
 end
 
 local cancel_travel = function()
