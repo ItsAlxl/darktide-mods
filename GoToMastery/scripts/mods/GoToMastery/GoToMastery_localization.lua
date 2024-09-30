@@ -14,6 +14,9 @@ local loc = {
 	opt_group_keybinds = {
 		en = Localize("loc_settings_menu_category_keybind")
 	},
+	show_hotkeys = {
+		en = Localize("loc_interface_setting_input_hints_enabled")
+	},
 }
 
 mod.hotkey_data = {

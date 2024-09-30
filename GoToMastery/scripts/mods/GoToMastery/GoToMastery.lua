@@ -149,7 +149,7 @@ mod:hook_safe(CLASS.InventoryWeaponsView, "on_enter", function(self)
 			callback = function() inventory_goto(self, "hadron_wep") end,
 		}
 		layout[base_idx + 3] = {
-			display_icon = "",
+			display_icon = "",
 			widget_type = "button",
 			display_name = mod.hotkey_data.kb_sacrifice.display_name,
 			callback = function() inventory_goto(self, "hadron_sacrifice") end,
@@ -159,13 +159,17 @@ mod:hook_safe(CLASS.InventoryWeaponsView, "on_enter", function(self)
 		for id, data in pairs(mod.hotkey_data) do
 			display_to_hotkey_id[data.display_name] = id
 		end
+
+		local show_hotkeys = mod:get("show_hotkeys")
 		for _, element in ipairs(layout) do
 			local hotkey_id = display_to_hotkey_id[element.display_name]
 			mod.hotkey_data[hotkey_id].callback = element.callback
 
-			local keybind = mod:get(hotkey_id)
-			if next(keybind) ~= nil then
-				element.display_name = Input_color_text("[" .. string.upper(keybind[1]) .. "] ", Color.ui_input_color(255, true)) .. element.display_name
+			if show_hotkeys then
+				local keybind = mod:get(hotkey_id)
+				if next(keybind) ~= nil then
+					element.display_name = Input_color_text("[" .. string.upper(keybind[1]) .. "] ", Color.ui_input_color(255, true)) .. element.display_name
+				end
 			end
 		end
 
@@ -173,8 +177,14 @@ mod:hook_safe(CLASS.InventoryWeaponsView, "on_enter", function(self)
 		grid:present_grid_layout(layout, self._definitions.blueprints)
 
 		-- shorten the text width, in case users supply long hotkeys
+		-- also center the icons
 		for _, widget in ipairs(grid._grid_widgets) do
-			widget.style.text.size = { self._definitions.blueprints.button.size[1] - 120, nil }
+			local style = widget.style
+			style.text.size = { self._definitions.blueprints.button.size[1] - 120, nil }
+
+			style.icon.text_horizontal_alignment = "center"
+			style.icon.size = { 50, nil }
+			style.icon.offset[1] = 10
 		end
 	end
 end)

@@ -1,6 +1,12 @@
 local mod = get_mod("GoToMastery")
 
-local keybind_widgets = {}
+local keybind_widgets = {
+	{
+		setting_id    = "show_hotkeys",
+		type          = "checkbox",
+		default_value = true,
+	}
+}
 local widget_order = {
 	"kb_marks",
 	"kb_cosmetics",
