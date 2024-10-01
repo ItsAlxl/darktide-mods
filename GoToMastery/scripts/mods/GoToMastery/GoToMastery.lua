@@ -91,7 +91,7 @@ end
 
 local is_outside_hub = function()
 	local game_mode_manager = Managers.state.game_mode
-	local gamemode_name = game_mode_manager and game_mode_manager:game_mode_name() or "unknown"
+	local gamemode_name = game_mode_manager and game_mode_manager:game_mode_name()
 	return gamemode_name ~= "hub"
 end
 
@@ -315,7 +315,7 @@ mod:hook_safe(CLASS.CraftingView, "on_enter", function(self)
 		if going_to_sacrifice then
 			self:on_option_button_pressed(nil, {
 				callback = function(crafting_view)
-					crafting_view:go_to_crafting_view("barter_items_mechanicus", target_item)
+					crafting_view:go_to_crafting_view("barter_items_mechanicus")
 				end
 			})
 		else
@@ -352,11 +352,14 @@ end)
 -- When exiting the item crafting view, return to inventory
 mod:hook_safe(CLASS.CraftingView, "_handle_back_pressed", function(self)
 	if target_item and not self._active_view_instance then
+		mod:info("back to crafting root")
 		if back_to_inv_wep then
+			mod:info("let's return to the inventory")
 			safe_close_view(VIEW_NAMES.crafting)
 			safe_open_view(VIEW_NAMES.inventory_bg)
 			select_inventory_background_tab(VIEW_NAMES.inventory_root)
 			enter_target_slot_list(Managers.ui:view_instance(VIEW_NAMES.inventory_root), target_item)
+			mod:info("should have returned to the inventory by now")
 		else
 			cancel_travel()
 		end
@@ -383,4 +386,15 @@ mod:hook_safe(CLASS.CraftingView, "on_exit", function(self)
 		Managers.package:release(sacrifice_package_id)
 		sacrifice_package_id = nil
 	end
+	mod:info("Entered barter view")
+end)
+
+-- Help pinpoint the crash when returning from sacrifice
+mod:hook_safe(CLASS.CraftingMechanicusBarterItemsView, "on_enter", function(self)
+	mod:info("Entered barter view")
+end)
+
+mod:hook_safe(CLASS.CraftingMechanicusBarterItemsView, "_create_ui_renderer", function(self, ...)
+	mod:info("Barter using external renderer: %s", self._ui_renderer_is_external)
+	mod:info("Barter renderer gui: %s", self._ui_renderer and self._ui_renderer.gui)
 end)
