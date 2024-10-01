@@ -19,7 +19,9 @@ local VIEW_NAMES = {
 	inventory_list = "inventory_weapons_view",
 	mastery_overview = "masteries_overview_view",
 	mastery_specific = "mastery_view",
-	crafting = "crafting_view",
+	crafting_root = "crafting_view",
+	crafting_select = "crafting_mechanicus_modify_view",
+	sacrifice = "crafting_mechanicus_barter_items_view",
 }
 
 local safe_open_view = function(view_name)
@@ -116,7 +118,7 @@ local inventory_goto = function(inventory_view, target)
 	elseif target_wants_hadron(target) then
 		going_to_sacrifice = target == "hadron_sacrifice"
 		safe_close_view(VIEW_NAMES.inventory_list)
-		force_view_to_top(VIEW_NAMES.crafting)
+		force_view_to_top(VIEW_NAMES.crafting_root)
 	else
 		cancel_travel()
 	end
@@ -178,7 +180,7 @@ mod:hook_safe(CLASS.InventoryWeaponsView, "on_enter", function(self)
 		resize_grid_height(grid, layout, self._definitions.blueprints.button.size[2] + 20, 10)
 		grid:present_grid_layout(layout, self._definitions.blueprints)
 
-		-- shorten the text width, in case users supply long hotkeys
+		-- shorten the text width, in case the text gets too long
 		-- also center the icons
 		for _, widget in ipairs(grid._grid_widgets) do
 			local style = widget.style
@@ -276,7 +278,8 @@ local enter_target_slot_list = function(inventory_view, item)
 		local widgets = inventory_view._loadout_widgets
 		for _, widget in ipairs(widgets) do
 			local element = widget.content.element
-			if widget.content.element.slot.name == item.__master_item.slots[1] then
+			local slot = element and element.slot
+			if slot and slot.name == item.__master_item.slots[1] then
 				inventory_view:cb_on_grid_entry_pressed(nil, element)
 				return
 			end
@@ -350,21 +353,25 @@ mod:hook_safe(CLASS.CraftingMechanicusBarterItemsView, "_setup_menu_tabs", funct
 end)
 
 -- When exiting the item crafting view, return to inventory
-mod:hook_safe(CLASS.CraftingView, "_handle_back_pressed", function(self)
-	if target_item and not self._active_view_instance then
-		mod:info("back to crafting root")
+local _return_to_inv_from_crafting = function(...)
+	local top_view = Managers.ui:active_top_view()
+	mod:info("SCT: Exited top view " .. top_view)
+	if target_item and (top_view == VIEW_NAMES.crafting_select or top_view == VIEW_NAMES.sacrifice) then
+		mod:info("SCT: back to crafting root")
 		if back_to_inv_wep then
-			mod:info("let's return to the inventory")
-			safe_close_view(VIEW_NAMES.crafting)
+			mod:info("SCT: let's return to the inventory")
+			safe_close_view(VIEW_NAMES.crafting_root)
 			safe_open_view(VIEW_NAMES.inventory_bg)
 			select_inventory_background_tab(VIEW_NAMES.inventory_root)
 			enter_target_slot_list(Managers.ui:view_instance(VIEW_NAMES.inventory_root), target_item)
-			mod:info("should have returned to the inventory by now")
+			mod:info("SCT: should have returned to the inventory by now")
 		else
 			cancel_travel()
 		end
 	end
-end)
+end
+mod:hook_safe(CLASS.CraftingMechanicusBarterItemsView, "on_exit", _return_to_inv_from_crafting)
+mod:hook_safe(CLASS.CraftingMechanicusModifyView, "on_exit", _return_to_inv_from_crafting)
 
 -- Update target item according to selection in crafting menu
 mod:hook_safe(CLASS.CraftingView, "start_present_item", function(self, item)
@@ -386,15 +393,15 @@ mod:hook_safe(CLASS.CraftingView, "on_exit", function(self)
 		Managers.package:release(sacrifice_package_id)
 		sacrifice_package_id = nil
 	end
-	mod:info("Entered barter view")
+	mod:info("SCT: Exited crafting view")
 end)
 
 -- Help pinpoint the crash when returning from sacrifice
 mod:hook_safe(CLASS.CraftingMechanicusBarterItemsView, "on_enter", function(self)
-	mod:info("Entered barter view")
+	mod:info("SCT: Entered barter view")
 end)
 
 mod:hook_safe(CLASS.CraftingMechanicusBarterItemsView, "_create_ui_renderer", function(self, ...)
-	mod:info("Barter using external renderer: %s", self._ui_renderer_is_external)
-	mod:info("Barter renderer gui: %s", self._ui_renderer and self._ui_renderer.gui)
+	mod:info("SCT: Barter using external renderer: %s", self._ui_renderer_is_external)
+	mod:info("SCT: Barter renderer gui: %s", self._ui_renderer and self._ui_renderer.gui)
 end)
