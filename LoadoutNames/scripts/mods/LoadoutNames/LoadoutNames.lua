@@ -80,14 +80,14 @@ local _set_loadout_name_from_iv = function(inv_view, deletion)
 end
 
 local _display_loadout_name_to_iv = function(inv_view)
-	tbox_widget = tbox_widget or (inv_view._elements and inv_view._elements.profile_presets and inv_view._elements.profile_presets._widgets_by_name.loadout_name_tbox)
-	tooltip_widget = tooltip_widget or (inv_view._elements and inv_view._elements.profile_presets and inv_view._elements.profile_presets._widgets_by_name.loadout_name_tooltip)
+	tbox_widget = tbox_widget or (inv_view._profile_presets_element and inv_view._profile_presets_element._widgets_by_name.loadout_name_tbox)
+	tooltip_widget = tooltip_widget or (inv_view._profile_presets_element and inv_view._profile_presets_element._widgets_by_name.loadout_name_tooltip)
 	if tbox_widget and tbox_widget.content then
 		tbox_widget.content.input_text = mod.get_loadout_name(inv_view._active_profile_preset_id, "")
 	end
 end
 
-mod:hook(CLASS.InventoryBackgroundView, "on_enter", function(func, self)
+mod:hook(CLASS.InventoryBackgroundView, "_setup_profile_presets", function(func, self)
 	func(self)
 	_display_loadout_name_to_iv(self)
 end)
@@ -99,12 +99,14 @@ mod:hook(CLASS.InventoryBackgroundView, "event_on_profile_preset_changed", funct
 	_display_loadout_name_to_iv(self)
 end)
 
-mod:hook(CLASS.InventoryBackgroundView, "on_exit", function(func, self)
+local _on_cleanup = function(func, self, ...)
 	_set_loadout_name_from_iv(self)
-	func(self)
+	func(self, ...)
 	tbox_widget = nil
 	tooltip_widget = nil
-end)
+end
+mod:hook(CLASS.InventoryBackgroundView, "_remove_profile_presets", _on_cleanup)
+mod:hook(CLASS.InventoryBackgroundView, "on_exit", _on_cleanup)
 
 -- |||
 -- UX
