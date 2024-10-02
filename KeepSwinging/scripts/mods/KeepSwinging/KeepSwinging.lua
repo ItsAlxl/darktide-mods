@@ -1,7 +1,7 @@
 local mod = get_mod("KeepSwinging")
 
 local SWING_DELAY_FRAMES = 10
-local RELEASE_DELAY_FRAMES = 1
+local RELEASE_DELAY_FRAMES = 2
 local VALID_MELEE_SPECIAL_TYPES = { "special_attack", "melee_hand" }
 local VALID_RANGED_SPECIAL_TYPES = { "melee", "melee_hand" }
 local ACTION_SETS = {
