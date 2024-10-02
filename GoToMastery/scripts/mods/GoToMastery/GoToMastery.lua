@@ -4,6 +4,7 @@ local Item_TraitCategory = require("scripts/utilities/items").trait_category
 local ITEM_TYPES = require("scripts/settings/ui/ui_settings").ITEM_TYPES
 local Input_color_text = require("scripts/managers/input/input_utils").apply_color_to_input_text
 local Promise = require("scripts/foundation/utilities/promise")
+local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 
 local back_to_inv_wep = false
 local back_to_rebless = false
@@ -135,38 +136,98 @@ local resize_grid_height = function(grid, layout, button_spacing, padding)
 	grid:update_grid_height(new_grid_height, new_grid_height + padding)
 end
 
-mod:hook_safe(CLASS.InventoryWeaponsView, "on_enter", function(self)
-	if self.item_type == ITEM_TYPES.WEAPON_MELEE or self.item_type == ITEM_TYPES.WEAPON_RANGED then
-		local grid = self._weapon_options_element
-		local layout = grid._visible_grid_layout
-		local base_idx = #layout
-		layout[base_idx + 1] = {
-			display_icon = "",
-			widget_type = "button",
-			display_name = mod.hotkey_data.kb_mastery.display_name,
-			callback = function() inventory_goto(self, "mastery_wep") end,
+mod:hook_safe(CLASS.InventoryWeaponsView, "_setup_weapon_options", function(self)
+	local is_curio = self.item_type == ITEM_TYPES.GADGET
+	mod.showing_curio = is_curio
+	if is_curio then
+		local button_size = self._definitions.blueprints.button.size
+		local top_padding = 30
+		local grid_size = {
+			button_size[1],
+			button_size[2] + top_padding,
 		}
-		layout[base_idx + 2] = {
-			display_icon = "",
-			widget_type = "button",
-			display_name = mod.hotkey_data.kb_hadron.display_name,
-			callback = function() inventory_goto(self, "hadron_wep") end,
-		}
-		layout[base_idx + 3] = {
-			display_icon = "",
-			widget_type = "button",
-			display_name = mod.hotkey_data.kb_sacrifice.display_name,
-			callback = function() inventory_goto(self, "hadron_sacrifice") end,
-		}
+		mod.create_curio_options_grid(
+			self,
+			{
+				edge_padding = 40,
+				scrollbar_width = 7,
+				title_height = 0,
+				use_is_focused_for_navigation = false,
+				use_select_on_focused = true,
+				use_terminal_background = true,
+				grid_spacing = {
+					10,
+					10,
+				},
+				grid_size = grid_size,
+				mask_size = {
+					grid_size[1] + 40,
+					grid_size[2] + 40,
+				},
+				top_padding = 30,
+			},
+			"content/ui/materials/frames/marks_top",
+			{
+				413.28,
+				58.8,
+			},
+			{
+				0,
+				-20,
+				20,
+			}
+		)
+	end
 
-		local display_to_hotkey_id = {}
-		for id, data in pairs(mod.hotkey_data) do
-			display_to_hotkey_id[data.display_name] = id
+	local grid = self._weapon_options_element
+	if not grid then
+		return
+	end
+
+	local base_layout = grid._visible_grid_layout or {}
+	local base_idx = #base_layout
+	base_layout[base_idx + 1] = {
+		display_icon = "",
+		widget_type = "button",
+		display_name = mod.hotkey_data.kb_mastery.display_name,
+		callback = function() inventory_goto(self, "mastery_wep") end,
+	}
+	base_layout[base_idx + 2] = {
+		display_icon = "",
+		widget_type = "button",
+		display_name = mod.hotkey_data.kb_hadron.display_name,
+		callback = function() inventory_goto(self, "hadron_wep") end,
+		_gtm_curio = true,
+	}
+	base_layout[base_idx + 3] = {
+		display_icon = "",
+		widget_type = "button",
+		display_name = mod.hotkey_data.kb_sacrifice.display_name,
+		callback = function() inventory_goto(self, "hadron_sacrifice") end,
+	}
+
+	local layout
+	if is_curio then
+		layout = {}
+		for _, entry in pairs(base_layout) do
+			if entry._gtm_curio then
+				layout[#layout + 1] = entry
+			end
 		end
+	else
+		layout = base_layout
+	end
 
-		local show_hotkeys = mod:get("show_hotkeys")
-		for _, element in ipairs(layout) do
-			local hotkey_id = display_to_hotkey_id[element.display_name]
+	local display_to_hotkey_id = {}
+	for id, data in pairs(mod.hotkey_data) do
+		display_to_hotkey_id[data.display_name] = id
+		mod.hotkey_data[id].callback = nil
+	end
+
+	local show_hotkeys = mod:get("show_hotkeys")
+	for _, element in ipairs(layout) do
+		local hotkey_id = element.display_name and display_to_hotkey_id[element.display_name]
+		if hotkey_id then
 			mod.hotkey_data[hotkey_id].callback = element.callback
 
 			if show_hotkeys then
@@ -176,14 +237,16 @@ mod:hook_safe(CLASS.InventoryWeaponsView, "on_enter", function(self)
 				end
 			end
 		end
+	end
 
-		resize_grid_height(grid, layout, self._definitions.blueprints.button.size[2] + 20, 10)
-		grid:present_grid_layout(layout, self._definitions.blueprints)
+	resize_grid_height(grid, layout, self._definitions.blueprints.button.size[2] + 10, 70)
+	grid:present_grid_layout(layout, self._definitions.blueprints)
 
-		-- shorten the text width, in case the text gets too long
-		-- also center the icons
-		for _, widget in ipairs(grid._grid_widgets) do
-			local style = widget.style
+	-- shorten the text width, in case the text gets too long
+	-- also center the icons
+	for _, widget in ipairs(grid._grid_widgets) do
+		local style = widget.style
+		if style.icon then
 			style.text.size = { self._definitions.blueprints.button.size[1] - 120, nil }
 
 			style.icon.text_horizontal_alignment = "center"
@@ -193,9 +256,26 @@ mod:hook_safe(CLASS.InventoryWeaponsView, "on_enter", function(self)
 	end
 end)
 
+mod:hook_safe(CLASS.InventoryWeaponsView, "_preview_item", function(self, item)
+	if mod.showing_curio then
+		self._weapon_options_element:set_visibility(true)
+	end
+end)
+
+mod.create_curio_options_grid = function(view, grid_options, top_divider_material, top_divider_size, top_divider_position)
+	local grid = view:_add_element(ViewElementGrid, "weapon_options", 10, grid_options)
+	grid:update_dividers(top_divider_material, top_divider_size, top_divider_position)
+	grid:disable_input(true)
+	grid:set_visibility(false)
+	view._weapon_options_element = grid
+end
+
 local _cb_hotkey = function(hotkey_id)
 	if Managers.ui:active_top_view() == VIEW_NAMES.inventory_list then
-		mod.hotkey_data[hotkey_id].callback()
+		local hotkey_data = mod.hotkey_data[hotkey_id]
+		if hotkey_data and hotkey_data.callback then
+			hotkey_data.callback()
+		end
 	end
 end
 
