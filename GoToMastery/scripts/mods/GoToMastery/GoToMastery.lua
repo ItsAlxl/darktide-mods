@@ -271,7 +271,8 @@ mod.create_curio_options_grid = function(view, grid_options, top_divider_materia
 end
 
 local _cb_hotkey = function(hotkey_id)
-	if Managers.ui:active_top_view() == VIEW_NAMES.inventory_list then
+	local ui_manager = Managers.ui
+	if ui_manager:active_top_view() == VIEW_NAMES.inventory_list and not ui_manager:chat_using_input() then
 		local hotkey_data = mod.hotkey_data[hotkey_id]
 		if hotkey_data and hotkey_data.callback then
 			hotkey_data.callback()
