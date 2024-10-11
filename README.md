@@ -105,6 +105,11 @@ See the difference between weapon marks in the mark menu.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/362).
 
+## NoNews
+Removes the news bulletin from character select.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/378).
+
 ## PanicStimm
 Switch to your Stimm and inject with one button press. Also dictate what you equip after injection.
 
