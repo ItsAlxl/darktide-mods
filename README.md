@@ -105,6 +105,11 @@ See the difference between weapon marks in the mark menu.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/362).
 
+## MissionBrief
+Shows mission details in the loading screen.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/387).
+
 ## NoNews
 Removes the news bulletin from character select.
 
