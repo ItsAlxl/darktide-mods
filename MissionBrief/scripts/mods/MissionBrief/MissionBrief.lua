@@ -11,6 +11,19 @@ local UIFonts = require("scripts/managers/ui/ui_fonts")
 
 mod:io_dofile("MissionBrief/scripts/mods/MissionBrief/ViewDefinitions")
 
+-- normally unnecessary (these packages are always loaded), but needed for Psych Ward
+local force_packages = {
+	{ path = "packages/ui/hud/mission_speaker_popup/mission_speaker_popup" },
+	{ path = "packages/ui/hud/tactical_overlay/tactical_overlay" },
+}
+
+local _load_packages = function()
+	for _, package in ipairs(force_packages) do
+		package.id = package.id or Managers.package:load(package.path, mod.name, nil, true)
+	end
+end
+_load_packages()
+
 -- draw widgets as normal
 mod:hook(CLASS.MissionIntroView, "draw", function(func, self, ...)
 	self.super.draw(self, ...)
@@ -30,10 +43,10 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 	--[[ DBG
 	if not mech_data or not mech_data.challenge then
 		mech_data = {
-			challenge = 5,
+			challenge = 4,
 			level_name = "content/levels/transit/missions/mission_cm_habs",
 			resistance = 4,
-			circumstance_name = "toxic_gas_more_resistance_01",
+			circumstance_name = "hunting_grounds_more_resistance_01",
 			backend_mission_id = "123",
 			mission_giver_vo_override = "sergeant_b",
 			mission_name = "cm_habs",
@@ -57,14 +70,14 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 
 			local side_mission_id = mech_data.side_mission
 			if side_mission_id and side_mission_id ~= "default" then
-				mission_content.mission_type = mission_content.mission_type .. " | " .. Localize(MissionObjectiveTemplates.side_mission.objectives[side_mission_id].header)
+				mission_content.mission_type = mission_content.mission_type .. " · " .. Localize(MissionObjectiveTemplates.side_mission.objectives[side_mission_id].header)
 			end
 
 			local zone_content = widgets.zone_info.content
 			zone_content.zone_coords = Localize(mission.coordinates)
 			zone_content.zone_description = Localize(mission.mission_description)
 			local text_style = self._definitions.widget_definitions.zone_info.style.zone_description
-			zone_height = 75 + UIRenderer.text_height(Managers.ui:ui_constant_elements():ui_renderer(), zone_content.zone_description, text_style.font_type, text_style.font_size, { 500, 2000 }, UIFonts.get_font_options_by_style(text_style))
+			zone_height = 75 + UIRenderer.text_height(self._ui_renderer, zone_content.zone_description, text_style.font_type, text_style.font_size, { 500, 2000 }, UIFonts.get_font_options_by_style(text_style))
 		end
 
 		widgets.mb_right_background.style.fade.size = { nil, 150 + zone_height }
@@ -91,7 +104,7 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 				circumstance_widget.visible = true
 
 				local text_style = self._definitions.widget_definitions.circumstance_info.style.circumstance_description
-				circumstance_height = 75 + UIRenderer.text_height(Managers.ui:ui_constant_elements():ui_renderer(), circumstance_content.circumstance_description, text_style.font_type, text_style.font_size, { 500, 2000 }, UIFonts.get_font_options_by_style(text_style))
+				circumstance_height = 75 + UIRenderer.text_height(self._ui_renderer, circumstance_content.circumstance_description, text_style.font_type, text_style.font_size, { 500, 2000 }, UIFonts.get_font_options_by_style(text_style))
 			end
 		end
 
