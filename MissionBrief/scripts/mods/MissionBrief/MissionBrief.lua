@@ -8,6 +8,7 @@ local MissionTypes = require("scripts/settings/mission/mission_types")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Zones = require("scripts/settings/zones/zones")
 
 mod:io_dofile("MissionBrief/scripts/mods/MissionBrief/ViewDefinitions")
 
@@ -74,8 +75,9 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 			end
 
 			local zone_content = widgets.zone_info.content
-			zone_content.zone_coords = Localize(mission.coordinates)
-			zone_content.zone_description = Localize(mission.mission_description)
+			local zone = Zones[mission.zone_id or "operations"]
+			zone_content.zone_coords = zone and Localize(zone.name) or ""
+			zone_content.zone_description = mission.mission_description and Localize(mission.mission_description) or ""
 			local text_style = self._definitions.widget_definitions.zone_info.style.zone_description
 			zone_height = 75 + UIRenderer.text_height(self._ui_renderer, zone_content.zone_description, text_style.font_type, text_style.font_size, { 500, 2000 }, UIFonts.get_font_options_by_style(text_style))
 		end
