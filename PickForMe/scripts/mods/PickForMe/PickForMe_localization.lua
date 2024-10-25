@@ -97,6 +97,7 @@ local localization = {
 	},
 	wait_a_sec = {
 		en = "Please wait a moment before randomizing again",
+		["zh-cn"] = "请等待一段时间再重新随机",
 	},
 	bad_circumstance = {
 		en = "You can't use PickForMe during a mission",
