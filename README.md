@@ -55,6 +55,11 @@ Changes your crosshair's color when aiming over an enemy, ally, or barrel.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/110).
 
+## EmoteBoard
+Quickly play any owned emote.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/391).
+
 ## EnlightenedGameEnjoyer
 Prevents matchmaking with undesirable players by preventing matchmaking entirely.
 
