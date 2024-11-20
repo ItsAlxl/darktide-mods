@@ -6,19 +6,32 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 
+local background_color = Color.black(255, true)
+local background_padding = 100
+local size_panel = {nil, 400}
+local size_info = {nil, 150}
+
+mod.update_sizes = function(width)
+	size_panel[1] = width
+	size_info[1] = width
+end
+mod.update_sizes(mod:get("panel_width") or 500)
+
+mod.update_bg_color = function(alpha)
+	background_color[1] = alpha
+end
+mod.update_bg_color(mod:get("panel_alpha") or 255)
+
 mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definitions", function(view_defs)
 	view_defs.scenegraph_definition.screen = UIWorkspaceSettings.screen
 	view_defs.scenegraph_definition.left_panel = {
 		parent = "screen",
 		horizontal_alignment = "left",
 		vertical_alignment = "top",
-		size = {
-			600,
-			400
-		},
+		size = size_panel,
 		position = {
 			0,
-			50,
+			0,
 			0,
 		},
 	}
@@ -26,11 +39,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		parent = "left_panel",
 		horizontal_alignment = "left",
 		vertical_alignment = "top",
-		size =
-		{
-			500,
-			150
-		},
+		size = size_info,
 		position = {
 			25,
 			-25,
@@ -41,11 +50,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		parent = "left_panel",
 		horizontal_alignment = "left",
 		vertical_alignment = "top",
-		size =
-		{
-			500,
-			100
-		},
+		size = size_info,
 		position = {
 			25,
 			135,
@@ -56,10 +61,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		parent = "left_panel",
 		horizontal_alignment = "left",
 		vertical_alignment = "top",
-		size = {
-			500,
-			120
-		},
+		size = size_info,
 		position = {
 			25,
 			215,
@@ -70,13 +72,10 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		parent = "screen",
 		horizontal_alignment = "right",
 		vertical_alignment = "top",
-		size = {
-			600,
-			400
-		},
+		size = size_panel,
 		position = {
 			0,
-			50,
+			0,
 			0,
 		},
 	}
@@ -84,11 +83,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		parent = "right_panel",
 		horizontal_alignment = "right",
 		vertical_alignment = "top",
-		size =
-		{
-			500,
-			150
-		},
+		size = size_info,
 		position = {
 			-25,
 			0,
@@ -99,11 +94,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		parent = "right_panel",
 		horizontal_alignment = "right",
 		vertical_alignment = "top",
-		size =
-		{
-			500,
-			150
-		},
+		size = size_info,
 		position = {
 			-25,
 			150,
@@ -117,7 +108,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			style_id = "fade",
 			value = "content/ui/materials/hud/backgrounds/fade_horizontal",
 			style = {
-				color = Color.black(200, true),
+				color = background_color,
 				offset = {
 					0,
 					0,
@@ -132,6 +123,10 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 						1,
 						1,
 					},
+				},
+				size_addition = {
+					background_padding,
+					0,
 				},
 			},
 		}
@@ -237,6 +232,10 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 					nil,
 					50,
 				},
+				size_addition = {
+					100,
+					0,
+				},
 				text_color = {
 					255,
 					169,
@@ -329,7 +328,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 					10,
 				},
 				size = {
-					500,
+					nil,
 					60,
 				},
 				text_color = {
@@ -348,9 +347,9 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			style_id = "fade",
 			value = "content/ui/materials/hud/backgrounds/fade_horizontal",
 			style = {
-				color = Color.black(200, true),
+				color = background_color,
 				offset = {
-					0,
+					-background_padding,
 					0,
 					-3,
 				},
@@ -363,6 +362,10 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 						0,
 						0,
 					},
+				},
+				size_addition = {
+					background_padding,
+					0,
 				},
 			},
 		}

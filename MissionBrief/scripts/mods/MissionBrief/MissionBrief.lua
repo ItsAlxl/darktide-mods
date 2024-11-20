@@ -16,6 +16,7 @@ mod:io_dofile("MissionBrief/scripts/mods/MissionBrief/ViewDefinitions")
 local force_packages = {
 	{ path = "packages/ui/hud/mission_speaker_popup/mission_speaker_popup" },
 	{ path = "packages/ui/hud/tactical_overlay/tactical_overlay" },
+	{ path = "packages/ui/views/mission_board_view/mission_board_view" },
 }
 
 local _load_packages = function()
@@ -25,10 +26,8 @@ local _load_packages = function()
 end
 _load_packages()
 
--- draw widgets as normal
-mod:hook(CLASS.MissionIntroView, "draw", function(func, self, ...)
-	self.super.draw(self, ...)
-	func(self, ...)
+mod:hook_safe(CLASS.MissionIntroView, "draw", function(self, ...)
+	self.super.draw(self, ...) -- draw widgets as normal
 end)
 
 mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
@@ -37,6 +36,7 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 		widgets.display.visible = false -- hide leftover widget lol
 	end
 	self._pass_draw = true
+	self:set_render_scale(mod:get("ui_scale") or 1.0)
 
 	local mech = Managers.mechanism and Managers.mechanism._mechanism
 	local mech_data = mech and mech._mechanism_data
@@ -56,6 +56,14 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 	end
 	mod.DBG_mech_data = mech_data
 	--]]
+
+	widgets.mb_left_background.visible = mod:get("show_mission")
+	widgets.mission_info.visible = mod:get("show_mission")
+	widgets.danger_info.visible = mod:get("show_mission")
+
+	widgets.mb_right_background.visible = mod:get("show_fluff")
+	widgets.zone_info.visible = mod:get("show_fluff")
+	widgets.npc_card.visible = mod:get("show_fluff")
 
 	if mech_data then
 		local mission_id = mech_data.mission_name
@@ -103,7 +111,7 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 				circumstance_content.icon = circumstance_ui.icon
 				circumstance_content.circumstance_name = Localize(circumstance_ui.display_name)
 				circumstance_content.circumstance_description = Localize(circumstance_ui.description)
-				circumstance_widget.visible = true
+				circumstance_widget.visible = mod:get("show_mission")
 
 				local text_style = self._definitions.widget_definitions.circumstance_info.style.circumstance_description
 				circumstance_height = 75 + UIRenderer.text_height(self._ui_renderer, circumstance_content.circumstance_description, text_style.font_type, text_style.font_size, { 500, 2000 }, UIFonts.get_font_options_by_style(text_style))
@@ -120,6 +128,15 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 		end
 	end
 end)
+
+mod.on_setting_changed = function(id)
+	if id == "panel_width" then
+		mod.update_sizes(mod:get(id))
+	end
+	if id == "panel_alpha" then
+		mod.update_bg_color(mod:get(id))
+	end
+end
 
 mod.DBG_screen = function()
 	local view_name = "mission_intro_view"
