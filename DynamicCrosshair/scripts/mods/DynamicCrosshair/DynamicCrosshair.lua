@@ -52,6 +52,8 @@ local perspectives_mod = nil
 local perspectives_reposition = mod:get("perspectives_reposition")
 local perform_repositioning = true
 
+local hooked_crosshair_position = false
+
 local ghost_crosshair_visible = mod:get("show_ghost_crosshair")
 local ghost_crosshair_type = nil
 local ghost_crosshair_widget = nil
@@ -248,7 +250,7 @@ mod:hook_safe(CLASS.PlayerUnitFirstPersonExtension, "fixed_update", function(sel
 		end
 	end
 
-	update_ghost_crosshair = color_type and ghost_crosshair_visible and perform_repositioning
+	update_ghost_crosshair = color_type and ghost_crosshair_visible and perform_repositioning or false
 	ghost_range = update_ghost_crosshair and static_range or MAX_DISTANCE
 	latest_range = range
 	latest_color_type = color_type
@@ -277,6 +279,11 @@ local _get_crosshair_position = function(dt, ui_renderer, pivot_position, prev_x
 end
 
 mod:hook_require("scripts/ui/utilities/crosshair", function(Crosshair)
+	if hooked_crosshair_position then
+		return
+	end
+	hooked_crosshair_position = true
+
 	mod:hook(Crosshair, "position", function(func, dt, t, ui_hud, ui_renderer, current_x, current_y, pivot_position)
 		if not crosshair_ui_hud then
 			crosshair_ui_hud = ui_hud
