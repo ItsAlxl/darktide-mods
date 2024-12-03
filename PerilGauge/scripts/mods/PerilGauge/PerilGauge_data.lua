@@ -125,6 +125,12 @@ return {
 						range         = { 0, 2 },
 					},
 					{
+						setting_id    = "perc_lead_zeroes",
+						type          = "numeric",
+						default_value = 1,
+						range         = { 0, 2 },
+					},
+					{
 						setting_id = "comp_orientation",
 						type = "dropdown",
 						default_value = 0,

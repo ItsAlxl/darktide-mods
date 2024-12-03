@@ -243,4 +243,7 @@ return {
 		["zh-cn"] = "显示小数位数",
 		ru = "Количество десятичных цифр",
 	},
+	perc_lead_zeroes = {
+		en = "Number of Leading 0s",
+	},
 }
