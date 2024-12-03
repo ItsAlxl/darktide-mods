@@ -170,6 +170,11 @@ Sorts Brunt's Armory and Mastery lists to keep similar items together.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/109).
 
+## SpecialGaugeVisibility
+Set whether or not special weapon gauges should be visible when unequipped.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/442).
+
 ## StaminaVis aka Stamina Visibility
 Allows you to tweak the stamina bar's visibility behavior.
 
