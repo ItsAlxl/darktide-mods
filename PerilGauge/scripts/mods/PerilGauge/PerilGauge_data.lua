@@ -54,6 +54,16 @@ return {
 				default_value = true,
 			},
 			{
+				setting_id = "wep_counter_behavior",
+				type = "dropdown",
+				default_value = 0,
+				options = {
+					{ text = "counter_use_counter", value = 0 },
+					{ text = "counter_use_gauge", value = 1 },
+					{ text = "counter_use_both",  value = 2 },
+				},
+			},
+			{
 				setting_id = "vis_behavior",
 				type = "dropdown",
 				default_value = 0,

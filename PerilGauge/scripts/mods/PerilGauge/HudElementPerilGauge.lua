@@ -82,6 +82,8 @@ mod.on_setting_changed = function(id)
 		perc_num_format = "%0" .. num_lead_zeroes .. "." .. num_decimals .. "f%%"
 	elseif id == "vis_behavior" then
 		vis_behavior = mod:get(id)
+	elseif id == "wep_counter_behavior" then
+		mod.wep_counter_behavior = mod:get(id)
 	elseif id == "vanish_speed" then
 		vanish_speed = mod:get(id)
 	elseif id == "appear_speed" then
@@ -110,7 +112,8 @@ HudElementPerilGauge.init = function(self, parent, draw_layer, start_scale)
 			weapon_slots[#weapon_slots + 1] = slot_id
 		end
 	end
-	self._weapon_slots = weapon_slots
+	self._wep_slots = weapon_slots
+	self._num_wep_slots = #weapon_slots
 
 	mod.override_alpha = nil
 	mod.override_color = nil
@@ -245,6 +248,13 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 
 	HudElementPerilGauge.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 
+	-- if the wep counter has us covered, just hide
+	if mod.wep_counter_vis and mod.wep_counter_behavior == 0 then
+		current_alpha = 0.0
+		mod.override_alpha = override_peril_alpha and current_alpha
+		return
+	end
+
 	-- Determine peril fraction
 	local player_extensions = self._parent:player_extensions()
 	local player_unit_data = player_extensions and player_extensions.unit_data
@@ -254,8 +264,9 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 	if player_unit_data then
 		local weapon_extension = player_extensions.weapon
 		local weapon_template = weapon_extension:weapon_template()
+		local use_current_wep = weapon_template and weapon_template.uses_overheat
 
-		if weapon_template and weapon_template.uses_overheat then
+		if use_current_wep then
 			local wielded_slot = player_unit_data:read_component("inventory").wielded_slot
 			if wielded_slot and wielded_slot ~= "none" then
 				local slot_configuration = PlayerCharacterConstants.slot_configuration[wielded_slot]
@@ -264,11 +275,12 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 				end
 			end
 		else
-			local weapon_slots = self._weapon_slots
-			for i = 1, #weapon_slots do
-				overheat_level = math.max(player_unit_data:read_component(weapon_slots[i]).overheat_current_percentage, overheat_level)
+			local wep_slots = self._wep_slots
+			for i = 1, self._num_wep_slots do
+				overheat_level = math.max(player_unit_data:read_component(wep_slots[i]).overheat_current_percentage, overheat_level)
 			end
 		end
+
 	end
 	if warp_charge_level ~= overheat_level then
 		mod.is_peril_driven = warp_charge_level > overheat_level
@@ -276,29 +288,16 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 	local peril_fraction = mod.is_peril_driven and warp_charge_level or overheat_level
 
 	-- Update visibility
-	if vis_behavior > 0 then
-		current_alpha = 1.0
-	elseif vis_behavior < 0 then
-		current_alpha = 0.0
-	else
+	if vis_behavior == 0 then
 		local vis_instruction = peril_fraction > 0
 		if prev_vis_instruction ~= nil then
 			if vis_instruction ~= prev_vis_instruction then
-				if vis_instruction then
-					appear_timeout = appear_delay
-					vanish_timeout = 0.0
-				else
-					vanish_timeout = vanish_delay
-					appear_timeout = 0.0
-				end
+				appear_timeout = vis_instruction and appear_delay or 0.0
+				vanish_timeout = vis_instruction and 0.0 or vanish_delay
 			end
 
-			if vanish_timeout > 0.0 then
-				vanish_timeout = vanish_timeout - dt
-			end
-			if appear_timeout > 0.0 then
-				appear_timeout = appear_timeout - dt
-			end
+			vanish_timeout = vanish_timeout > 0.0 and (vanish_timeout - dt) or -1.0
+			appear_timeout = appear_timeout > 0.0 and (appear_timeout - dt) or -1.0
 
 			local appear = vis_instruction
 			if vanish_timeout <= 0.0 and appear_timeout > 0.0 then
@@ -308,22 +307,14 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 			end
 
 			local alpha_multiplier = current_alpha or 0.0
-			if appear then
-				if appear_speed > 0.0 then
-					alpha_multiplier = math.min(alpha_multiplier + dt * appear_speed, 1.0)
-				else
-					alpha_multiplier = 1.0
-				end
-			else
-				if vanish_speed > 0.0 then
-					alpha_multiplier = math.max(alpha_multiplier - dt * vanish_speed, 0.0)
-				else
-					alpha_multiplier = 0.0
-				end
-			end
+			alpha_multiplier = appear
+				and (appear_speed > 0.0 and math.min(alpha_multiplier + dt * appear_speed, 1.0) or 1.0)
+				or (vanish_speed > 0.0 and math.max(alpha_multiplier - dt * vanish_speed, 0.0) or 0.0)
 			current_alpha = alpha_multiplier
 		end
 		prev_vis_instruction = vis_instruction
+	else
+		current_alpha = vis_behavior > 0 and 1.0 or 0.0
 	end
 
 	-- Set bar size & color

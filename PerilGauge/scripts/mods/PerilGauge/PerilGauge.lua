@@ -23,6 +23,11 @@ end
 mod:hook_require("scripts/ui/hud/hud_elements_player_onboarding", _add_hud_element)
 mod:hook_require("scripts/ui/hud/hud_elements_player", _add_hud_element)
 
+mod.wep_counter_behavior = mod:get("wep_counter_behavior")
+mod.wep_counter_vis = false
+
+local hooked_overheat_counter = false
+
 mod:hook(CLASS.HudElementOvercharge, "update", function(func, self, ...)
 	func(self, ...)
 	if mod.is_peril_driven ~= nil then
@@ -41,6 +46,19 @@ mod:hook(CLASS.HudElementOvercharge, "update", function(func, self, ...)
 			widget.style.warning_text.text_color = table.clone(mod.override_color)
 		end
 	end
+end)
+
+mod:hook_require("scripts/ui/hud/elements/weapon_counter/templates/weapon_counter_template_overheat_lockout", function(WeaponCounterOverheat)
+	if hooked_overheat_counter then
+		return
+	end
+	hooked_overheat_counter = true
+
+	mod:hook(WeaponCounterOverheat, "update_function", function(func, hud_element_weapon_counter, ui_renderer, widget, is_currently_wielded, weapon_counter_settings, template, dt, t)
+		func(hud_element_weapon_counter, ui_renderer, widget, is_currently_wielded, weapon_counter_settings, template, dt, t)
+		widget.visible = widget.visible and mod.wep_counter_behavior ~= 1
+		mod.wep_counter_vis = widget.visible
+	end)
 end)
 
 mod:hook(CLASS.HudElementOvercharge, "_update_visibility", function(func, ...)

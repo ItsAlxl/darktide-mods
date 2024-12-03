@@ -246,4 +246,16 @@ return {
 	perc_lead_zeroes = {
 		en = "Number of Leading 0s",
 	},
+	wep_counter_behavior = {
+		en = "Special Weapon Gauges",
+	},
+	counter_use_counter = {
+		en = "Use weapon gauge",
+	},
+	counter_use_gauge = {
+		en = "Use PerilGauge",
+	},
+	counter_use_both = {
+		en = "Use both",
+	},
 }
