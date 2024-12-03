@@ -26,7 +26,7 @@ mod:hook_require("scripts/ui/hud/hud_elements_player", _add_hud_element)
 mod:hook(CLASS.HudElementOvercharge, "update", function(func, self, ...)
     func(self, ...)
     if mod.is_peril_driven ~= nil then
-        local widget = mod.is_peril_driven and self._widgets_by_name.overcharge or self._widgets_by_name.overheat
+        local widget = mod.is_peril_driven and self._widgets_by_name.warp_charge or self._widgets_by_name.overheat
         local text_prefix = mod.is_peril_driven and "" or ""
 
         if mod.override_alpha and mod.override_alpha > 0 and not widget.visible then
