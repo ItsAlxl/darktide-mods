@@ -238,6 +238,7 @@ mod.on_setting_changed("autoswitch_lunge_ogryn")
 mod.on_setting_changed("autoswitch_lunge_human")
 mod.on_setting_changed("autoswitch_act2_primary")
 mod.on_setting_changed("autoswitch_act2_secondary")
+mod.apply_custom_viewpoint()
 
 mod.toggle_third_person = function()
 	local prev = mod.is_requesting_third_person()
@@ -494,11 +495,5 @@ end)
 
 mod:hook(CLASS.HudElementCrosshair, "_get_current_crosshair_type", function(func, self, crosshair_settings)
 	local type = func(self, crosshair_settings)
-	mod.DBG = {
-		crosshair_settings = crosshair_settings,
-		xhair_fallback = xhair_fallback,
-		type = type,
-		xhair_elm = self,
-	}
 	return crosshair_settings and xhair_fallback ~= "none" and (type == "none" or type == "ironsight") and not is_in_hub and mod.is_requesting_third_person() and xhair_fallback or type
 end)
