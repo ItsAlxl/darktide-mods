@@ -161,9 +161,9 @@ Allows you to reorder your characters on the character select screen.
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/75).
 
 ## Shirtless
-Takes your shirt off.
+Takes your shirt off (client-side only).
 
-Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/193).
+This mod is no longer available on Nexus because it was bugged and I didn't feel like fixing/maintaining it. I do not recall the nature of the bug, but the code is available here regardless.
 
 ## SortBrunt aka Sort Mastery
 Sorts Brunt's Armory and Mastery lists to keep similar items together.
