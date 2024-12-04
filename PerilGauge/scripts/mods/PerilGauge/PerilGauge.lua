@@ -1,5 +1,7 @@
 local mod = get_mod("PerilGauge")
 
+local ColorUtilities = require("scripts/utilities/ui/colors")
+
 local hud_element = {
 	package = "packages/ui/hud/blocking/blocking",
 	use_hud_scale = true,
@@ -25,25 +27,31 @@ mod:hook_require("scripts/ui/hud/hud_elements_player", _add_hud_element)
 
 mod.wep_counter_behavior = mod:get("wep_counter_behavior")
 mod.wep_counter_vis = false
+mod.vanilla_alpha_mult = mod:get("vanilla_alpha_mult")
 
 local hooked_overheat_counter = false
 
 mod:hook(CLASS.HudElementOvercharge, "update", function(func, self, ...)
 	func(self, ...)
-	if mod.is_peril_driven ~= nil then
-		local widget = mod.is_peril_driven and self._widgets_by_name.warp_charge or self._widgets_by_name.overheat
+	local is_peril_driven = mod.is_peril_driven
+	if is_peril_driven ~= nil then
+		local widget = is_peril_driven and self._widgets_by_name.warp_charge or self._widgets_by_name.overheat
+		local widget_content = widget.content
 		local text_prefix = mod.is_peril_driven and "" or ""
 
-		if mod.override_alpha and mod.override_alpha > 0 and not widget.visible then
-			widget.content.warning_text = text_prefix .. "0%"
-			widget.alpha_multiplier = mod.override_alpha * 0.5 -- this 0.5 comes from vanilla peril alpha behavior
+		local override_alpha = mod.override_alpha
+		if override_alpha and override_alpha > 0 and not widget.visible then
+			widget_content.warning_text = text_prefix .. "0%"
+			widget.alpha_multiplier = override_alpha
 			widget.visible = true
 		end
+		widget.alpha_multiplier = widget.alpha_multiplier and widget.alpha_multiplier * mod.vanilla_alpha_mult
+
 		if mod.override_text then
-			widget.content.warning_text = text_prefix .. mod.override_text
+			widget_content.warning_text = text_prefix .. mod.override_text
 		end
 		if mod.override_color then
-			widget.style.warning_text.text_color = table.clone(mod.override_color)
+			ColorUtilities.color_copy(mod.override_color, widget.style.warning_text.text_color)
 		end
 	end
 end)

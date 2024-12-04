@@ -8,7 +8,7 @@ local area_size = { area_side, area_side }
 local center_offset = 120
 
 local bar_bracket_spacing = 2
-local bar_color = UIHudSettings.color_tint_main_1
+local bar_color = table.clone(UIHudSettings.color_tint_main_1)
 
 local name_text_style = table.clone(UIFontSettings.body_small)
 name_text_style.text_color = UIHudSettings.color_tint_main_2

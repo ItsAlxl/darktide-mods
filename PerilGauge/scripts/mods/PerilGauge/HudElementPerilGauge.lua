@@ -96,6 +96,10 @@ mod.on_setting_changed = function(id)
 		appear_delay = mod:get(id)
 	elseif id == "gauge_alpha" then
 		alpha_mult = mod:get(id)
+	elseif id == "vanilla_alpha_mult" then
+		mod.vanilla_alpha_mult = mod:get(id)
+	elseif id == "special_alpha_mult" then
+		mod.special_alpha_mult = mod:get(id)
 	else
 		next_update_refresh_style = true
 	end
@@ -318,19 +322,17 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 	end
 
 	-- Set bar size & color
-	local color = Definitions.default_values.bar_color
+	local color = bar_style.color
 	if num_thresholds > 0 then
 		local thresh_idx = _get_next_threshold_idx(peril_fraction)
 		if thresh_idx == nil then
-			color = _get_threshold_after_color(num_thresholds)
+			ColorUtilities.color_copy(_get_threshold_after_color(num_thresholds), color)
 		elseif threshold_keys[thresh_idx] == peril_fraction then
-			color = _get_threshold_after_color(thresh_idx)
+			ColorUtilities.color_copy(_get_threshold_after_color(thresh_idx), color)
 		else
-			color = table.clone(color)
 			ColorUtilities.color_lerp(_get_threshold_after_color(thresh_idx - 1), _get_threshold_before_color(thresh_idx), _get_threshold_lerp(thresh_idx, peril_fraction), color, false)
 		end
 	end
-	bar_style.color = color
 	bar_style.size[1] = math.lerp(bar_size_empty[1], bar_size_full[1], peril_fraction)
 	bar_style.size[2] = math.lerp(bar_size_empty[2], bar_size_full[2], peril_fraction)
 

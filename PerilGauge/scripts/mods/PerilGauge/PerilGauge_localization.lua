@@ -69,11 +69,6 @@ return {
 		["zh-cn"] = "指示条显示的速度（默认 3.0）。1.0 表示完全显示需要 1 秒。2.0 表示完全显示需要 0.5 秒。0.0 表示立刻显示。",
 		ru = "Как быстро появляется полоса (по умолчанию 3.0). Значение 1.0 заставляет её появляться через 1 секунду. При значении 2,0 она появляется через полсекунды. Значение 0.0 заставляет её появляться мгновенно.",
 	},
-	override_peril_color = {
-		en = "Override Vanilla Peril Text Color",
-		["zh-cn"] = "覆盖原版危机值文本颜色",
-		ru = "Заменить стандартный цвет текста Угрозы",
-	},
 	group_comps = {
 		en = "Components",
 		["zh-cn"] = "组件",
@@ -198,11 +193,6 @@ return {
 		["zh-cn"] = "右侧",
 		ru = "Справа",
 	},
-	override_peril_alpha = {
-		en = "Override Vanilla Peril Text Visibility",
-		["zh-cn"] = "覆盖原版危机值文本可见度",
-		ru = "Заменить стандартную видимость текста Угрозы",
-	},
 	gauge_thick = {
 		en = "Gauge Thickness",
 		["zh-cn"] = "指示器厚度",
@@ -217,11 +207,6 @@ return {
 		en = "Gauge Opacity",
 		["zh-cn"] = "指示器不透明度",
 		ru = "Прозрачность датчика",
-	},
-	override_peril_text = {
-		en = "Override Vanilla Peril Percentage Text",
-		["zh-cn"] = "覆盖原版危机值百分比文本",
-		ru = "Заменить стандартный текст процентов Угрозы",
 	},
 	show_perc = {
 		en = "Show Gauge Percentage",
@@ -262,5 +247,26 @@ return {
 	counter_use_both = {
 		en = "Use both",
 		["zh-cn"] = "同时使用",
+	},
+	group_vanilla_text = {
+		en = "Base Game Peril Percentage",
+	},
+	override_color = {
+		en = "Override Color",
+		["zh-cn"] = "覆盖原版危机值文本颜色",
+		ru = "Заменить стандартный цвет текста Угрозы",
+	},
+	override_alpha = {
+		en = "Override Visibility",
+		["zh-cn"] = "覆盖原版危机值文本可见度",
+		ru = "Заменить стандартную видимость текста Угрозы",
+	},
+	override_text = {
+		en = "Override Text",
+		["zh-cn"] = "覆盖原版危机值百分比文本",
+		ru = "Заменить стандартный текст процентов Угрозы",
+	},
+	alpha_mult = {
+		en = "Opacity",
 	},
 }
