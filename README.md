@@ -11,6 +11,7 @@ Choose what your character equips after throwing a grenade.
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/80).
 
 ## AimSensitivity
+Note: As of Patch #13, this mod is obsolete.
 Set a sensitivity multiplier for aiming down sights.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/119).
@@ -36,6 +37,7 @@ Automatically readies up when joining a lobby.
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/96).
 
 ## CharWallets aka Character Screen Wallets
+Note: As of Patch #12 "Into the Maelstrom", this mod is obsolete.
 Adds your characters' currencies to the character select screen.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/67).
@@ -81,6 +83,7 @@ Adds a "Mastery" button to the inventory screen when selecting a weapon.
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/361).
 
 ## IgnorePsykerGrenades
+Note: This mod is deprecated. Use Alternate Grenade Icons by Vatinas instead.
 Prevent Psyker blitzes from changing their grenade color in your HUD.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/221).
@@ -126,6 +129,7 @@ Switch to your Stimm and inject with one button press. Also dictate what you equ
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/266).
 
 ## PenanceDetails
+Note: As of Patch #15 "The Traitor Curse Part 1", this mod is obsolete.
 Penances provide more details about your current progress.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/122).
@@ -216,6 +220,7 @@ Makes quelling peril a toggled action.
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/228).
 
 ## TruePeril
+Note: This mod is deprecated. Use PerilGauge instead.
 Allows you to remove the interpolation/decay of the value on the Psyker's peril gauge and to show up to 2 decimal places of the peril value.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/63).
@@ -226,7 +231,7 @@ Walk slowly at the push of a button.
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/151).
 
 ## WhichMissions
-Note: This mod is deprecated. Use PenanceDetails instead.
+Note: As of Patch #15 "The Traitor Curse Part 1", this mod is obsolete.
 Adds chat commands to list which mission types you need for the "complete one of each mission type..." penances.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/55).
