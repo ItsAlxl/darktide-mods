@@ -245,17 +245,22 @@ return {
 	},
 	perc_lead_zeroes = {
 		en = "Number of Leading 0s",
+		["zh-cn"] = "前缀 0 的数量",
 	},
 	wep_counter_behavior = {
 		en = "Special Weapon Gauges",
+		["zh-cn"] = "武器特殊状态",
 	},
 	counter_use_counter = {
 		en = "Use weapon gauge",
+		["zh-cn"] = "使用武器状态条",
 	},
 	counter_use_gauge = {
 		en = "Use PerilGauge",
+		["zh-cn"] = "使用 PerilGauge",
 	},
 	counter_use_both = {
 		en = "Use both",
+		["zh-cn"] = "同时使用",
 	},
 }
