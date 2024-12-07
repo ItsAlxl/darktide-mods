@@ -56,6 +56,10 @@ mod:hook(CLASS.HudElementOvercharge, "update", function(func, self, ...)
 	end
 end)
 
+mod:hook(CLASS.HudElementOvercharge, "_update_visibility", function(func, ...)
+	return mod.override_alpha or func(...)
+end)
+
 mod:hook_require("scripts/ui/hud/elements/weapon_counter/templates/weapon_counter_template_overheat_lockout", function(WeaponCounterOverheat)
 	if hooked_overheat_counter then
 		return
@@ -69,6 +73,6 @@ mod:hook_require("scripts/ui/hud/elements/weapon_counter/templates/weapon_counte
 	end)
 end)
 
-mod:hook(CLASS.HudElementOvercharge, "_update_visibility", function(func, ...)
-	return mod.override_alpha or func(...)
+mod:hook_safe(CLASS.HudElementWeaponCounter, "init", function(...)
+	mod.wep_counter_vis = false
 end)
