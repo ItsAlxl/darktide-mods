@@ -2,12 +2,12 @@ return {
 	mod_name = {
 		en = "PerilGauge",
 		["zh-cn"] = "危机值指示器",
-		ru = "Индикатор Угрозы",
+		ru = "Индикатор опасности",
 	},
 	mod_description = {
 		en = "Adds a configurable HUD bar for your current peril/heat.",
 		["zh-cn"] = "添加一个可配置的 HUD 指示条，用于显示当前危机值/热量。",
-		ru = "Peril Gauge - Добавляет в интерфейс настраиваемую полоску текущего уровня угрозы/перегрева.",
+		ru = "Peril Gauge - Добавляет в интерфейс настраиваемую полоску текущего уровня опасности/перегрева.",
 	},
 	vis_behavior = {
 		en = "Visibility Behavior",
@@ -37,7 +37,7 @@ return {
 	vanish_delay_description = {
 		en = "How many seconds pass before the bar vanishes (default 0.0).",
 		["zh-cn"] = "指示条隐藏前等待的秒数（默认 0.0）。",
-		ru = "Сколько секунд должно пройти, прежде чем полоса исчезнет (по умолчанию 0,0).",
+		ru = "Сколько секунд должно пройти, прежде чем полоска исчезнет (по умолчанию 0.0).",
 	},
 	vanish_speed = {
 		en = "Vanish Speed",
@@ -47,7 +47,7 @@ return {
 	vanish_speed_description = {
 		en = "How quickly the bar fades out (default 3.0). A value of 1.0 makes it vanish over 1 second. A value of 2.0 makes it vanish over 0.5 seconds. A value of 0.0 causes it to vanish instantly.",
 		["zh-cn"] = "指示条隐藏的速度（默认 3.0）。1.0 表示完全隐藏需要 1 秒。2.0 表示完全隐藏需要 0.5 秒。0.0 表示立刻隐藏。",
-		ru = "Как быстро исчезает полоса (по умолчанию 3.0). Значение 1.0 заставляет её исчезать в течение 1 секунды. При значении 2,0 она исчезает через полсекунды. Значение 0.0 заставляет её мгновенно исчезать.",
+		ru = "Как быстро исчезает полоска (по умолчанию 3.0). Значение 1.0 заставляет её исчезать в течение 1 секунды. При значении 2.0 она исчезает через полсекунды. Значение 0.0 заставляет её мгновенно исчезать.",
 	},
 	appear_delay = {
 		en = "Appear Delay",
@@ -57,7 +57,7 @@ return {
 	appear_delay_description = {
 		en = "How many seconds pass before the bar appears (default 0.0).",
 		["zh-cn"] = "指示条显示前等待的秒数（默认 0.0）。",
-		ru = "Сколько секунд должно пройти до появления полосы (по умолчанию 0,0).",
+		ru = "Сколько секунд должно пройти до появления полоски (по умолчанию 0.0).",
 	},
 	appear_speed = {
 		en = "Appear Speed",
@@ -67,7 +67,7 @@ return {
 	appear_speed_description = {
 		en = "How quickly the bar fades in (default 3.0). A value of 1.0 makes it appear over 1 second. A value of 2.0 makes it appear over 0.5 seconds. A value of 0.0 causes it to appear instantly.",
 		["zh-cn"] = "指示条显示的速度（默认 3.0）。1.0 表示完全显示需要 1 秒。2.0 表示完全显示需要 0.5 秒。0.0 表示立刻显示。",
-		ru = "Как быстро появляется полоса (по умолчанию 3.0). Значение 1.0 заставляет её появляться через 1 секунду. При значении 2,0 она появляется через полсекунды. Значение 0.0 заставляет её появляться мгновенно.",
+		ru = "Как быстро появляется полоска (по умолчанию 3.0). Значение 1.0 заставляет её появляться через 1 секунду. При значении 2.0 она появляется через полсекунды. Значение 0.0 заставляет её появляться мгновенно.",
 	},
 	group_comps = {
 		en = "Components",
@@ -77,17 +77,17 @@ return {
 	comp_bracket = {
 		en = "Bar Bracket",
 		["zh-cn"] = "指示条边框",
-		ru = "Скоба под полосой",
+		ru = "Скобка под полосой",
 	},
 	lbl_text = {
 		en = "Label",
 		["zh-cn"] = "文字标签",
-		ru = "Ярлык",
+		ru = "Метка",
 	},
 	lbl_text_none = {
 		en = "<Hide Label>",
 		["zh-cn"] = "<隐藏标签>",
-		ru = "<Скрыть ярлык>",
+		ru = "<Скрыть метку>",
 	},
 	lbl_text_peril = {
 		en = Utf8.upper(Localize("loc_ranged_warp_charge")),
@@ -116,12 +116,12 @@ return {
 	orientation_horizontal_flipped = {
 		en = "Horizontal (Flipped)",
 		["zh-cn"] = "水平（翻转）",
-		ru = "Горизонтальная (Перевёрнутая)",
+		ru = "Горизонтальная (перевёрнутая)",
 	},
 	orientation_vertical_flipped = {
 		en = "Vertical (Flipped)",
 		["zh-cn"] = "垂直（翻转）",
-		ru = "Вертикальная (Перевёрнутая)",
+		ru = "Вертикальная (перевёрнутая)",
 	},
 	bar_direction = {
 		en = "Bar Grow Direction",
@@ -146,7 +146,7 @@ return {
 	lbl_vert = {
 		en = "Label Vertical Position",
 		["zh-cn"] = "文字标签垂直位置",
-		ru = "Вертикальное положение ярлыка",
+		ru = "Вертикальное положение метки",
 	},
 	vert_hint = {
 		en = "'Middle' is the same as 'Bottom' for horizontal gauges.",
@@ -171,7 +171,7 @@ return {
 	lbl_horiz = {
 		en = "Label Horizontal Position",
 		["zh-cn"] = "文字标签水平位置",
-		ru = "Горизонтальное положение ярлыка",
+		ru = "Горизонтальное положение метки",
 	},
 	horiz_hint = {
 		en = "'Center' is the same as 'Right' for vertical gauges.",
@@ -206,7 +206,7 @@ return {
 	gauge_alpha = {
 		en = "Gauge Opacity",
 		["zh-cn"] = "指示器不透明度",
-		ru = "Прозрачность датчика",
+		ru = "Прозрачность индикатора",
 	},
 	show_perc = {
 		en = "Show Gauge Percentage",
@@ -231,42 +231,49 @@ return {
 	perc_lead_zeroes = {
 		en = "Number of Leading 0s",
 		["zh-cn"] = "前缀 0 的数量",
+		ru = "Количество нулей впереди",
 	},
 	wep_counter_behavior = {
 		en = "Special Weapon Gauges",
 		["zh-cn"] = "武器特殊状态",
+		ru = "Специальные индикаторы оружия",
 	},
 	counter_use_counter = {
 		en = "Use weapon gauge",
 		["zh-cn"] = "使用武器状态条",
+		ru = "Использовать индикаторы оружия",
 	},
 	counter_use_gauge = {
 		en = "Use PerilGauge",
 		["zh-cn"] = "使用 PerilGauge",
+		ru = "Использовать индикаторы мода",
 	},
 	counter_use_both = {
 		en = "Use both",
 		["zh-cn"] = "同时使用",
+		ru = "Использовать оба",
 	},
 	group_vanilla_text = {
 		en = "Base Game Peril Percentage",
+		ru = "Базовый процент опасности игры",
 	},
 	override_color = {
 		en = "Override Color",
 		["zh-cn"] = "覆盖原版危机值文本颜色",
-		ru = "Заменить стандартный цвет текста Угрозы",
+		ru = "Заменить стандартный цвет",
 	},
 	override_alpha = {
 		en = "Override Visibility",
 		["zh-cn"] = "覆盖原版危机值文本可见度",
-		ru = "Заменить стандартную видимость текста Угрозы",
+		ru = "Заменить стандартную видимость",
 	},
 	override_text = {
 		en = "Override Text",
 		["zh-cn"] = "覆盖原版危机值百分比文本",
-		ru = "Заменить стандартный текст процентов Угрозы",
+		ru = "Заменить стандартный текст",
 	},
 	alpha_mult = {
 		en = "Opacity",
+		ru = "Прозрачность",
 	},
 }
