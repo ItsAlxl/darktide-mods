@@ -96,7 +96,7 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 		if difficulty then
 			local difficulty_widget = widgets.danger_info
 			difficulty_widget.style.difficulty_icon.amount = difficulty
-			difficulty_widget.content.difficulty_name = Localize(DangerSettings.by_index[difficulty].display_name)
+			difficulty_widget.content.difficulty_name = Localize(DangerSettings[difficulty].display_name)
 		end
 
 		local circumstance_id = mech_data.circumstance_name
