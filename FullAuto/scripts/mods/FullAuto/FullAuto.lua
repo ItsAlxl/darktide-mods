@@ -274,6 +274,9 @@ local _input_action_hook = function(func, self, action_name)
 				is_firing = true
 				next_autofire = -1
 			end
+			if action_name == "action_one_hold" then
+				is_firing = true
+			end
 			if action_name == "action_one_release" then
 				is_firing = false
 			end
