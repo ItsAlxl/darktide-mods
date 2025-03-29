@@ -20,8 +20,10 @@ return {
 	},
 	panel_width = {
 		en = "Panel Width",
+		ru = "Ширина панели",
 	},
 	panel_alpha = {
 		en = "Panel Opacity",
+		ru = "Прозрачность панели",
 	},
 }
