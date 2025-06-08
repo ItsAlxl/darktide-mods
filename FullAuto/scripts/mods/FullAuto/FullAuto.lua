@@ -280,7 +280,7 @@ local _input_action_hook = function(func, self, action_name)
 		end
 
 		-- delay ending the warp charge attack properties, cuz they end between shots
-		if delayed_warp_end and val and action_name == "action_two_release" then
+		if delayed_warp_end and not val and action_name == "action_two_hold" then
 			delayed_warp_end = false
 			_end_aim()
 		end
