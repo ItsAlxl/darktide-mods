@@ -270,12 +270,9 @@ local _input_action_hook = function(func, self, action_name)
 
 		-- track if the user is holding down LMB
 		if val and not shoot_for_me then
-			if is_lmb_action then
+			if is_lmb_action or (not is_firing and action_name == "action_one_hold") then
 				is_firing = true
 				next_autofire = -1
-			end
-			if action_name == "action_one_hold" then
-				is_firing = true
 			end
 			if action_name == "action_one_release" then
 				is_firing = false
