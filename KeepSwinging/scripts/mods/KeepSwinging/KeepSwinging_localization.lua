@@ -11,6 +11,22 @@ return {
 		en = "Enable Auto-Swing (Toggle)",
 		["zh-cn"] = "启用自动攻击（切换）",
 	},
+	burst_keybind = {
+		en = "Burst Mode Keybind",
+		["zh-cn"] = "",
+	},
+	burst_keybind_description = {
+		en = "Burst Mode starts an auto swing sequence, that stops after the configured Burst Length (see below)",
+		["zh-cn"] = "",
+	},
+	burst_length = {
+		en = "Burst Length",
+		["zh-cn"] = "",
+	},
+	burst_length_description = {
+		en = "This determines how long the Burst Mode will go on before stopping. Experiment to see which value works for you.",
+		["zh-cn"] = "",
+	},
 	as_modifier = {
 		en = "Modifier Mode",
 		["zh-cn"] = "修改模式",
