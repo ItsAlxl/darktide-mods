@@ -53,7 +53,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		size = size_info,
 		position = {
 			25,
-			135,
+			125,
 			1,
 		},
 	}
@@ -141,8 +141,8 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 				text_vertical_alignment = "top",
 				vertical_alignment = "bottom",
 				offset = {
-					15,
-					-25,
+					75,
+					18,
 					10,
 				},
 				text_color = {
@@ -155,7 +155,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		},
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/icons/generic/danger",
+			value = "content/ui/materials/buttons/rhombus",
 			style = {
 				horizontal_alignment = "left",
 				vertical_alignment = "top",
@@ -166,30 +166,35 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 					153,
 				},
 				offset = {
+					0,
+					-3,
 					5,
-					5,
-					2,
 				},
 				size = {
-					50,
-					50,
+					72.8,
+					72.8,
 				},
 			},
 		},
 		{
-			pass_type = "multi_texture",
-			style_id = "diffulty_icon_background",
-			value = "content/ui/materials/backgrounds/default_square",
-		},
-		{
-			pass_type = "multi_texture",
-			style_id = "diffulty_icon_background_frame",
-			value = "content/ui/materials/frames/frame_tile_2px",
-		},
-		{
-			pass_type = "multi_texture",
+			pass_type = "texture",
 			style_id = "difficulty_icon",
-			value = "content/ui/materials/backgrounds/default_square",
+			value = "content/ui/materials/icons/difficulty/difficulty_skull_uprising",
+			value_id = "difficulty_icon",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				color = Color.white(255, true),
+				offset = {
+					5.6,
+					2,
+					7,
+				},
+				size = {
+					61.6,
+					61.6,
+				},
+			},
 		},
 	}, "difficulty_panel", nil, nil, TacOverlaySettings.styles.difficulty)
 

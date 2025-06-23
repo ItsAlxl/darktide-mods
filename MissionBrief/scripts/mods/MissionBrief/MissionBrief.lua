@@ -1,7 +1,7 @@
 local mod = get_mod("MissionBrief")
 
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
+local Danger = require("scripts/utilities/danger")
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
 local Missions = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
@@ -92,11 +92,16 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 
 		widgets.mb_right_background.style.fade.size = { nil, 150 + zone_height }
 
-		local difficulty = mech_data.challenge
+		local difficulty = Danger.danger_by_difficulty(mech_data.challenge, mech_data.resistance)
 		if difficulty then
 			local difficulty_widget = widgets.danger_info
-			difficulty_widget.style.difficulty_icon.amount = difficulty
-			difficulty_widget.content.difficulty_name = Localize(DangerSettings[difficulty].display_name)
+			local widget_content = difficulty_widget.content
+			widget_content.difficulty_icon = difficulty.icon or "content/ui/materials/icons/difficulty/flat/difficulty_skull_uprising"
+			widget_content.difficulty_name = Localize(difficulty.display_name)
+
+			local icon_style = difficulty_widget.style.difficulty_icon
+			icon_style.amount = difficulty.index or 0
+			icon_style.color = difficulty.color or {255, 255, 255, 255}
 		end
 
 		local circumstance_id = mech_data.circumstance_name
