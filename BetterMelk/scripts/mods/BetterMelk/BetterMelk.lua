@@ -26,14 +26,20 @@ local _update_contracts_lbl = function(widget, contract_data)
 				num_tasks_completed = num_tasks_completed + 1
 			end
 		end
-		widget.content.contracts_text = _get_contracts_string(num_tasks_completed, num_tasks, contract_data.fulfilled, contract_data.rewarded)
+		widget.content.contracts_text = _get_contracts_string(
+			num_tasks_completed,
+			num_tasks,
+			contract_data.fulfilled,
+			contract_data.rewarded
+		)
 	else
 		widget.content.contracts_text = "---"
 	end
 end
 
 local _auto_melk = function(profile, char_screen_widget)
-	if profile.current_level < PlayerProgressionUnlocks.contracts or not char_screen_widget then
+	if not char_screen_widget then
+		char_screen_widget.content.contracts_text = "---"
 		return
 	end
 	local character_id = profile.character_id
@@ -41,13 +47,7 @@ local _auto_melk = function(profile, char_screen_widget)
 	local promise = interface:get_current_contract(character_id)
 	if promise then
 		promise:next(function(contract_data)
-			if contract_data.fulfilled and not contract_data.rewarded then
-				interface:complete_contract(character_id):next(function(...)
-					_update_contracts_lbl(char_screen_widget, contract_data)
-				end)
-			else
-				_update_contracts_lbl(char_screen_widget, contract_data)
-			end
+			_update_contracts_lbl(char_screen_widget, contract_data)
 		end)
 	else
 		mod:error("msg_error")
@@ -60,11 +60,7 @@ mod.refresh_profile = function(profile)
 		return
 	end
 
-	if profile.current_level >= PlayerProgressionUnlocks.contracts then
-		_auto_melk(profile, widget)
-	else
-		widget.content.contracts_text = "---"
-	end
+	_auto_melk(profile, widget)
 end
 
 mod.refresh_all_profiles = function()
