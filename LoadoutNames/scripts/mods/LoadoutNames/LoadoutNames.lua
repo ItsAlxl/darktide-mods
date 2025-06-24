@@ -1,5 +1,5 @@
 local mod = get_mod("LoadoutNames")
-local HubHotkeys = require("scripts/settings/game_mode/game_mode_settings").hub.hotkeys
+local Views = require("scripts/ui/views/views")
 
 mod:io_dofile("LoadoutNames/scripts/mods/LoadoutNames/ViewDefinitions")
 
@@ -8,8 +8,6 @@ local MAX_NAME_LENGTH = 50
 local is_typing = false
 local tooltip_widget = nil
 local tbox_widget = nil
-
-local stored_hotkeys = {}
 
 mod.set_loadout_name = function(loadout_id, name)
 	if loadout_id then
@@ -25,29 +23,12 @@ mod.is_user_typing = function()
 	return tbox_widget and is_typing
 end
 
-local _remove_vanilla_hotkeys = function()
-	stored_hotkeys = {
-		hotkey_inventory = HubHotkeys.hotkeys.hotkey_inventory,
-		inventory_background_view = HubHotkeys.lookup.inventory_background_view
-	}
-	HubHotkeys.hotkeys.hotkey_inventory = nil
-	HubHotkeys.lookup.inventory_background_view = nil
-end
-
-local _restore_vanilla_hotkeys = function()
-	HubHotkeys.hotkeys.hotkey_inventory = stored_hotkeys.hotkey_inventory or HubHotkeys.hotkeys.hotkey_inventory
-	HubHotkeys.lookup.inventory_background_view = stored_hotkeys.inventory_background_view or HubHotkeys.lookup.inventory_background_view
-end
-
 local set_is_typing = function(t)
 	if t ~= is_typing then
 		is_typing = t
 
-		if t then
-			_remove_vanilla_hotkeys()
-		else
-			_restore_vanilla_hotkeys()
-		end
+		-- suppress inventory hotkey
+		Views["inventory_background_view"].close_on_hotkey_pressed = not t
 
 		local tbox_content = tbox_widget and tbox_widget.content
 		if tbox_content then
@@ -82,8 +63,12 @@ end
 local _display_loadout_name_to_iv = function(inv_view)
 	tbox_widget = tbox_widget or (inv_view._profile_presets_element and inv_view._profile_presets_element._widgets_by_name.loadout_name_tbox)
 	tooltip_widget = tooltip_widget or (inv_view._profile_presets_element and inv_view._profile_presets_element._widgets_by_name.loadout_name_tooltip)
-	if tbox_widget and tbox_widget.content then
-		tbox_widget.content.input_text = mod.get_loadout_name(inv_view._active_profile_preset_id, "")
+
+	local widget_content = tbox_widget and tbox_widget.content
+	if widget_content then
+		local loadout_id = inv_view._active_profile_preset_id
+		widget_content.visible = loadout_id and loadout_id ~= "" or false
+		widget_content.input_text = mod.get_loadout_name(loadout_id, "")
 	end
 end
 
