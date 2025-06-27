@@ -183,6 +183,16 @@ return {
 						default_value = true,
 					},
 					{
+						setting_id    = "boltpistol",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id    = "shotpistol_shield",
+						type          = "checkbox",
+						default_value = true,
+					},
+					{
 						setting_id    = "heavystubber",
 						type          = "checkbox",
 						default_value = true,

@@ -83,6 +83,12 @@ return {
 		en = "Bolters",
 		["zh-cn"] = "爆矢枪",
 	},
+	boltpistol = {
+		en = "Boltpistols",
+	},
+	shotpistol_shield = {
+		en = "Arbites Shotpistol & Shield",
+	},
 	heavystubber = {
 		en = "Heavy Stubbers",
 		["zh-cn"] = "重机枪",
