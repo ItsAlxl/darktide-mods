@@ -6,6 +6,7 @@ local GrowingUp = require("scripts/settings/character/growing_up")
 local FormativeEvent = require("scripts/settings/character/formative_event")
 local Crimes = require("scripts/settings/character/crimes")
 local Personalities = require("scripts/settings/character/personalities")
+local CrimesCompabilityMap = require("scripts/settings/character/crimes_compability_mapping")
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -34,7 +35,6 @@ local bio_btn_widgets = {}
 local bio_text_widget = nil
 local bio_current_idx = -1
 
-
 -- Handle accordion
 
 local live_accordion_anim = nil
@@ -57,11 +57,12 @@ local show_bio_text_at_idx = function(idx)
 	else
 		text_anim_data.start_y = bio_text_widget.offset[2]
 		text_anim_data.end_y = vert_spacing * (idx + 1) - bg_y_pad - 10 -- -10 due to a gap in the material
+		text_anim_data.text = bio_btn_widgets[idx].content.bio_txt or missing_text
 
-		local bio_data = bio_btn_widgets[idx].content.bio_data
-		text_anim_data.text = bio_data and (Localize(bio_data.description) .. (bio_data.story_snippet and ("\n\n" .. Localize(bio_data.story_snippet)) or "")) or missing_text
-
-		text_height = 3 * bg_y_pad + UIRenderer.text_height(Managers.ui:ui_constant_elements():ui_renderer(), text_anim_data.text, text_style.font_type, text_style.font_size, { bio_entry_size[1] - 2 * bg_x_pad, 2000 }, UIFonts.get_font_options_by_style(text_style))
+		text_height = 3 * bg_y_pad +
+			UIRenderer.text_height(Managers.ui:ui_constant_elements():ui_renderer(), text_anim_data.text,
+				text_style.font_type, text_style.font_size, { bio_entry_size[1] - 2 * bg_x_pad, 2000 },
+				UIFonts.get_font_options_by_style(text_style))
 		text_anim_data.end_height = text_height - bg_y_pad
 	end
 
@@ -73,7 +74,9 @@ local show_bio_text_at_idx = function(idx)
 	end
 
 	if inv_view then
-		live_accordion_anim = inv_view:_start_animation(text_anim_data.start_height == 0 and "bio_accordion_open" or "bio_accordion", bio_btn_widgets, bio_text_widget)
+		live_accordion_anim = inv_view:_start_animation(
+			text_anim_data.start_height == 0 and "bio_accordion_open" or "bio_accordion", bio_btn_widgets,
+			bio_text_widget)
 	else
 		for btn_idx = 1, #bio_btn_widgets do
 			local widget = bio_btn_widgets[btn_idx]
@@ -89,7 +92,6 @@ local show_bio_text_at_idx = function(idx)
 		bio_text_widget.visible = anim_data.end_height > 0
 	end
 end
-
 
 -- Add scenegraph definitions, blueprints
 
@@ -115,8 +117,10 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_content_bluepri
 			local content = widget.content
 			local bio_data = element.bio_data
 			content.text = element.bio_title .. (bio_data and (" - " .. Localize(bio_data.display_name)) or "")
-			content.bio_data = bio_data
 			content.bio_idx = element.bio_idx
+			content.bio_txt = element.bio_txt or
+				(bio_data and (Localize(bio_data.description) .. (bio_data.story_snippet and ("\n\n" .. Localize(bio_data.story_snippet)) or ""))) or
+				missing_text
 
 			local start_y = vert_spacing * element.bio_idx
 			widget.accordion_anim_data = {
@@ -199,13 +203,111 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_content_bluepri
 	}
 end)
 
-
 -- Add Bio tab to inventory view and populate it with info
+
+local get_crime = function(key)
+	return Crimes[CrimesCompabilityMap[key] or key]
+end
+
+local get_personality = function(personality_key, voice_fallback)
+	local personality = Personalities[personality_key]
+	if personality then
+		return personality
+	end
+
+	-- FS changed the keys, but (at the time of writing) there is no compat for old keys
+	for _, p in pairs(Personalities) do
+		if p.character_voice == voice_fallback then
+			return p
+		end
+	end
+
+	return nil
+end
 
 mod:hook_safe(CLASS.InventoryBackgroundView, "_setup_top_panel", function(self, ...)
 	local player = self._preview_player
 	local profile = player:profile()
+	local archetype = profile.archetype
+	local archetype_name = archetype.name
+	local is_ogryn = archetype_name == "ogryn"
+	local is_adamant = archetype_name == "adamant"
 	local backstory = profile.lore and profile.lore.backstory
+
+	local planet_data = backstory.planet and HomePlanets[backstory.planet]
+	local childhood_data = backstory.childhood and Childhood[backstory.childhood]
+	local growing_up_data = backstory.growing_up and GrowingUp[backstory.growing_up]
+	local formative_event_data = backstory.formative_event and FormativeEvent[backstory.formative_event]
+	local crime_data = backstory.crime and get_crime(backstory.crime)
+	local personality_data = backstory.personality and get_personality(backstory.personality, profile.selected_voice)
+
+	local bio_tuples = {
+		{
+			bio_key = "archetype",
+			bio_txt = Localize(profile.archetype.archetype_description),
+		},
+		{
+			bio_key = "home_planet",
+			bio_data = planet_data,
+		},
+		{
+			bio_key = "childhood",
+			bio_data = childhood_data,
+		},
+		{
+			bio_key = "growing_up",
+			bio_data = growing_up_data,
+		},
+		{
+			bio_key = "formative_event",
+			bio_data = formative_event_data,
+		},
+		{
+			bio_key = "crime",
+			bio_data = crime_data,
+		},
+		{
+			bio_key = "personality",
+			bio_data = personality_data,
+		},
+		{
+			bio_key = "summary",
+			bio_txt = string.format("%s %s %s %s\n\n%s",
+				Localize(planet_data.story_snippet),
+				Localize(childhood_data.story_snippet),
+				Localize(growing_up_data.story_snippet),
+				Localize(formative_event_data.story_snippet),
+				Localize(crime_data.story_snippet)
+			)
+		}
+	}
+
+	-- transform the data, just so that the above array is less annoying to edit
+	local num_layouts = 1
+	local layout_data = {}
+	for i = 1, #bio_tuples do
+		local tuple = bio_tuples[i]
+		if mod:get(tuple.bio_key) then
+			local choice = mod.bio_choices[tuple.bio_key]
+			local bio_entry = {
+				scenegraph_id = "bio_entry",
+				widget_type = "bio_button",
+				bio_idx = num_layouts,
+				bio_title = is_adamant and choice.loc_adamant or choice.loc,
+				bio_data = tuple.bio_data,
+				bio_txt = tuple.bio_txt,
+			}
+			if tuple.bio_key == "archetype" then
+				bio_entry.bio_title = profile.name .. " - " .. Localize(profile.archetype.archetype_name)
+			end
+			layout_data[num_layouts] = bio_entry
+			num_layouts = num_layouts + 1
+		end
+	end
+	layout_data[num_layouts] = {
+		scenegraph_id = "bio_entry",
+		widget_type = "bio_text",
+	}
 
 	local bio_tab = {
 		display_name = mod:localize("bio_tab_name"),
@@ -222,96 +324,20 @@ mod:hook_safe(CLASS.InventoryBackgroundView, "_setup_top_panel", function(self, 
 					ui_animation = "bio_on_enter",
 					camera_settings = {
 						{
-							"event_inventory_set_camera_position_axis_offset",
-							"x",
-							0.2,
-							0.5,
-							math.easeCubic,
+							"event_inventory_set_target_camera_offset",
+							0.4, -- +right -left
+							1.5, -- +in -out
+							is_ogryn and 0.4 or 0.3, -- +up -down
 						},
 						{
-							"event_inventory_set_camera_position_axis_offset",
-							"y",
-							0,
-							0.5,
-							math.easeCubic,
+							"event_inventory_set_target_camera_rotation",
+							false,
 						},
 						{
-							"event_inventory_set_camera_position_axis_offset",
-							"z",
-							0,
-							0.5,
-							math.easeCubic,
-						},
-						{
-							"event_inventory_set_camera_rotation_axis_offset",
-							"x",
-							0,
-							0.5,
-							math.easeCubic,
-						},
-						{
-							"event_inventory_set_camera_rotation_axis_offset",
-							"y",
-							0,
-							0.5,
-							math.easeCubic,
-						},
-						{
-							"event_inventory_set_camera_rotation_axis_offset",
-							"z",
-							0,
-							0.5,
-							math.easeCubic,
+							"event_inventory_set_camera_default_focus",
 						},
 					},
-					layout = {
-						{
-							scenegraph_id = "bio_entry",
-							widget_type = "bio_button",
-							bio_title = Localize("loc_character_birthplace_planet_title_name"),
-							bio_data = backstory.planet and HomePlanets[backstory.planet],
-							bio_idx = 1,
-						},
-						{
-							scenegraph_id = "bio_entry",
-							widget_type = "bio_button",
-							bio_title = Localize("loc_character_childhood_title_name"),
-							bio_data = backstory.childhood and Childhood[backstory.childhood],
-							bio_idx = 2,
-						},
-						{
-							scenegraph_id = "bio_entry",
-							widget_type = "bio_button",
-							bio_title = Localize("loc_character_growing_up_title_name"),
-							bio_data = backstory.growing_up and GrowingUp[backstory.growing_up],
-							bio_idx = 3,
-						},
-						{
-							scenegraph_id = "bio_entry",
-							widget_type = "bio_button",
-							bio_title = Localize("loc_character_event_title_name"),
-							bio_data = backstory.formative_event and FormativeEvent[backstory.formative_event],
-							bio_idx = 4,
-						},
-						{
-							scenegraph_id = "bio_entry",
-							widget_type = "bio_button",
-							bio_title = Localize("loc_character_create_title_crime"),
-							bio_data = backstory.crime and Crimes[backstory.crime],
-							bio_idx = 5,
-						},
-						{
-							scenegraph_id = "bio_entry",
-							widget_type = "bio_button",
-							bio_title = Localize("loc_character_create_title_personality"),
-							bio_data = backstory.personality and Personalities[backstory.personality],
-							bio_idx = 6,
-						},
-						{
-							scenegraph_id = "bio_entry",
-							widget_type = "bio_text",
-						},
-					},
+					layout = layout_data,
 				},
 			},
 		},
@@ -328,7 +354,6 @@ mod:hook_safe(CLASS.InventoryBackgroundView, "_setup_top_panel", function(self, 
 
 	self._top_panel:add_entry(bio_tab.display_name, cb, optional_update_function)
 end)
-
 
 -- Animations
 
