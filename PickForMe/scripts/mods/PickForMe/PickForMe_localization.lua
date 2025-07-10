@@ -8,7 +8,7 @@ mod.slot_data = {
 	},
 	secondary = {
 		slot = "slot_secondary",
-		loc = "loc_inventory_title_slot_primary",
+		loc = "loc_inventory_title_slot_secondary",
 		default = true,
 	},
 	curios = {
