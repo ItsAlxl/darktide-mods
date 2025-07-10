@@ -1,5 +1,16 @@
 local mod = get_mod("Walk")
 
+local walk_speeds = {}
+for k, _ in pairs(mod.archetypes) do
+	walk_speeds[#walk_speeds + 1] = {
+		setting_id      = k,
+		type            = "numeric",
+		default_value   = 0.5,
+		range           = { 0.0, 1.0 },
+		decimals_number = 2,
+	}
+end
+
 return {
 	name = "Walk",
 	description = mod:localize("mod_description"),
@@ -25,17 +36,15 @@ return {
 				function_name   = "held_walk",
 			},
 			{
-				setting_id      = "walk_speed",
-				type            = "numeric",
-				default_value   = 0.5,
-				range           = { 0.0, 1.0 },
-				decimals_number = 2,
-			},
-			{
 				setting_id    = "sprint_cancels",
 				type          = "checkbox",
 				default_value = true,
 			},
+			{
+				setting_id  = "walk_speed",
+				type        = "group",
+				sub_widgets = walk_speeds
+			}
 		}
 	}
 }
