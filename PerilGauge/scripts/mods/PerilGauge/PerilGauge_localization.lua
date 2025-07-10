@@ -256,24 +256,26 @@ return {
 	group_vanilla_text = {
 		en = "Base Game Peril Percentage",
 		ru = "Базовый процент опасности игры",
+		["zh-cn"] = "游戏原版危机值百分比",
 	},
 	override_color = {
 		en = "Override Color",
-		["zh-cn"] = "覆盖原版危机值文本颜色",
+		["zh-cn"] = "覆盖颜色",
 		ru = "Заменить стандартный цвет",
 	},
 	override_alpha = {
 		en = "Override Visibility",
-		["zh-cn"] = "覆盖原版危机值文本可见度",
+		["zh-cn"] = "覆盖可见度",
 		ru = "Заменить стандартную видимость",
 	},
 	override_text = {
 		en = "Override Text",
-		["zh-cn"] = "覆盖原版危机值百分比文本",
+		["zh-cn"] = "覆盖文本",
 		ru = "Заменить стандартный текст",
 	},
 	alpha_mult = {
 		en = "Opacity",
 		ru = "Прозрачность",
+		["zh-cn"] = "不透明度",
 	},
 }
