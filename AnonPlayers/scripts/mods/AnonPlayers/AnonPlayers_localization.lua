@@ -9,7 +9,6 @@ return {
 	},
 	mask_other = {
 		en = "???",
-		["zh-cn"] = "???",
 	},
 	anon_others = {
 		en = "Other Players",
