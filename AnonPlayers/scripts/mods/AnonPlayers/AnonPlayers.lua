@@ -6,15 +6,15 @@ local _is_my_profile = function(profile)
 	return profile == Managers.player:local_player(1)._profile
 end
 
-local get_personality = function(key)
-	local personality = Personalities[key]
+local get_personality = function(personality_key, voice_fallback)
+	local personality = Personalities[personality_key]
 	if personality then
 		return personality
 	end
 
 	-- FS changed the keys, but (at the time of writing) there is no compat for old keys
 	for _, p in pairs(Personalities) do
-		if string.find(p.display_name, key) then
+		if p.character_voice == voice_fallback then
 			return p
 		end
 	end
@@ -39,7 +39,7 @@ mod.anonymize = function(profile, real_name, is_account)
 		return mod:localize(is_me and "mask_me" or "mask_other")
 	elseif anon_mode == 2 then
 		local personality_key = table.nested_get(profile, "lore", "backstory", "personality")
-		local personality = personality_key and get_personality(personality_key)
+		local personality = personality_key and get_personality(personality_key, profile.selected_voice)
 		if not personality then
 			mod:warning("can't find personality: %s", personality_key)
 			return mod:localize(is_me and "mask_me" or "mask_other")
