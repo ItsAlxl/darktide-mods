@@ -45,6 +45,10 @@ mod.slot_data = {
 		slot = "slot_animation_end_of_round",
 		loc = "loc_inventory_title_slot_animation_end_of_round",
 	},
+	dog = {
+		slot = "slot_companion_gear_full",
+		loc = "loc_inventory_title_slot_companion_gear_full",
+	},
 }
 mod.arg_order = {
 	"primary",
@@ -61,6 +65,7 @@ mod.arg_order = {
 	"insignia",
 	"portrait",
 	"pose",
+	"dog",
 	"cosmetics",
 	"all",
 }

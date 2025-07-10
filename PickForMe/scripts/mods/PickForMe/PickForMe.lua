@@ -167,6 +167,7 @@ mod:command("pickforme", mod:localize("cmd_desc"), function(...)
 			add_to_slot_filter(slot_filter, "frame")
 			add_to_slot_filter(slot_filter, "insignia")
 			add_to_slot_filter(slot_filter, "pose")
+			add_to_slot_filter(slot_filter, "dog")
 		else
 			if table.contains(args, "gear") then
 				add_to_slot_filter(slot_filter, "primary")
@@ -191,6 +192,7 @@ mod:command("pickforme", mod:localize("cmd_desc"), function(...)
 				add_to_slot_filter(slot_filter, "frame")
 				add_to_slot_filter(slot_filter, "insignia")
 				add_to_slot_filter(slot_filter, "pose")
+				add_to_slot_filter(slot_filter, "dog")
 			else
 				if table.contains(args, "clothes") then
 					add_to_slot_filter(slot_filter, "hat")
@@ -213,6 +215,7 @@ mod:command("pickforme", mod:localize("cmd_desc"), function(...)
 				end
 
 				add_to_slot_filter_from_args(slot_filter, args, "pose")
+				add_to_slot_filter_from_args(slot_filter, args, "dog")
 			end
 		end
 	end
