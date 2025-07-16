@@ -209,9 +209,11 @@ mod:command("pickforme", mod:localize("cmd_desc"), function(...)
 				if table.contains(args, "portrait") then
 					add_to_slot_filter(slot_filter, "frame")
 					add_to_slot_filter(slot_filter, "insignia")
+					add_to_slot_filter(slot_filter, "title")
 				else
 					add_to_slot_filter_from_args(slot_filter, args, "frame")
 					add_to_slot_filter_from_args(slot_filter, args, "insignia")
+					add_to_slot_filter_from_args(slot_filter, args, "title")
 				end
 
 				add_to_slot_filter_from_args(slot_filter, args, "pose")

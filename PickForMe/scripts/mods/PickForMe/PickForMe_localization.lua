@@ -8,7 +8,7 @@ mod.slot_data = {
 	},
 	secondary = {
 		slot = "slot_secondary",
-		loc = "loc_inventory_title_slot_secondary",
+		loc = "loc_inventory_title_slot_primary",
 		default = true,
 	},
 	curios = {
@@ -32,6 +32,10 @@ mod.slot_data = {
 	back = {
 		slot = "slot_gear_extra_cosmetic",
 		loc = "loc_inventory_title_slot_gear_extra_cosmetic",
+	},
+	title = {
+		slot = "slot_character_title",
+		loc = "loc_inventory_title_slot_character_title",
 	},
 	frame = {
 		slot = "slot_portrait_frame",
@@ -61,6 +65,7 @@ mod.arg_order = {
 	"pants",
 	"back",
 	"clothes",
+	"title",
 	"frame",
 	"insignia",
 	"portrait",
