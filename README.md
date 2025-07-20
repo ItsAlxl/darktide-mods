@@ -118,6 +118,11 @@ Shows mission details in the loading screen.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/387).
 
+## MissionGrid
+Organizes the mission board into a grid and groups them by modifier.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/570).
+
 ## NoNews
 Removes the news bulletin from character select.
 
@@ -188,6 +193,11 @@ Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/57).
 Changes 'Toggle Sprint' to only toggle on, i.e. pressing the sprint key while sprinting doesn't stop sprinting.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/62).
+
+## StoryReplay
+Replay story missions (with matchmaking).
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/571).
 
 ## TagKeys
 Bind the tagging wheel options to individual keys.
