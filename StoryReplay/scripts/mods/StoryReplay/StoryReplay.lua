@@ -16,7 +16,7 @@ mod:hook_safe(CLASS.MissionBoardView, "on_enter", function(self, ...)
 	toggle_widget_content.hotspot.pressed_callback = function()
 		show_story_only = not toggle_widget_content.checked
 		toggle_widget_content.checked = show_story_only
-		if mission_grid_mod then
+		if mission_grid_mod and mission_grid_mod.override_settings then
 			mission_grid_mod.override_settings( show_story_only and {
 				start_x = 0,
 				start_y = 5,
