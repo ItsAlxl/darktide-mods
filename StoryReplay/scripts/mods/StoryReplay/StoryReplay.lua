@@ -3,14 +3,29 @@ local mod = get_mod("StoryReplay")
 mod:io_dofile("StoryReplay/scripts/mods/StoryReplay/ViewDefinitions")
 
 local show_story_only = false
+local mission_grid_mod = nil
+
+mod.on_all_mods_loaded = function()
+	mission_grid_mod = get_mod("MissionGrid")
+end
 
 mod:hook_safe(CLASS.MissionBoardView, "on_enter", function(self, ...)
 	local toggle_widget_content = self._widgets_by_name.sr_story_toggle.content
-
 	toggle_widget_content.checked = show_story_only
+
 	toggle_widget_content.hotspot.pressed_callback = function()
 		show_story_only = not toggle_widget_content.checked
 		toggle_widget_content.checked = show_story_only
+		if mission_grid_mod then
+			mission_grid_mod.override_settings( show_story_only and {
+				start_x = 0,
+				start_y = 5,
+				spacing_x = 20,
+				spacing_y = 20,
+				max_columns = 6,
+				icon_scale = 1.0,
+			} or nil)
+		end
 		self:_open_current_page()
 	end
 end)
