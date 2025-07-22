@@ -1,41 +1,47 @@
 local mod = get_mod("BetterMelk")
 
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 
 local CONTRACTS_TEXT_OFFSET = { 20, 10, 100 }
 
-local contracts_text_style = table.clone(UIFontSettings.body_small)
-contracts_text_style.text_horizontal_alignment = "right"
-contracts_text_style.text_vertical_alignment = "top"
-contracts_text_style.horizontal_alignment = "right"
-contracts_text_style.vertical_alignment = "top"
-contracts_text_style.size = { 150, 20 }
-contracts_text_style.offset = CONTRACTS_TEXT_OFFSET
-contracts_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
-contracts_text_style.default_color = Color.terminal_text_body_sub_header(255, true)
-contracts_text_style.hover_color = Color.terminal_text_header(255, true)
-contracts_text_style.visible = false
-
-local _text_color_change = function(content, style)
-	local math_max = math.max
-	local hotspot = content.hotspot
-	local default_color = hotspot.disabled and style.disabled_color or style.default_color
-	local hover_color = style.hover_color
-	local text_color = style.text_color
-	local progress = math_max(math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math_max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-	ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-end
-
 mod:hook_require("scripts/ui/pass_templates/character_select_pass_templates", function(CharacterSelectPassTemplates)
-	table.insert(CharacterSelectPassTemplates.character_select, {
+	local character_select = CharacterSelectPassTemplates.character_select
+
+	local get_pass_by_style_id = function(id)
+		for i = 1, #character_select do
+			local pass = character_select[i]
+			if pass.style_id == id then
+				return pass
+			end
+		end
+		return nil
+	end
+
+	local character_archetype_title_pass = get_pass_by_style_id("character_archetype_title")
+	local contracts_text_style
+	if character_archetype_title_pass then
+		contracts_text_style = table.clone(character_archetype_title_pass.style)
+	else
+		contracts_text_style = table.clone(UIFontSettings.body_small)
+		contracts_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+		contracts_text_style.default_color = Color.terminal_text_body_sub_header(255, true)
+		contracts_text_style.hover_color = Color.terminal_text_header(255, true)
+	end
+	contracts_text_style.text_horizontal_alignment = "right"
+	contracts_text_style.text_vertical_alignment = "top"
+	contracts_text_style.horizontal_alignment = "right"
+	contracts_text_style.vertical_alignment = "top"
+	contracts_text_style.size = { 150, 20 }
+	contracts_text_style.offset = CONTRACTS_TEXT_OFFSET
+	contracts_text_style.visible = false
+
+	table.insert(character_select, {
 		value_id = "contracts_text",
 		style_id = "contracts_text",
 		pass_type = "text",
 		value = "---",
 		style = contracts_text_style,
-		change_function = _text_color_change
+		change_function = character_archetype_title_pass and character_archetype_title_pass.change_function
 	})
 end)
 

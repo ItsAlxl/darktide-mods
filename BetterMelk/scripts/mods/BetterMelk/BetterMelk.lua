@@ -72,7 +72,10 @@ end
 mod.refresh_all_style = function()
 	for _, widget in pairs(profile_to_widget) do
 		for style_id, style in pairs(Style.get_style_update()) do
-			table.merge_recursive(widget.style[style_id], style)
+			local target = widget.style[style_id]
+			if target then
+				table.merge_recursive(target, style)
+			end
 		end
 	end
 end
