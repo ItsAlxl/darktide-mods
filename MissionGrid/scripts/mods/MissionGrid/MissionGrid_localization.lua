@@ -40,7 +40,7 @@ return {
 	},
 	group_large = {
 		-- not sure what to call this, as it's currently unused
-		en = "Special",
+		en = "Large Mission",
 	},
 	generic_x = {
 		en = "Horizontal Position",

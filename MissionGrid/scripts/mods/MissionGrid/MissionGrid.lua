@@ -124,8 +124,8 @@ local sort_missions = function(view)
 	-- if we've already sorted these, don't do it again
 	local missions = view._filtered_missions
 	local sort_is_dirty = false
-	for id, _ in pairs(missions) do
-		if mission_to_slot[id] == nil then
+	for id, m in pairs(missions) do
+		if m.category ~= "maelstrom" and mission_to_slot[id] == nil then
 			sort_is_dirty = true
 			break
 		end
@@ -158,6 +158,12 @@ local sort_missions = function(view)
 		elseif a_is_story then
 			-- if they're both story missions, put them in story order
 			return mb_campaign_order(mb_logic, a.map, a.category) < mb_campaign_order(mb_logic, b.map, b.category)
+		end
+
+		local b_is_event = b.category == "event"
+		if (a.category == "event") ~= b_is_event then
+			-- put event missions last
+			return b_is_event
 		end
 
 		-- group modifiers together; no modifier goes first
