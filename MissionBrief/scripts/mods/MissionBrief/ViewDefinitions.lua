@@ -8,8 +8,8 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 
 local background_color = Color.black(255, true)
 local background_padding = 100
-local size_panel = {nil, 400}
-local size_info = {nil, 150}
+local size_panel = { nil, 400 }
+local size_info = { nil, 150 }
 
 mod.update_sizes = function(width)
 	size_panel[1] = width
@@ -23,8 +23,9 @@ end
 mod.update_bg_color(mod:get("panel_alpha") or 255)
 
 mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definitions", function(view_defs)
-	view_defs.scenegraph_definition.screen = UIWorkspaceSettings.screen
-	view_defs.scenegraph_definition.left_panel = {
+	local scenegraph = view_defs.scenegraph_definition
+	scenegraph.screen = UIWorkspaceSettings.screen
+	scenegraph.left_panel = {
 		parent = "screen",
 		horizontal_alignment = "left",
 		vertical_alignment = "top",
@@ -35,7 +36,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			0,
 		},
 	}
-	view_defs.scenegraph_definition.mission_info_panel = {
+	scenegraph.mission_info_panel = {
 		parent = "left_panel",
 		horizontal_alignment = "left",
 		vertical_alignment = "top",
@@ -46,7 +47,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			1,
 		},
 	}
-	view_defs.scenegraph_definition.difficulty_panel = {
+	scenegraph.difficulty_panel = {
 		parent = "left_panel",
 		horizontal_alignment = "left",
 		vertical_alignment = "top",
@@ -57,7 +58,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			1,
 		},
 	}
-	view_defs.scenegraph_definition.circumstance_info_panel = {
+	scenegraph.circumstance_info_panel = {
 		parent = "left_panel",
 		horizontal_alignment = "left",
 		vertical_alignment = "top",
@@ -68,7 +69,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			1,
 		},
 	}
-	view_defs.scenegraph_definition.right_panel = {
+	scenegraph.right_panel = {
 		parent = "screen",
 		horizontal_alignment = "right",
 		vertical_alignment = "top",
@@ -79,7 +80,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			0,
 		},
 	}
-	view_defs.scenegraph_definition.npc_info_panel = {
+	scenegraph.npc_info_panel = {
 		parent = "right_panel",
 		horizontal_alignment = "right",
 		vertical_alignment = "top",
@@ -90,7 +91,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			1,
 		},
 	}
-	view_defs.scenegraph_definition.zone_info_panel = {
+	scenegraph.zone_info_panel = {
 		parent = "right_panel",
 		horizontal_alignment = "right",
 		vertical_alignment = "top",
@@ -102,7 +103,8 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		},
 	}
 
-	view_defs.widget_definitions.mb_left_background = UIWidget.create_definition({
+	local widget = view_defs.widget_definitions
+	widget.mb_left_background = UIWidget.create_definition({
 		{
 			pass_type = "texture_uv",
 			style_id = "fade",
@@ -131,7 +133,8 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			},
 		}
 	}, "left_panel")
-	view_defs.widget_definitions.danger_info = UIWidget.create_definition({
+
+	widget.danger_info = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			value_id = "difficulty_name",
@@ -198,7 +201,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		},
 	}, "difficulty_panel", nil, nil, TacOverlaySettings.styles.difficulty)
 
-	view_defs.widget_definitions.mission_info = UIWidget.create_definition({
+	widget.mission_info = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/icons/generic/danger",
@@ -276,7 +279,8 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			},
 		},
 	}, "mission_info_panel")
-	view_defs.widget_definitions.circumstance_info = UIWidget.create_definition({
+
+	widget.circumstance_info = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			style_id = "icon",
@@ -346,7 +350,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		},
 	}, "circumstance_info_panel")
 
-	view_defs.widget_definitions.mb_right_background = UIWidget.create_definition({
+	widget.mb_right_background = UIWidget.create_definition({
 		{
 			pass_type = "texture_uv",
 			style_id = "fade",
@@ -376,7 +380,6 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		}
 	}, "right_panel")
 
-
 	local portrait_size = HudElementMissionSpeakerPopupSettings.portrait_size
 	local name_text_style = table.clone(UIFontSettings.hud_body)
 	name_text_style.horizontal_alignment = "right"
@@ -395,7 +398,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 	name_text_style.drop_shadow = true
 	name_text_style.font_size = 24
 
-	view_defs.widget_definitions.npc_card = UIWidget.create_definition({
+	widget.npc_card = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			style_id = "portrait",
@@ -448,7 +451,8 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			style = name_text_style,
 		}
 	}, "npc_info_panel")
-	view_defs.widget_definitions.zone_info = UIWidget.create_definition({
+
+	widget.zone_info = UIWidget.create_definition({
 		{
 			pass_type = "text",
 			value_id = "zone_coords",
@@ -488,4 +492,144 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			},
 		},
 	}, "zone_info_panel")
+
+	widget.havoc_rank_info = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			value = "content/ui/materials/icons/generic/havoc",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				color = {
+					255,
+					169,
+					191,
+					153,
+				},
+				offset = {
+					5,
+					5,
+					2,
+				},
+				size = {
+					50,
+					50,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			value_id = "havoc_rank",
+			style = {
+				font_size = 34,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "center",
+				offset = {
+					75,
+					10,
+					2,
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153,
+				},
+			},
+		},
+	}, "difficulty_panel")
+
+	local _havoc_circumstance_icon = function(idx)
+		return {
+			pass_type = "texture",
+			style_id = "icon_0" .. idx,
+			value_id = "icon_0" .. idx,
+			value = "content/ui/materials/icons/generic/danger",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				color = Color.golden_rod(255, true),
+				offset = {
+					10,
+					0,
+					2,
+				},
+				size = {
+					40,
+					40,
+				},
+			},
+		}
+	end
+
+	local _havoc_circumstance_name = function(idx)
+		return {
+			pass_type = "text",
+			style_id = "circumstance_name_0" .. idx,
+			value_id = "circumstance_name_0" .. idx,
+			style = {
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "center",
+				vertical_alignment = "top",
+				offset = {
+					60,
+					0,
+					10,
+				},
+				size = {
+					nil,
+					40,
+				},
+				text_color = Color.golden_rod(255, true),
+			},
+		}
+	end
+
+	local _havoc_circumstance_desc = function(idx)
+		return {
+			pass_type = "text",
+			style_id = "circumstance_description_0" .. idx,
+			value_id = "circumstance_description_0" .. idx,
+			style = {
+				font_size = 20,
+				horizontal_alignment = "left",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				vertical_alignment = "top",
+				offset = {
+					65,
+					40,
+					10,
+				},
+				size = {
+					nil,
+					25,
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153,
+				},
+			},
+		}
+	end
+
+	widget.havoc_circumstance_info = UIWidget.create_definition({
+		_havoc_circumstance_icon(1),
+		_havoc_circumstance_icon(2),
+		_havoc_circumstance_icon(3),
+		_havoc_circumstance_icon(4),
+		_havoc_circumstance_name(1),
+		_havoc_circumstance_name(2),
+		_havoc_circumstance_name(3),
+		_havoc_circumstance_name(4),
+		_havoc_circumstance_desc(1),
+		_havoc_circumstance_desc(2),
+		_havoc_circumstance_desc(3),
+		_havoc_circumstance_desc(4),
+	}, "circumstance_info_panel")
 end)
