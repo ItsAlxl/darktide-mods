@@ -52,6 +52,10 @@ local include_melee_specials = mod:get("include_melee_specials")
 local include_gauntlets = mod:get("include_gauntlets")
 local include_ranged_specials = mod:get("include_ranged_specials")
 
+local burst_count = 0
+local burst_mode = false
+local burst_length = mod:get("burst_length")
+
 local _is_interrupted = function()
     for action, t in pairs(disable_actions) do
         if (not as_modifier or action ~= current_action) and t.active and t.enabled then
@@ -121,6 +125,8 @@ mod.on_setting_changed = function(id)
         disable_actions.weapon_reload_hold.enabled = mod:get(id)
     elseif id == "disable_weapon_extra_hold" then
         disable_actions.weapon_extra_hold.enabled = mod:get(id)
+    elseif id == "burst_length" then
+        burst_length = mod:get(id)
     end
 end
 
@@ -165,13 +171,17 @@ local _is_valid_ranged_special = function(special_attack)
 end
 
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
-    if self._player == Managers.player:local_player(1) then
+    if self._player == Managers.player:local_player(1) then       
         local wep = self._weapons[slot_name].weapon_template
         local keywords = wep and wep.keywords
+        if (burst_mode and is_swinging) then
+            burst_count = 0
+            burst_mode = false
+            _set_autoswing(false)
+        end
         if keywords then
             local is_melee = keywords and table.contains(keywords, "melee")
-            local special_attack = wep.displayed_attacks and wep.displayed_attacks.special
-
+            local special_attack = wep.displayed_attacks and wep.displayed_attacks.special            
             if is_melee then
                 allow_primary = include_melee_primary
                 allow_special = special_attack and include_melee_specials and _is_valid_melee_special(special_attack)
@@ -189,12 +199,18 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
 end)
 
 mod._toggle_swinging = function(held)
+    burst_mode = false
     if held == false and held_interrupted then
         held_interrupted = false
         return
     end
-
     _set_autoswing(not is_swinging)
+end
+
+mod._init_burst_swinging = function()
+    burst_mode = true
+    burst_count = 0
+    _set_autoswing(true)
 end
 
 local _consume_action_request = function(act)
@@ -208,7 +224,9 @@ end
 local _input_action_hook = function(func, self, action_name)
     local val = func(self, action_name)
     local current_action_set = ACTION_SETS[current_action]
+
     if allow_swinging and is_swinging then
+
         if disable_actions[action_name] and disable_actions[action_name].enabled and (not as_modifier or action_name ~= "action_one_hold") then
             disable_actions[action_name].active = val
         end
@@ -231,17 +249,25 @@ local _input_action_hook = function(func, self, action_name)
         if not skip then
             if action_name == current_action then
                 holding_current_action = val
+
                 if as_modifier == val then
                     local request = _consume_action_request(action_name)
 
                     if swing_delay > 0 then
                         swing_delay = swing_delay - 1
-
+                        
                         if swing_delay == 0 then
                             _start_attack_request(current_action_set)
-                            swing_delay = SWING_DELAY_FRAMES
+                            swing_delay = SWING_DELAY_FRAMES                           
+                            if burst_mode then
+                                burst_count = burst_count + 1 
+                                if (burst_count >= burst_length) then
+                                    burst_count = 0  -- Reset burst count
+                                    _set_autoswing(false)  -- Stop after reaching burst length value
+                                end
+                            end
                         end
-                    end
+                    end                  
 
                     if release_delay > 0 then
                         release_delay = release_delay - 1
@@ -273,6 +299,7 @@ local _input_action_hook = function(func, self, action_name)
 
     return val
 end
+
 mod:hook(CLASS.InputService, "_get", _input_action_hook)
 mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
