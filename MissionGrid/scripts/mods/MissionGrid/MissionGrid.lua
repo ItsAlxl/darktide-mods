@@ -103,15 +103,7 @@ end
 
 mod:hook_require("scripts/ui/views/mission_board_view_pj/mission_board_view_themes", function(themes)
 	for _, theme in pairs(themes) do
-		-- create some extra slots (in case we need, like, a lot of missions displayed at once)
-		local theme_slots = theme.slots
-		local small_slots = theme_slots.small
-		local original_count = #small_slots
-		for i = original_count + 1, 25 do
-			small_slots[i] = table.clone(small_slots[i - original_count])
-		end
-
-		put_slots_in_grid(theme_slots)
+		put_slots_in_grid(theme.slots)
 	end
 end)
 
@@ -222,7 +214,7 @@ end)
 
 mod:hook(CLASS.MissionBoardView, "_create_mission_widget_from_mission",
 	function(func, self, mission, blueprint_name, ...)
-		if blueprint_name == "small_mission_definition" and mission.category ~= "maelstrom" then
+		if blueprint_name == "mission_tile" and mission.category ~= "maelstrom" then
 			return func(self, mission, blueprint_name, mission_to_slot[mission.id] or fallback_slot)
 		end
 		return func(self, mission, blueprint_name, ...)
