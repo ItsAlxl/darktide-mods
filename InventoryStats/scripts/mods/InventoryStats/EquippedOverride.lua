@@ -22,13 +22,10 @@ mod:hook_require("scripts/settings/buff/buff_templates", function(templates)
     local OVERRIDE_WIELD_BUFFS = {
         "weapon_trait_increase_stamina",
         "weapon_trait_ranged_increase_stamina",
-        "weapon_trait_ranged_common_wield_increase_stamina_regen_buff",
-        "weapon_trait_melee_common_wield_increase_crit_chance_buff",
         "weapon_trait_increase_crit_chance",
         "weapon_trait_increase_crit_damage",
         "weapon_trait_ranged_increase_crit_chance",
         "weapon_trait_ranged_increase_crit_damage",
-        "weapon_trait_ranged_common_wield_increase_crit_chance_buff",
         "weapon_trait_reduce_sprint_cost",
     }
     for _, buff in pairs(OVERRIDE_WIELD_BUFFS) do
