@@ -55,4 +55,10 @@ return {
 	ag_psyker_quickswap = {
 		en = _localize_class_action_en("loc_class_psyker_title", "loc_ingame_quick_wield"),
 	},
+	ag_adamant = {
+		en = Localize("loc_class_adamant_title"),
+	},
+	ag_adamant_quickswap = {
+		en = _localize_class_action_en("loc_class_adamant_title", "loc_ingame_quick_wield"),
+	},
 }

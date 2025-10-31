@@ -8,54 +8,30 @@ local dropdown_options = {
 	{ text = "after_secondary", value = "wield_2" },
 }
 
+local create_ag_dropdown = function(id, default)
+	return {
+		setting_id    = id,
+		type          = "dropdown",
+		default_value = default,
+		options       = table.clone(dropdown_options),
+	}
+end
+
 return {
 	name = mod:localize("mod_name"),
 	description = mod:localize("mod_description"),
 	is_togglable = true,
 	options = {
 		widgets = {
-			{
-				setting_id    = "ag_zealot",
-				type          = "dropdown",
-				default_value = "wield_1",
-				options       = table.clone(dropdown_options),
-			},
-			{
-				setting_id    = "ag_zealot_quickswap",
-				type          = "dropdown",
-				default_value = "PREVIOUS",
-				options       = table.clone(dropdown_options),
-			},
-			{
-				setting_id    = "ag_veteran",
-				type          = "dropdown",
-				default_value = "grenade_ability_pressed",
-				options       = table.clone(dropdown_options),
-			},
-			{
-				setting_id    = "ag_veteran_quickswap",
-				type          = "dropdown",
-				default_value = "PREVIOUS",
-				options       = table.clone(dropdown_options),
-			},
-			{
-				setting_id    = "ag_ogryn",
-				type          = "dropdown",
-				default_value = "PREVIOUS",
-				options       = table.clone(dropdown_options),
-			},
-			{
-				setting_id    = "ag_ogryn_quickswap",
-				type          = "dropdown",
-				default_value = "PREVIOUS",
-				options       = table.clone(dropdown_options),
-			},
-			{
-				setting_id    = "ag_psyker_quickswap",
-				type          = "dropdown",
-				default_value = "PREVIOUS",
-				options       = dropdown_options,
-			},
+			create_ag_dropdown("ag_zealot", "wield_1"),
+			create_ag_dropdown("ag_zealot_quickswap", "PREVIOUS"),
+			create_ag_dropdown("ag_veteran", "grenade_ability_pressed"),
+			create_ag_dropdown("ag_veteran_quickswap", "PREVIOUS"),
+			create_ag_dropdown("ag_ogryn", "PREVIOUS"),
+			create_ag_dropdown("ag_ogryn_quickswap", "PREVIOUS"),
+			create_ag_dropdown("ag_psyker_quickswap", "PREVIOUS"),
+			create_ag_dropdown("ag_adamant", "grenade_ability_pressed"),
+			create_ag_dropdown("ag_adamant_quickswap", "PREVIOUS"),
 		}
 	}
 }
