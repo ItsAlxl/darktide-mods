@@ -9,14 +9,18 @@ local input_request = nil
 local _update_request_type = function()
 	if Managers and Managers.player then
 		local player = Managers.player:local_player_safe(1)
-		local profile = player:profile()
+		local profile = player and player:profile()
 		local archetype_name = profile and profile.archetype and profile.archetype.name
+		if archetype_name then
+			after_request_type = mod:get("ag_" .. archetype_name)
+			after_request_qs_type = mod:get("ag_" .. archetype_name .. "_quickswap")
 
-		after_request_type = mod:get("ag_" .. archetype_name)
-		after_request_qs_type = mod:get("ag_" .. archetype_name .. "_quickswap")
-
-		after_request_type = after_request_type ~= "" and after_request_type or nil
-		after_request_qs_type = after_request_qs_type ~= "" and after_request_qs_type or nil
+			after_request_type = after_request_type ~= "" and after_request_type or nil
+			after_request_qs_type = after_request_qs_type ~= "" and after_request_qs_type or nil
+		else
+			after_request_type = nil
+			after_request_qs_type = nil
+		end
 	end
 end
 
