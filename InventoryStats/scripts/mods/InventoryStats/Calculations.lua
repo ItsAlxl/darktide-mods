@@ -99,6 +99,6 @@ return {
         local toughness_melee_replenish_stat_buff = stat_buffs.toughness_melee_replenish or 1
         local total_toughness_replenish_stat_buff = stat_buffs.toughness_replenish_multiplier
         local stat_buff_multiplier = toughness_melee_replenish_stat_buff + total_toughness_replenish_stat_buff - 1
-        return max_toughness * tough_template.recovery_percentages.melee_kill * stat_buff_multiplier * modifier
+        return (max_toughness or 1) * tough_template.recovery_percentages.melee_kill * stat_buff_multiplier * modifier
     end
 }

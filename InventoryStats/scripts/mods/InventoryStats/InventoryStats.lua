@@ -312,7 +312,7 @@ mod:hook_safe(CLASS.InventoryView, "draw", function(self, dt, t, input_service, 
 end)
 
 local _refresh_from_background_view = function(bg_view)
-    mod.set_equipped_wep(bg_view._preview_profile_equipped_items[bg_view._preview_wield_slot_id])
+	mod.set_equipped_wep(bg_view._preview_profile_equipped_items[bg_view._preview_wield_slot_name])
 end
 
 mod:hook_safe(CLASS.InventoryBackgroundView, "_update_presentation_wield_item", function(self)
