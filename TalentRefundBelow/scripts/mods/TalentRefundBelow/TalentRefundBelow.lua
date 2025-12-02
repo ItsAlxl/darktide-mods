@@ -1,9 +1,6 @@
 local mod = get_mod("TalentRefundBelow")
 
 local removed_nodes = {}
-
-mod.DBG_remnodes = removed_nodes
-
 local click_checks = {}
 local currently_swapping = false
 local currently_removing = false
@@ -32,7 +29,7 @@ local _click_mode_passes = function(key, widget)
 end
 
 local _node_has_points = function(tree, node)
-    return (tree._points_spent_on_node_widgets[node.widget_name] or 0) > 0
+    return (tree._node_widget_tiers[node.widget_name] or 0) > 0
 end
 
 local _node_to_widget = function(tree, node)
@@ -65,9 +62,9 @@ local _is_deadend = function(tree, node)
 end
 
 local _find_deadend_node = function(tree)
-    for name, points in pairs(tree._points_spent_on_node_widgets) do
+    for name, tier in pairs(tree._node_widget_tiers) do
         local node = tree:_node_by_name(name)
-        if points > 0 and _is_deadend(tree, node) then
+        if tier > 0 and _is_deadend(tree, node) then
             return node
         end
     end
