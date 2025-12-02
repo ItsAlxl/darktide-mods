@@ -2,64 +2,25 @@ local mod = get_mod("MissionGrid")
 
 local slot_layout_dirty = false
 
-local resizers = mod:persistent_table("resizers")
-local overriden_settings
-
 local mission_to_slot = {}
 local fallback_slot
-
-local overridable_setting = function(key)
-	local over = overriden_settings and overriden_settings[key]
-	if over == nil then
-		return mod:get(key)
-	end
-	return over
-end
-
-local track_resize = function(key, size, scale)
-	local r = resizers[key]
-	if r then
-		r.scale = scale
-	else
-		resizers[key] = {
-			original = table.clone(size),
-			current = size,
-			scale = scale,
-		}
-	end
-end
-
-local scale_resize = function(scale)
-	scale = scale or overridable_setting("icon_scale")
-	for _, r in pairs(resizers) do
-		local r_scale = r.scale and (1 + r.scale * (scale - 1)) or scale
-		r.current[1] = r.original[1] * r_scale
-		r.current[2] = r.original[2] * r_scale
-	end
-end
-
-mod.override_settings = function(override)
-	overriden_settings = override
-	slot_layout_dirty = true
-	scale_resize()
-end
 
 local move_single_slot = function(theme_slots, category)
 	local slot = theme_slots[category] and theme_slots[category][1]
 	if slot then
 		slot.position = {
-			overridable_setting(category .. "_x") * 10,
-			overridable_setting(category .. "_y") * 10
+			mod:get(category .. "_x") * 10,
+			mod:get(category .. "_y") * 10
 		}
 	end
 end
 
 local put_slots_in_grid = function(theme_slots)
-	local start_x = overridable_setting("start_x") * 10
-	local spacing_x = overridable_setting("spacing_x") * 10
-	local start_y = overridable_setting("start_y") * 10
-	local spacing_y = overridable_setting("spacing_y") * 10
-	local max_columns = overridable_setting("max_columns")
+	local start_x = mod:get("start_x") * 10
+	local spacing_x = mod:get("spacing_x") * 10
+	local start_y = mod:get("start_y") * 10
+	local spacing_y = mod:get("spacing_y") * 10
+	local max_columns = mod:get("max_columns")
 
 	local column = 0
 	local row = 0
@@ -85,8 +46,8 @@ local put_slots_in_grid = function(theme_slots)
 		rotation = 0,
 		zoom = 1,
 		position = {
-			overridable_setting("maelstrom_x") * 10,
-			overridable_setting("maelstrom_y") * 10
+			mod:get("maelstrom_x") * 10,
+			mod:get("maelstrom_y") * 10
 		},
 	}
 	move_single_slot(theme_slots, "static")
@@ -94,14 +55,10 @@ local put_slots_in_grid = function(theme_slots)
 end
 
 mod.on_setting_changed = function(id)
-	if id == "icon_scale" then
-		scale_resize()
-	else
-		slot_layout_dirty = true
-	end
+	slot_layout_dirty = true
 end
 
-mod:hook_require("scripts/ui/views/mission_board_view_pj/mission_board_view_themes", function(themes)
+mod:hook_require("scripts/ui/views/mission_board_view/mission_board_view_themes", function(themes)
 	for _, theme in pairs(themes) do
 		put_slots_in_grid(theme.slots)
 	end
@@ -136,7 +93,7 @@ local sort_missions = function(view)
 
 		-- show missions that haven't quite started yet (h/t Aussiemon)
 		if m.start_game_time and now_t < m.start_game_time then
-			m.start_game_time = now_t - 1
+			m.start_game_time = now_t - 10
 		end
 	end
 
@@ -180,6 +137,7 @@ local sort_missions = function(view)
 
 	local small_slots = theme_slots.small
 	fallback_slot = small_slots[#small_slots]
+
 	for i = 1, #missions_array do
 		local id = missions_array[i].id
 		local slot = small_slots[i]
@@ -192,30 +150,12 @@ local sort_missions = function(view)
 	end
 end
 
-mod:hook_require("scripts/ui/views/mission_board_view_pj/mission_board_view_blueprints", function(Blueprints)
-	local small_def = Blueprints.small_mission_definition
-	track_resize("base", small_def.size)
-
-	local small_def_style = small_def.style
-	local track_style_size = function(style_id, scale)
-		track_resize(style_id, small_def_style[style_id].size, scale)
-	end
-	track_style_size("timer_background")
-	track_style_size("timer_bar")
-	track_style_size("circumstance_icon", 0.5)
-	track_style_size("main_objective_frame", 0.25)
-	track_style_size("main_objective_icon", 0.25)
-	track_style_size("side_objective_background", 0.25)
-	track_style_size("side_objective_frame", 0.25)
-	track_style_size("side_objective_icon", 0.25)
-
-	scale_resize()
-end)
-
 mod:hook(CLASS.MissionBoardView, "_create_mission_widget_from_mission",
 	function(func, self, mission, blueprint_name, ...)
 		if blueprint_name == "mission_tile" and mission.category ~= "maelstrom" then
-			return func(self, mission, blueprint_name, mission_to_slot[mission.id] or fallback_slot)
+			local widget = func(self, mission, blueprint_name, mission_to_slot[mission.id] or fallback_slot)
+			widget.scale = mod:get("icon_scale")
+			return widget
 		end
 		return func(self, mission, blueprint_name, ...)
 	end

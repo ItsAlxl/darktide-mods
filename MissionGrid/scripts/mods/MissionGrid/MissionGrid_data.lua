@@ -42,19 +42,19 @@ return {
 					{
 						setting_id = "start_y",
 						type = "numeric",
-						default_value = 5,
+						default_value = 4,
 						range = { -10, 100 },
 					},
 					{
 						setting_id = "spacing_x",
 						type = "numeric",
-						default_value = 20,
+						default_value = 17,
 						range = { 10, 60 },
 					},
 					{
 						setting_id = "spacing_y",
 						type = "numeric",
-						default_value = 20,
+						default_value = 17,
 						range = { 10, 60 },
 					},
 					{
