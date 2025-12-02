@@ -197,14 +197,37 @@ local _get_shooting_vector = function(player_extensions, weapon_extension)
 	local first_person_unit = first_person_extention:first_person_unit()
 	local shoot_rotation = Unit.world_rotation(first_person_unit, 1)
 	local movement_state_component = unit_data_extension:read_component("movement_state")
-	shoot_rotation = Recoil.apply_weapon_recoil_rotation(weapon_extension:recoil_template(), unit_data_extension:read_component("recoil"), movement_state_component, shoot_rotation)
-	shoot_rotation = Sway.apply_sway_rotation(weapon_extension:sway_template(), unit_data_extension:read_component("sway"), movement_state_component, shoot_rotation)
+	local locomotion_component = unit_data_extension:read_component("locomotion")
+	local inair_state_component = unit_data_extension:read_component("inair_state")
+
+	shoot_rotation = Recoil.apply_weapon_recoil_rotation(
+		weapon_extension:recoil_template(),
+		unit_data_extension:read_component("recoil"),
+		movement_state_component,
+		locomotion_component,
+		inair_state_component,
+		shoot_rotation
+	)
+
+	shoot_rotation = Sway.apply_sway_rotation(
+		weapon_extension:sway_template(),
+		unit_data_extension:read_component("sway"),
+		shoot_rotation
+	)
 
 	return Unit.world_position(first_person_unit, 1), Quaternion.forward(shoot_rotation)
 end
 
 local _crosshair_raycast = function(physics_world, shoot_position, shoot_direction)
-	return PhysicsWorld.raycast(physics_world, shoot_position, shoot_direction, MAX_DISTANCE, "all", "collision_filter", "filter_debug_unit_selector")
+	return PhysicsWorld.raycast(
+		physics_world,
+		shoot_position,
+		shoot_direction,
+		MAX_DISTANCE,
+		"all",
+		"collision_filter",
+		"filter_debug_unit_selector"
+	)
 end
 
 mod:hook_safe(CLASS.PlayerUnitFirstPersonExtension, "fixed_update", function(self, ...)
@@ -270,10 +293,13 @@ local _get_crosshair_position = function(dt, ui_renderer, pivot_position, prev_x
 		target_x = screen_aim_position.x - pivot_position[1]
 		target_y = screen_aim_position.y - pivot_position[2]
 	end
-	local ui_renderer_inverse_scale = ui_renderer.inverse_scale
+
+	local ui_inv_scale = ui_renderer.inverse_scale
 	local lerp_t = math.min(CROSSHAIR_POSITION_LERP_SPEED * dt, 1)
-	local x = (skip_lerp and target_x or math.lerp(prev_x * ui_renderer_scale, target_x, lerp_t)) * ui_renderer_inverse_scale
-	local y = (skip_lerp and target_y or math.lerp(prev_y * ui_renderer_scale, target_y, lerp_t)) * ui_renderer_inverse_scale
+	local x = (skip_lerp and target_x
+		or math.lerp(prev_x * ui_renderer_scale, target_x, lerp_t)) * ui_inv_scale
+	local y = (skip_lerp and target_y
+		or math.lerp(prev_y * ui_renderer_scale, target_y, lerp_t)) * ui_inv_scale
 
 	return x, y
 end
@@ -289,9 +315,25 @@ mod:hook_require("scripts/ui/utilities/crosshair", function(Crosshair)
 			crosshair_ui_hud = ui_hud
 		end
 
-		ghost_crosshair_x, ghost_crosshair_y = _get_crosshair_position(dt, ui_renderer, pivot_position, ghost_crosshair_x, ghost_crosshair_y, ghost_range, true)
-		local crosshair_x, crosshair_y = _get_crosshair_position(dt, ui_renderer, pivot_position, current_x, current_y, perform_repositioning and latest_range or MAX_DISTANCE, ghost_crosshair_visible and perform_repositioning and not latest_color_type)
-		return crosshair_x, crosshair_y
+		ghost_crosshair_x, ghost_crosshair_y = _get_crosshair_position(
+			dt,
+			ui_renderer,
+			pivot_position,
+			ghost_crosshair_x,
+			ghost_crosshair_y,
+			ghost_range,
+			true
+		)
+
+		return _get_crosshair_position(
+			dt,
+			ui_renderer,
+			pivot_position,
+			current_x,
+			current_y,
+			perform_repositioning and latest_range or MAX_DISTANCE,
+			ghost_crosshair_visible and perform_repositioning and not latest_color_type
+		)
 	end)
 end)
 
@@ -325,9 +367,11 @@ mod:hook_safe(CLASS.HudElementCrosshair, "update", function(self, dt, t, ui_rend
 				ColorUtilities.color_copy(color or base_def.style[part_name].color, style.color)
 			end
 
-			local ghost_style = ghost_crosshair_widget and ghost_crosshair_widget.style and ghost_crosshair_widget.style[part_name]
+			local ghost_style = ghost_crosshair_widget and ghost_crosshair_widget.style
+				and ghost_crosshair_widget.style[part_name]
 			if ghost_style then
-				ghost_style.color[1] = update_ghost_crosshair and not _is_hitmarker(part_name) and color_types.ghost[1] or 0
+				ghost_style.color[1] = update_ghost_crosshair and not _is_hitmarker(part_name) and color_types.ghost[1]
+					or 0
 				if update_ghost_crosshair then
 					ghost_style.angle = style.angle
 					ghost_style.size = style.size
@@ -349,13 +393,14 @@ mod:hook_safe(CLASS.HudElementCrosshair, "update", function(self, dt, t, ui_rend
 	end
 end)
 
-mod:hook_safe(CLASS.HudElementCrosshair, "_draw_widgets", function(self, dt, t, input_service, ui_renderer, render_settings)
-	if ghost_crosshair_widget then
-		local widget_offset = ghost_crosshair_widget.offset
-		widget_offset[1] = ghost_crosshair_x
-		widget_offset[2] = ghost_crosshair_y
-		widget_offset[3] = -10
+mod:hook_safe(CLASS.HudElementCrosshair, "_draw_widgets",
+	function(self, dt, t, input_service, ui_renderer, ...)
+		if ghost_crosshair_widget then
+			local widget_offset = ghost_crosshair_widget.offset
+			widget_offset[1] = ghost_crosshair_x
+			widget_offset[2] = ghost_crosshair_y
+			widget_offset[3] = -10
 
-		UIWidget.draw(ghost_crosshair_widget, ui_renderer)
-	end
-end)
+			UIWidget.draw(ghost_crosshair_widget, ui_renderer)
+		end
+	end)
