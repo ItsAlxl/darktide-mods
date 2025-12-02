@@ -14,6 +14,7 @@ mod.register_stimm("syringe_corruption_pocketable", { 0.15, 0.8, 0.1 }, 1)
 mod.register_stimm("syringe_speed_boost_pocketable", { 0.0, 0.25, 0.75 }, 2)
 mod.register_stimm("syringe_power_boost_pocketable", { 0.9, 0.2, 0.1 }, 3)
 mod.register_stimm("syringe_ability_boost_pocketable", { 0.9, 0.5, 0.05 }, 4)
+mod.register_stimm("syringe_broker_pocketable", { 0.9, 0.2, 0.1 }, 3)
 
 local _create_color_channel = function(channel_prefix, channel, default)
 	return {

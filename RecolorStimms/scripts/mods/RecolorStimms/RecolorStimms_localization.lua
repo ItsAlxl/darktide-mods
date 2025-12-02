@@ -29,17 +29,21 @@ local localization = {
 		en = "Blue",
 		["zh-cn"] = "蓝色",
 	},
+	syringe_corruption_pocketable = {
+		en = Localize("loc_pickup_pocketable_01")
+	},
+	syringe_power_boost_pocketable = {
+		en = Localize("loc_pickup_syringe_pocketable_03")
+	},
+	syringe_speed_boost_pocketable = {
+		en = Localize("loc_pickup_syringe_pocketable_04")
+	},
+	syringe_ability_boost_pocketable = {
+		en = Localize("loc_pickup_syringe_pocketable_02")
+	},
+	syringe_broker_pocketable = {
+		en = Localize("loc_talent_broker_stimm")
+	},
 }
-
-local _add_stimm_loc = function(path_to_settings)
-	local data = require(path_to_settings)
-	localization[data.name] = {
-		en = Localize(data.description)
-	}
-end
-_add_stimm_loc("scripts/settings/pickup/pickups/pocketable/syringe_ability_boost_pocketable_pickup")
-_add_stimm_loc("scripts/settings/pickup/pickups/pocketable/syringe_corruption_pocketable_pickup")
-_add_stimm_loc("scripts/settings/pickup/pickups/pocketable/syringe_power_boost_pocketable_pickup")
-_add_stimm_loc("scripts/settings/pickup/pickups/pocketable/syringe_speed_boost_pocketable_pickup")
 
 return localization
