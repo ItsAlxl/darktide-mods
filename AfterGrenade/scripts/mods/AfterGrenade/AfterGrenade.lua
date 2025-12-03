@@ -39,23 +39,34 @@ mod:hook(CLASS.InputService, "_get_simulate", _input_action_hook)
 
 mod:hook_safe(CLASS.ActionHandler, "start_action",
 	function(self, id, action_objects, action_name, action_params, action_settings, used_input, ...)
-		if after_request_type or after_request_qs_type then
-			local slot = self._inventory_component.wielded_slot
-			if action_name == "action_wield" then
-				if slot ~= "slot_grenade_ability" then
-					last_equipped_slot = slot
-				end
-			elseif slot == "slot_grenade_ability" then
-				input_request = nil
-				if used_input == "quick_wield" then
-					input_request = after_request_qs_type
-				elseif action_name == "action_unwield_to_previous" then
-					input_request = after_request_type
-				end
+		-- Quick check for early exit
+		if not after_request_type and not after_request_qs_type then
+			return
+		end
+		
+		local slot = self._inventory_component.wielded_slot
+		
+		-- Quick check for unrelated actions
+		if action_name ~= "action_wield" and 
+		   action_name ~= "action_unwield_to_previous" and
+		   slot ~= "slot_grenade_ability" then
+			return
+		end
+		
+		if action_name == "action_wield" then
+			if slot ~= "slot_grenade_ability" then
+				last_equipped_slot = slot
+			end
+		elseif slot == "slot_grenade_ability" then
+			input_request = nil
+			if used_input == "quick_wield" then
+				input_request = after_request_qs_type
+			elseif action_name == "action_unwield_to_previous" then
+				input_request = after_request_type
+			end
 
-				if input_request == "PREVIOUS" then
-					input_request = last_equipped_slot == "slot_secondary" and "wield_2" or "wield_1"
-				end
+			if input_request == "PREVIOUS" then
+				input_request = last_equipped_slot == "slot_secondary" and "wield_2" or "wield_1"
 			end
 		end
 	end)
@@ -67,7 +78,10 @@ mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, g
 end)
 
 mod.on_setting_changed = function(id)
-	_update_request_type()
+	-- Update only when changing the settings of this mod
+	if string.sub(id, 1, 3) == "ag_" then
+		_update_request_type()
+	end
 end
 
 _update_request_type()
