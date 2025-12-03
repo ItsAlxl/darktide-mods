@@ -1,19 +1,22 @@
 local mod = get_mod("AfterGrenade")
 
-local dropdown_options = {
-	{ text = "after_normal",    value = "" },
-	{ text = "after_keep",      value = "grenade_ability_pressed" },
-	{ text = "after_previous",  value = "PREVIOUS" },
-	{ text = "after_primary",   value = "wield_1" },
-	{ text = "after_secondary", value = "wield_2" },
-}
+-- Function for creating a copy of options without multiple table clones
+local create_dropdown_options = function()
+	return {
+		{ text = "after_normal",	value = "" },
+		{ text = "after_keep",		value = "grenade_ability_pressed" },
+		{ text = "after_previous",	value = "PREVIOUS" },
+		{ text = "after_primary",	value = "wield_1" },
+		{ text = "after_secondary", value = "wield_2" },
+	}
+end
 
 local create_ag_dropdown = function(id, default)
 	return {
-		setting_id    = id,
-		type          = "dropdown",
+		setting_id	  = id,
+		type		  = "dropdown",
 		default_value = default,
-		options       = table.clone(dropdown_options),
+		options		  = create_dropdown_options(),	-- Use a function instead of table.clone
 	}
 end
 
@@ -32,6 +35,8 @@ return {
 			create_ag_dropdown("ag_psyker_quickswap", "PREVIOUS"),
 			create_ag_dropdown("ag_adamant", "grenade_ability_pressed"),
 			create_ag_dropdown("ag_adamant_quickswap", "PREVIOUS"),
+			create_ag_dropdown("ag_broker", "PREVIOUS"),
+			create_ag_dropdown("ag_broker_quickswap", "PREVIOUS"),
 		}
 	}
 }
