@@ -1,5 +1,13 @@
 local mod = get_mod("TalentRefundBelow")
 
+local _create_click_options = function()
+	return {
+		{ text = "mode_never",  value = 0 },
+		{ text = "mode_single", value = 1 },
+		{ text = "mode_double", value = 2 },
+	}
+end
+
 return {
 	name = mod:localize("mod_name"),
 	description = mod:localize("mod_description"),
@@ -7,24 +15,16 @@ return {
 	options = {
 		widgets = {
 			{
-				setting_id = "mode_remove_below",
-				type = "dropdown",
-				default_value = 1,
-				options = {
-					{ text = "mode_never", value = 0 },
-					{ text = "mode_single", value = 1 },
-					{ text = "mode_double", value = 2 },
-				}
-			},
-			{
-				setting_id = "mode_exclusive_swap",
+				setting_id = "remove_dependents",
 				type = "dropdown",
 				default_value = 2,
-				options = {
-					{ text = "mode_never", value = 0 },
-					{ text = "mode_single", value = 1 },
-					{ text = "mode_double", value = 2 },
-				}
+				options = _create_click_options()
+			},
+			{
+				setting_id = "swap_exclusives",
+				type = "dropdown",
+				default_value = 2,
+				options = _create_click_options()
 			},
 			{
 				setting_id    = "swap_siblings",
