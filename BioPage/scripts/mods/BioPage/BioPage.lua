@@ -57,7 +57,7 @@ local show_bio_text_at_idx = function(idx)
 	else
 		text_anim_data.start_y = bio_text_widget.offset[2]
 		text_anim_data.end_y = vert_spacing * (idx + 1) - bg_y_pad - 10 -- -10 due to a gap in the material
-		text_anim_data.text = bio_btn_widgets[idx].content.bio_txt or missing_text
+		text_anim_data.text = bio_btn_widgets[idx].content.bio_text or missing_text
 
 		text_height = 3 * bg_y_pad +
 			UIRenderer.text_height(Managers.ui:ui_constant_elements():ui_renderer(), text_anim_data.text,
@@ -109,6 +109,15 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_definitions", f
 	}
 end)
 
+local is_bio_data_valid = function(bio_data)
+	return bio_data and bio_data.display_name and bio_data.description
+end
+
+local get_bio_data_text = function(bio_data)
+	return Localize(bio_data.description)
+		.. (bio_data.story_snippet and ("\n\n" .. Localize(bio_data.story_snippet)) or "")
+end
+
 mod:hook_require("scripts/ui/views/inventory_view/inventory_view_content_blueprints", function(blueprints)
 	blueprints.bio_button = {
 		size = bio_entry_size,
@@ -118,9 +127,7 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_content_bluepri
 			local bio_data = element.bio_data
 			content.text = element.bio_title .. (bio_data and (" - " .. Localize(bio_data.display_name)) or "")
 			content.bio_idx = element.bio_idx
-			content.bio_txt = element.bio_txt or
-				(bio_data and (Localize(bio_data.description) .. (bio_data.story_snippet and ("\n\n" .. Localize(bio_data.story_snippet)) or ""))) or
-				missing_text
+			content.bio_text = element.bio_text or get_bio_data_text(bio_data) or missing_text
 
 			local start_y = vert_spacing * element.bio_idx
 			widget.accordion_anim_data = {
@@ -225,13 +232,20 @@ local get_personality = function(personality_key, voice_fallback)
 	return nil
 end
 
+local append_narrative_text = function(bio_data, prepend)
+	local loc = bio_data.story_snippet
+	if loc then
+		return (prepend or "") .. Localize(loc)
+	end
+	return ""
+end
+
 mod:hook_safe(CLASS.InventoryBackgroundView, "_setup_top_panel", function(self, ...)
 	local player = self._preview_player
 	local profile = player:profile()
 	local archetype = profile.archetype
 	local archetype_name = archetype.name
 	local is_ogryn = archetype_name == "ogryn"
-	local is_adamant = archetype_name == "adamant"
 	local backstory = profile.lore and profile.lore.backstory
 
 	local planet_data = backstory.planet and HomePlanets[backstory.planet]
@@ -244,7 +258,7 @@ mod:hook_safe(CLASS.InventoryBackgroundView, "_setup_top_panel", function(self, 
 	local bio_tuples = {
 		{
 			bio_key = "archetype",
-			bio_txt = Localize(profile.archetype.archetype_description),
+			bio_text = Localize(profile.archetype.archetype_description),
 		},
 		{
 			bio_key = "home_planet",
@@ -272,13 +286,11 @@ mod:hook_safe(CLASS.InventoryBackgroundView, "_setup_top_panel", function(self, 
 		},
 		{
 			bio_key = "summary",
-			bio_txt = string.format("%s %s %s %s\n\n%s",
-				Localize(planet_data.story_snippet),
-				Localize(childhood_data.story_snippet),
-				Localize(growing_up_data.story_snippet),
-				Localize(formative_event_data.story_snippet),
-				Localize(crime_data.story_snippet)
-			)
+			bio_text = append_narrative_text(planet_data)
+				.. append_narrative_text(childhood_data, " ")
+				.. append_narrative_text(growing_up_data, " ")
+				.. append_narrative_text(formative_event_data, " ")
+				.. append_narrative_text(crime_data, "\n\n")
 		}
 	}
 
@@ -287,15 +299,16 @@ mod:hook_safe(CLASS.InventoryBackgroundView, "_setup_top_panel", function(self, 
 	local layout_data = {}
 	for i = 1, #bio_tuples do
 		local tuple = bio_tuples[i]
-		if mod:get(tuple.bio_key) then
-			local choice = mod.bio_choices[tuple.bio_key]
+		local bio_data = tuple.bio_data
+		local bio_text = tuple.bio_text
+		if mod:get(tuple.bio_key) and (bio_text or is_bio_data_valid(bio_data)) then
 			local bio_entry = {
 				scenegraph_id = "bio_entry",
 				widget_type = "bio_button",
 				bio_idx = num_layouts,
-				bio_title = is_adamant and choice.loc_adamant or choice.loc,
-				bio_data = tuple.bio_data,
-				bio_txt = tuple.bio_txt,
+				bio_title = Localize(mod.get_bio_title(tuple.bio_key, archetype_name)),
+				bio_data = bio_data,
+				bio_text = bio_text,
 			}
 			if tuple.bio_key == "archetype" then
 				bio_entry.bio_title = profile.name .. " - " .. Localize(profile.archetype.archetype_name)
