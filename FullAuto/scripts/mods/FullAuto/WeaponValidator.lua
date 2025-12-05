@@ -1,9 +1,26 @@
 local mod = get_mod("FullAuto")
 
-local NORMAL_ACTIONS = { "action_shoot_hip", "action_shoot", "rapid_left", "action_shoot_flame", "action_rapid_left", "action_rapid_right" }
-local NORMAL_CHAINS = { "shoot_pressed", "shoot", "shoot_charge" }
-local AIMED_ACTIONS = { "action_shoot_zoomed", "action_rapid_zoomed" }
-local AIMED_CHAINS = { "zoom_shoot" }
+local NORMAL_ACTIONS = {
+	"action_shoot_hip",
+	"action_shoot",
+	"rapid_left",
+	"action_shoot_flame",
+	"action_rapid_left",
+	"action_rapid_right",
+}
+local NORMAL_CHAINS = {
+	"shoot_pressed",
+	"shoot",
+	"shoot_charge",
+}
+
+local AIMED_ACTIONS = {
+	"action_shoot_zoomed",
+	"action_rapid_zoomed",
+}
+local AIMED_CHAINS = {
+	"zoom_shoot",
+}
 
 local FULLAUTO_FIREMODE = "full_auto"
 local CHARGEUP_TYPE = "charge"
@@ -28,12 +45,8 @@ end
 local _get_chain_time = function(template, primary)
 	local act = _get_action(template, primary)
 	if act then
-		local chain_actions = NORMAL_CHAINS
-		if not primary then
-			chain_actions = AIMED_CHAINS
-		end
-
-		for _, ca in pairs(chain_actions) do
+		local chain_actions = primary and NORMAL_CHAINS or AIMED_CHAINS
+		for _, ca in ipairs(chain_actions) do
 			local chain = act.allowed_chain_actions[ca]
 			if chain then
 				return chain.chain_time

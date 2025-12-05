@@ -132,8 +132,16 @@ local _cache_current_wep_firemode = function()
 	end
 end
 
+local _get_player = function()
+	return Managers.player:local_player(1)
+end
+
+local _get_player_unit = function()
+	return _get_player().player_unit
+end
+
 mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
-	if self._player == Managers.player:local_player(1) then
+	if self._player == _get_player() then
 		_cache_current_wep_firemode()
 		_disable_autofire()
 		local wep_template = self._weapons[slot_name].weapon_template
@@ -158,7 +166,7 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
 	end
 end)
 
-mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, game_mode_name, ...)
+mod:hook_safe(CLASS.GameModeManager, "init", function(...)
 	_cache_current_wep_firemode()
 	for template_name, autofire in pairs(cached_default_autofires) do
 		mod:set(template_name, autofire)
@@ -170,13 +178,8 @@ mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, g
 	end
 end)
 
-local _get_player_unit = function()
-	local plr = Managers.player and Managers.player:local_player(1)
-	return plr and plr.player_unit
-end
-
 mod:hook_safe(CLASS.ActionHandler, "start_action", function(self, id, ...)
-	if _get_player_unit() == self._unit then
+	if self._unit == _get_player_unit() then
 		if id == "weapon_action" then
 			time_scale = self._registered_components[id].component.time_scale
 		end
@@ -202,17 +205,23 @@ local _end_aim = function()
 end
 
 mod:hook_require("scripts/utilities/alternate_fire", function(AlternateFire)
-	mod:hook_safe(AlternateFire, "start", function(alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, peeking_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, ...)
-		if player_unit == _get_player_unit() then
-			_begin_aim()
-		end
-	end)
+	mod:hook_safe(AlternateFire, "start",
+		function(alternate_fire_component, weapon_tweak_templates_component, spread_control_component,
+				 sway_control_component, sway_component, movement_state_component, locomotion_component,
+				 inair_state_component, peeking_component, first_person_extension, animation_extension,
+				 weapon_extension, weapon_template, player_unit, ...)
+			if player_unit == _get_player_unit() then
+				_begin_aim()
+			end
+		end)
 
-	mod:hook_safe(AlternateFire, "stop", function(alternate_fire_component, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, weapon_template, skip_stop_anim, player_unit, ...)
-		if player_unit == _get_player_unit() then
-			_end_aim()
-		end
-	end)
+	mod:hook_safe(AlternateFire, "stop",
+		function(alternate_fire_component, peeking_component, first_person_extension, weapon_tweak_templates_component,
+				 animation_extension, weapon_template, player_unit, ...)
+			if player_unit == _get_player_unit() then
+				_end_aim()
+			end
+		end)
 end)
 
 mod:hook_safe(CLASS.WarpChargeActionModule, "start", function(self, ...)
@@ -312,7 +321,9 @@ local _input_action_hook = function(func, self, action_name)
 				-- the original core of the mod; signal LMB press every X seconds
 				local this_t = Managers.time and Managers.time:time("main")
 				if next_autofire < 0 or this_t >= next_autofire then
-					next_autofire = this_t + autofire_delay_current / time_scale * (is_sprinting and SPRINT_MULTIPLIER or STANDARD_MULTIPLIER)
+					next_autofire = this_t
+						+ autofire_delay_current / time_scale
+						* (is_sprinting and SPRINT_MULTIPLIER or STANDARD_MULTIPLIER)
 					return true
 				end
 				return false

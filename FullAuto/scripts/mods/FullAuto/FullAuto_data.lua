@@ -7,47 +7,47 @@ return {
 	options = {
 		widgets = {
 			{
-				setting_id  = "group_select",
-				type        = "group",
+				setting_id = "group_select",
+				type = "group",
 				sub_widgets = {
 					{
-						setting_id      = "pressed_autoshoot",
-						type            = "keybind",
-						default_value   = {},
-						keybind_global  = false,
+						setting_id = "pressed_autoshoot",
+						type = "keybind",
+						default_value = {},
+						keybind_global = false,
 						keybind_trigger = "pressed",
-						keybind_type    = "function_call",
-						function_name   = "_kb_toggle_select",
+						keybind_type = "function_call",
+						function_name = "_kb_toggle_select",
 					},
 					{
-						setting_id      = "held_autoshoot",
-						type            = "keybind",
-						default_value   = {},
-						keybind_global  = false,
+						setting_id = "held_autoshoot",
+						type = "keybind",
+						default_value = {},
+						keybind_global = false,
 						keybind_trigger = "held",
-						keybind_type    = "function_call",
-						function_name   = "_kb_toggle_select",
+						keybind_type = "function_call",
+						function_name = "_kb_toggle_select",
 					},
 					{
-						setting_id    = "default_autofire",
-						type          = "checkbox",
+						setting_id = "default_autofire",
+						type = "checkbox",
 						default_value = true,
 					},
 					{
-						setting_id    = "remember_per_wep",
-						type          = "checkbox",
+						setting_id = "remember_per_wep",
+						type = "checkbox",
 						default_value = true,
 					},
 				}
 			},
 			{
-				setting_id  = "group_hud",
-				title       = "hud_element",
-				type        = "group",
+				setting_id = "group_hud",
+				title = "hud_element",
+				type = "group",
 				sub_widgets = {
 					{
-						setting_id    = "hud_element",
-						type          = "checkbox",
+						setting_id = "hud_element",
+						type = "checkbox",
 						default_value = true,
 					},
 					{
@@ -59,29 +59,29 @@ return {
 				}
 			},
 			{
-				setting_id  = "group_extra",
-				type        = "group",
+				setting_id = "group_extra",
+				type = "group",
 				sub_widgets = {
 					{
-						setting_id    = "shoot_for_me",
-						type          = "checkbox",
+						setting_id = "shoot_for_me",
+						type = "checkbox",
 						default_value = false,
 					},
 					{
-						setting_id    = "include_psyker_bees",
-						type          = "checkbox",
+						setting_id = "include_psyker_bees",
+						type = "checkbox",
 						default_value = true,
 					},
 					{
-						setting_id    = "chargeup_autofire",
-						type          = "checkbox",
+						setting_id = "chargeup_autofire",
+						type = "checkbox",
 						default_value = true,
 					},
 					{
-						setting_id      = "chargeup_autofire_amt",
-						type            = "numeric",
-						default_value   = 100,
-						range           = { 0, 100 },
+						setting_id = "chargeup_autofire_amt",
+						type = "numeric",
+						default_value = 100,
+						range = { 0, 100 },
 						decimals_number = 0,
 					},
 				}
