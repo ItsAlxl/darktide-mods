@@ -6,7 +6,7 @@ return {
 	mod_name = {
 		en = "AfterBlitz",
 		["zh-cn"] = "闪击结束动作",
-		ru = "После Блица",
+		ru = "После блица",
 	},
 	mod_description = {
 		en = "Choose what your character does when unequipping their blitz.",
@@ -60,5 +60,11 @@ return {
 	},
 	ag_adamant_quickswap = {
 		en = _localize_class_action_en("loc_class_adamant_title", "loc_ingame_quick_wield"),
+	},
+	ag_broker = {
+		en = Localize("loc_class_broker_title"),
+	},
+	ag_broker_quickswap = {
+		en = _localize_class_action_en("loc_class_broker_title", "loc_ingame_quick_wield"),
 	},
 }
