@@ -266,11 +266,10 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 	local warp_charge_level = player_unit_data and player_unit_data:read_component("warp_charge").current_percentage or 0
 	local overheat_level = 0
 	if player_unit_data then
-		local weapon_extension = player_extensions.weapon
-		local weapon_template = weapon_extension:weapon_template()
-		local use_current_wep = weapon_template and weapon_template.uses_overheat
+		local weapon_template = player_extensions.weapon:weapon_template()
+		local hud_config = weapon_template and weapon_template.hud_configuration
 
-		if use_current_wep then
+		if hud_config and (hud_config.uses_overheat or hud_config.uses_weapon_special_charges) then
 			local wielded_slot = player_unit_data:read_component("inventory").wielded_slot
 			if wielded_slot and wielded_slot ~= "none" then
 				local slot_configuration = PlayerCharacterConstants.slot_configuration[wielded_slot]
@@ -281,10 +280,12 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 		else
 			local wep_slots = self._wep_slots
 			for i = 1, self._num_wep_slots do
-				overheat_level = math.max(player_unit_data:read_component(wep_slots[i]).overheat_current_percentage, overheat_level)
+				overheat_level = math.max(
+					player_unit_data:read_component(wep_slots[i]).overheat_current_percentage,
+					overheat_level
+				)
 			end
 		end
-
 	end
 	if warp_charge_level ~= overheat_level then
 		mod.is_peril_driven = warp_charge_level > overheat_level
@@ -330,7 +331,13 @@ HudElementPerilGauge.update = function(self, dt, t, ui_renderer, render_settings
 		elseif threshold_keys[thresh_idx] == peril_fraction then
 			ColorUtilities.color_copy(_get_threshold_after_color(thresh_idx), color)
 		else
-			ColorUtilities.color_lerp(_get_threshold_after_color(thresh_idx - 1), _get_threshold_before_color(thresh_idx), _get_threshold_lerp(thresh_idx, peril_fraction), color, false)
+			ColorUtilities.color_lerp(
+				_get_threshold_after_color(thresh_idx - 1),
+				_get_threshold_before_color(thresh_idx),
+				_get_threshold_lerp(thresh_idx, peril_fraction),
+				color,
+				false
+			)
 		end
 	end
 	bar_style.size[1] = math.lerp(bar_size_empty[1], bar_size_full[1], peril_fraction)
