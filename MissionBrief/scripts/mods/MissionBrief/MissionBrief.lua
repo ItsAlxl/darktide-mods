@@ -42,6 +42,21 @@ local calc_text_height = function(renderer, style, text, size)
 	)
 end
 
+local sanitize_icon = function(icon)
+	--[[
+		I *think* 'content/ui/materials/icons/mission_types_pj/mission_type_event'
+		belongs to several event packages; it may even be a different icon
+		depending on which of those event packages gets loaded
+
+		so to keep things simple, just replace it with something else,
+		no additional package loading required :)
+	]]
+	return (icon == "content/ui/materials/icons/mission_types_pj/mission_type_event"
+			or icon == "content/ui/materials/icons/mission_types/mission_type_event")
+		and "content/ui/materials/icons/mission_types/mission_type_side"
+		or icon
+end
+
 mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 	local widgets = self._widgets_by_name
 	if widgets.display then
@@ -85,7 +100,7 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 			local mission_type = MissionTypes[mission.mission_type]
 
 			local mission_content = widgets.mission_info.content
-			mission_content.icon = mission_type and mission_type.icon or mission_content.icon
+			mission_content.icon = sanitize_icon(mission_type and mission_type.icon or mission_content.icon)
 			mission_content.mission_name = Utf8.upper(Localize(mission.mission_name))
 			mission_content.mission_type = Localize(mission_type.name)
 
@@ -130,7 +145,7 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 				local circumstance_info_content = havoc_circumstance_info.content
 				local circumstance_info_style = havoc_circumstance_info.style
 				local circumstance_ui_settings = CircumstanceTemplates[mutator_data].ui
-				local circumstance_icon = circumstance_ui_settings.icon
+				local circumstance_icon = sanitize_icon(circumstance_ui_settings.icon)
 
 				circumstance_info_content.icon = circumstance_icon
 				local circumstance_icon_identifer = "icon_0" .. i
@@ -199,7 +214,7 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 				local circumstance_ui = circumstance_data and circumstance_data.ui
 				if circumstance_ui then
 					local circumstance_content = circumstance_widget.content
-					circumstance_content.icon = circumstance_ui.icon
+					circumstance_content.icon = sanitize_icon(circumstance_ui.icon)
 					circumstance_content.circumstance_name = Localize(circumstance_ui.display_name)
 					circumstance_content.circumstance_description = Localize(circumstance_ui.description)
 					circumstance_widget.visible = show_mission
