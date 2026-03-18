@@ -69,7 +69,10 @@ local _is_sibling_swappable = function(tree, node, sibling)
 		for c = 1, #sib_children do
 			local sib_child_name = sib_children[c]
 			local sib_child_node = tree:_node_by_name(sib_child_name)
-			if sib_child_node and sib_child_node ~= node and tree:_is_node_dependent_on_parent(sib_child_node, sibling) and table.contains(node_children, sib_child_name) then
+			if sib_child_node
+				and sib_child_node ~= node
+				and tree:_is_node_dependent_on_parent(sib_child_node, sibling)
+				and table.contains(node_children, sib_child_name) then
 				return true
 			end
 		end
@@ -102,6 +105,9 @@ end)
 
 local _remove_dependents = function(tree, root_node, condition)
 	local removed_nodes = {}
+	local ignore_list = {
+		[root_node.widget_name] = true,
+	}
 	table.insert(removed_nodes, root_node)
 
 	local i = 1
@@ -109,9 +115,15 @@ local _remove_dependents = function(tree, root_node, condition)
 		local work_node = removed_nodes[i]
 		local children = work_node.children
 		for c = 1, #children do
-			local child_node = tree:_node_by_name(children[c])
-			if child_node and not table.contains(removed_nodes, child_node) and tree:_is_node_dependent_on_parent(child_node, root_node) and (condition == nil or condition(child_node)) then
-				table.insert(removed_nodes, child_node)
+			local descendant = tree:_node_by_name(children[c])
+			if descendant
+				and _node_has_points(tree, descendant)
+				and (condition == nil or condition(descendant))
+				and not table.contains(removed_nodes, descendant)
+				and tree:_can_node_traverse_to_start(descendant, ignore_list)
+			then
+				table.insert(removed_nodes, descendant)
+				ignore_list[descendant.widget_name] = true
 			end
 		end
 		i = i + 1
@@ -132,12 +144,16 @@ local _remove_modifier_nodes = function(tree, node)
 	end
 end
 
+local _take_talent_on_widget = function(tree, widget)
+	tree:_add_node_point_on_widget(widget, 1)
+end
+
 mod:hook(CLASS.TalentBuilderView, "_on_node_widget_right_pressed", function(func, self, widget)
 	local node = widget.content.node_data
 	if _click_mode_passes("remove_dependents", widget) then
 		-- if it's an empty node, buy it so that dependency is meaningful
 		if not _node_has_points(self, node) and self:_points_available() > 0 then
-			self:_add_node_point_on_widget(widget)
+			_take_talent_on_widget(self, widget)
 		end
 
 		-- don't perform dependent removal on an empty node when all points are spent
@@ -151,20 +167,20 @@ mod:hook(CLASS.TalentBuilderView, "_on_node_widget_right_pressed", function(func
 end)
 
 mod:hook(CLASS.TalentBuilderView, "_on_node_widget_left_pressed", function(func, self, widget)
-	if _click_mode_passes("swap_exclusives", widget) then
-		local node = widget.content.node_data
+	local node = widget.content.node_data
+	if not _node_has_points(self, node) and _click_mode_passes("swap_exclusives", widget) then
 		local _, spent_in_parents_counter = self:_has_points_spent_in_parents(node)
 		if spent_in_parents_counter > 0 then
 			local exclusive_blocker = _get_node_exclusive_blocker(self, node)
 			if exclusive_blocker and node ~= exclusive_blocker then
 				_remove_modifier_nodes(self, exclusive_blocker)
 				self:_remove_node_point_on_widget(_node_to_widget(self, exclusive_blocker))
-				self:_add_node_point_on_widget(widget)
+				_take_talent_on_widget(self, widget)
 			elseif self:_points_available() == 0 and mod:get("swap_siblings") then
 				local swap_sib = _find_swappable_sibling(self, node)
 				if swap_sib then
 					self:_remove_node_point_on_widget(_node_to_widget(self, swap_sib))
-					self:_add_node_point_on_widget(widget)
+					_take_talent_on_widget(self, widget)
 				end
 			end
 		end
