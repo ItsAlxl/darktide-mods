@@ -105,9 +105,6 @@ end)
 
 local _remove_dependents = function(tree, root_node, condition)
 	local removed_nodes = {}
-	local ignore_list = {
-		[root_node.widget_name] = true,
-	}
 	table.insert(removed_nodes, root_node)
 
 	local i = 1
@@ -120,10 +117,9 @@ local _remove_dependents = function(tree, root_node, condition)
 				and _node_has_points(tree, descendant)
 				and (condition == nil or condition(descendant))
 				and not table.contains(removed_nodes, descendant)
-				and tree:_can_node_traverse_to_start(descendant, ignore_list)
+				and tree:_is_node_dependent_on_parent(descendant, root_node)
 			then
 				table.insert(removed_nodes, descendant)
-				ignore_list[descendant.widget_name] = true
 			end
 		end
 		i = i + 1
