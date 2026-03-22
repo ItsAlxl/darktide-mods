@@ -58,7 +58,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 			1,
 		},
 	}
-	scenegraph.circumstance_info_panel = {
+	scenegraph.modifiers_info_panel = {
 		parent = "left_panel",
 		horizontal_alignment = "left",
 		vertical_alignment = "top",
@@ -280,76 +280,6 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		},
 	}, "mission_info_panel")
 
-	widget.circumstance_info = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			style_id = "icon",
-			value = "content/ui/materials/icons/generic/danger",
-			value_id = "icon",
-			style = {
-				horizontal_alignment = "left",
-				vertical_alignment = "top",
-				color = Color.golden_rod(255, true),
-				offset = {
-					10,
-					0,
-					2,
-				},
-				size = {
-					40,
-					40,
-				},
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "circumstance_name",
-			value_id = "circumstance_name",
-			style = {
-				horizontal_alignment = "left",
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "center",
-				vertical_alignment = "top",
-				offset = {
-					60,
-					0,
-					10,
-				},
-				size = {
-					nil,
-					40,
-				},
-				text_color = Color.golden_rod(255, true),
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "circumstance_description",
-			value_id = "circumstance_description",
-			style = {
-				horizontal_alignment = "left",
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
-				offset = {
-					10,
-					50,
-					10,
-				},
-				size = {
-					nil,
-					60,
-				},
-				text_color = {
-					255,
-					169,
-					191,
-					153,
-				},
-			},
-		},
-	}, "circumstance_info_panel")
-
 	widget.mb_right_background = UIWidget.create_definition({
 		{
 			pass_type = "texture_uv",
@@ -541,7 +471,7 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		},
 	}, "difficulty_panel")
 
-	local _havoc_circumstance_icon = function(idx)
+	local _modifier_icon = function(idx)
 		return {
 			pass_type = "texture",
 			style_id = "icon_0" .. idx,
@@ -564,11 +494,11 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		}
 	end
 
-	local _havoc_circumstance_name = function(idx)
+	local _modifier_name = function(idx)
 		return {
 			pass_type = "text",
-			style_id = "circumstance_name_0" .. idx,
-			value_id = "circumstance_name_0" .. idx,
+			style_id = "modifier_name_0" .. idx,
+			value_id = "modifier_name_0" .. idx,
 			style = {
 				horizontal_alignment = "left",
 				text_horizontal_alignment = "left",
@@ -588,13 +518,13 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		}
 	end
 
-	local _havoc_circumstance_desc = function(idx)
+	local _modifier_desc = function(idx)
 		return {
 			pass_type = "text",
-			style_id = "circumstance_description_0" .. idx,
-			value_id = "circumstance_description_0" .. idx,
+			style_id = "modifier_description_0" .. idx,
+			value_id = "modifier_description_0" .. idx,
 			style = {
-				font_size = 20,
+				font_size = 22,
 				horizontal_alignment = "left",
 				text_horizontal_alignment = "left",
 				text_vertical_alignment = "top",
@@ -618,18 +548,18 @@ mod:hook_require("scripts/ui/views/mission_intro_view/mission_intro_view_definit
 		}
 	end
 
-	widget.havoc_circumstance_info = UIWidget.create_definition({
-		_havoc_circumstance_icon(1),
-		_havoc_circumstance_icon(2),
-		_havoc_circumstance_icon(3),
-		_havoc_circumstance_icon(4),
-		_havoc_circumstance_name(1),
-		_havoc_circumstance_name(2),
-		_havoc_circumstance_name(3),
-		_havoc_circumstance_name(4),
-		_havoc_circumstance_desc(1),
-		_havoc_circumstance_desc(2),
-		_havoc_circumstance_desc(3),
-		_havoc_circumstance_desc(4),
-	}, "circumstance_info_panel")
+	widget.modifiers_info = UIWidget.create_definition({
+		_modifier_icon(1),
+		_modifier_icon(2),
+		_modifier_icon(3),
+		_modifier_icon(4),
+		_modifier_name(1),
+		_modifier_name(2),
+		_modifier_name(3),
+		_modifier_name(4),
+		_modifier_desc(1),
+		_modifier_desc(2),
+		_modifier_desc(3),
+		_modifier_desc(4),
+	}, "modifiers_info_panel")
 end)
