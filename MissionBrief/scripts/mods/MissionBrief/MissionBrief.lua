@@ -47,8 +47,8 @@ end
 local _sanitize_icon = function(icon)
 	--[[
 		'content/ui/materials/icons/mission_types_pj/mission_type_event'
-		moved and I was too lazy to go searching for it; this'll work
-		even if it moves again
+		moved to a different package and I was too lazy to go searching
+		for it; this'll work even if it moves again
 	]]
 	return (icon == "content/ui/materials/icons/mission_types_pj/mission_type_event"
 			or icon == "content/ui/materials/icons/mission_types/mission_type_event")
@@ -148,10 +148,8 @@ local _update_modifiers_list = function(view, mission_modifiers)
 				local modifier_info_content = info_widget.content
 				local modifier_info_style = info_widget.style
 
-				local modifier_icon = modifier_data.icon
-				modifier_info_content.icon = modifier_icon
 				local modifier_icon_id = "icon_0" .. i
-				modifier_info_content[modifier_icon_id] = modifier_icon
+				modifier_info_content[modifier_icon_id] = modifier_data.icon
 				modifier_info_style[modifier_icon_id].offset[2] = modifiers_height
 
 				local modifier_name_id = "modifier_name_0" .. i
@@ -174,25 +172,15 @@ local _update_modifiers_list = function(view, mission_modifiers)
 		end
 
 		info_widget.visible = mod:get("show_mission") and num_displayed_modifiers > 0
-		info_widget.num_displayed_modifiers = num_displayed_modifiers
 		if num_displayed_modifiers > 0 then
 			modifiers_height = modifiers_height + 25
 		end
 
-		if num_displayed_modifiers ~= 4 then
-			for i = num_displayed_modifiers + 1, 4 do
-				local modifier_icon_identifer = "icon_0" .. i
-				local icon_style = info_widget.style[modifier_icon_identifer]
-				icon_style.visible = false
-
-				local modifier_name_identifer = "modifier_name_0" .. i
-				local name_style = info_widget.style[modifier_name_identifer]
-				name_style.visible = false
-
-				local modifier_description_identifier = "modifier_description_0" .. i
-				local description_style = info_widget.style[modifier_description_identifier]
-				description_style.visible = false
-			end
+		for i = 1, 4 do
+			local visible = i <= num_displayed_modifiers
+			info_widget.style["icon_0" .. i].visible = visible
+			info_widget.style["modifier_name_0" .. i].visible = visible
+			info_widget.style["modifier_description_0" .. i].visible = visible
 		end
 	end
 
@@ -230,6 +218,7 @@ mod.DBG_screen = function(type)
 						if num_modifiers > highest_modifiers then
 							highest_modifiers = num_modifiers
 							DBG_mech_data_override.node_id = _extract_and_validate_node_id(mission.flags)
+							DBG_mech_data_override.backend_mission_id = mission.id
 						end
 					end
 				end
@@ -285,19 +274,20 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 
 		local mission_id = mech_data.mission_name
 		local zone_height = 0
+		local mission_content = widgets.mission_info.content
 		if mission_id then
 			local mission = Missions[mission_id]
 			local mission_type = MissionTypes[mission.mission_type]
 
-			local mission_content = widgets.mission_info.content
 			mission_content.icon = _sanitize_icon(mission_type and mission_type.icon or mission_content.icon)
 			mission_content.mission_name = Utf8.upper(Localize(mission.mission_name))
 			mission_content.mission_type = Localize(mission_type.name)
 
 			local side_mission_id = mech_data.side_mission
 			if side_mission_id and side_mission_id ~= "default" then
-				mission_content.mission_type = mission_content.mission_type .. " · " ..
-					Localize(MissionObjectiveTemplates.side_mission.objectives[side_mission_id].header)
+				mission_content.mission_type = mission_content.mission_type
+					.. " · "
+					.. Localize(MissionObjectiveTemplates.side_mission.objectives[side_mission_id].header)
 			end
 
 			local zone_content = widgets.zone_info.content
@@ -349,26 +339,27 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 			end
 		end
 
+		_update_modifiers_list(self, mission_modifiers)
 		if mech_data.expedition_template_name and mech_data.node_id then
-			Managers.data_service.expedition:fetch_expedition_missions():next(function(expeditions_data)
-				local found = false
-				for _, mission in ipairs(expeditions_data) do
-					local node_id = _extract_and_validate_node_id(mission.flags)
-					if node_id and node_id == mech_data.node_id then
-						_update_modifiers_list(self, mission.modifiers)
-						found = true
-						break
+			Managers.data_service.expedition:fetch_nodes():next(function(node_data)
+				local node = node_data.nodes_by_id[mech_data.node_id]
+				if node then
+					local node_missions = node.missions
+					for i = 1, #node_missions do
+						local mission = node_missions[i]
+						if mission.id == mech_data.backend_mission_id then
+							_update_modifiers_list(self, mission.modifiers)
+							local node_name = node.ui and node.ui.display_name
+							if node_name then
+								mission_content.mission_type = Localize("loc_grid_point") .. " " .. Localize(node_name)
+							end
+							break
+						end
 					end
-				end
-				if not found then
-					_update_modifiers_list(self, mission_modifiers)
 				end
 			end):catch(function(error)
 				mod:error(error)
-				_update_modifiers_list(self, mission_modifiers)
 			end)
-		else
-			_update_modifiers_list(self, mission_modifiers)
 		end
 
 		local mission_giver_id = mech_data.mission_giver_vo_override
