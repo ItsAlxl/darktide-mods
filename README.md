@@ -103,6 +103,11 @@ Adds the ability to name your loadouts.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/286).
 
+## LobbyModifierInfo
+Displays mission modifier information in the lobby screen.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/788).
+
 ## LookAround
 Provides the ability to freelook.
 
@@ -122,6 +127,9 @@ Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/387).
 Organizes the mission board into a grid and groups them by modifier.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/570).
+
+## MissionMechanismDebugger
+A tool to help debug/develop MissionBrief and LobbyModifierInfo. Doesn't do anything on its own and isn't useful for players.
 
 ## NoNews
 Removes the news bulletin from character select.

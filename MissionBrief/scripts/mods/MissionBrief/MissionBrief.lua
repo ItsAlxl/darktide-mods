@@ -15,11 +15,11 @@ local Zones = require("scripts/settings/zones/zones")
 
 mod:io_dofile("MissionBrief/scripts/mods/MissionBrief/ViewDefinitions")
 
--- normally unnecessary (these packages are always loaded), but needed for Psych Ward
 local force_packages = {
 	{ path = "packages/ui/hud/mission_speaker_popup/mission_speaker_popup" },
 	{ path = "packages/ui/hud/tactical_overlay/tactical_overlay" },
 	{ path = "packages/ui/views/mission_board_view/mission_board_view" },
+	{ path = "packages/ui/views/expedition_play_view/expedition_play_view" },
 }
 
 local _load_packages = function()
@@ -75,26 +75,6 @@ local _get_modifier_flag_desc = function(id)
 	return expedition_flag and expedition_flag.ui and expedition_flag.ui.display_string
 end
 
-local _extract_and_validate_node_id = function(mission_flags)
-	if not mission_flags then
-		return nil
-	end
-
-	local node_id = nil
-	local prefix = "exped-node-"
-	for flag, _ in pairs(mission_flags) do
-		local a, b = string.find(flag, prefix, 1, true)
-
-		if a == 1 and b == #prefix then
-			if node_id then
-				return nil
-			end
-			node_id = string.sub(flag, #prefix + 1)
-		end
-	end
-	return node_id
-end
-
 local _update_modifiers_list = function(view, mission_modifiers)
 	local widgets = view._widgets_by_name
 	local info_widget = widgets.modifiers_info
@@ -140,6 +120,7 @@ local _update_modifiers_list = function(view, mission_modifiers)
 		end
 
 		local num_displayed_modifiers = 0
+		local max_num_modifiers = 4
 		for i = 1, #mission_modifiers_data do
 			local modifier_data = mission_modifiers_data[i]
 			if modifier_data then
@@ -148,18 +129,18 @@ local _update_modifiers_list = function(view, mission_modifiers)
 				local modifier_info_content = info_widget.content
 				local modifier_info_style = info_widget.style
 
-				local modifier_icon_id = "icon_0" .. i
+				local modifier_icon_id = "icon_0" .. num_displayed_modifiers
 				modifier_info_content[modifier_icon_id] = modifier_data.icon
 				modifier_info_style[modifier_icon_id].offset[2] = modifiers_height
 
-				local modifier_name_id = "modifier_name_0" .. i
+				local modifier_name_id = "modifier_name_0" .. num_displayed_modifiers
 				modifier_info_content[modifier_name_id] = modifier_data.name
 				modifier_info_style[modifier_name_id].offset[2] = modifiers_height
 
 				modifiers_height = modifiers_height + 40
 
 				local description = modifier_data.description
-				local modifier_description_identifier = "modifier_description_0" .. i
+				local modifier_description_identifier = "modifier_description_0" .. num_displayed_modifiers
 				modifier_info_content[modifier_description_identifier] = description
 				modifier_info_style[modifier_description_identifier].offset[2] = modifiers_height
 
@@ -168,6 +149,10 @@ local _update_modifiers_list = function(view, mission_modifiers)
 					view._definitions.widget_definitions.modifiers_info.style[modifier_description_identifier],
 					description
 				)
+
+				if num_displayed_modifiers >= max_num_modifiers then
+					break
+				end
 			end
 		end
 
@@ -176,7 +161,7 @@ local _update_modifiers_list = function(view, mission_modifiers)
 			modifiers_height = modifiers_height + 25
 		end
 
-		for i = 1, 4 do
+		for i = 1, max_num_modifiers do
 			local visible = i <= num_displayed_modifiers
 			info_widget.style["icon_0" .. i].visible = visible
 			info_widget.style["modifier_name_0" .. i].visible = visible
@@ -187,66 +172,6 @@ local _update_modifiers_list = function(view, mission_modifiers)
 	widgets.mb_left_background.style.fade.size = { nil, 215 + modifiers_height }
 end
 
-local DBG_mech_data_override = nil
-
-mod.DBG_screen = function(type)
-	local view_name = "mission_intro_view"
-	local view = Managers.ui:view_instance(view_name)
-	if view then
-		Managers.ui:close_view(view_name)
-	else
-		local type_id = type and string.sub(type, 1, 1) or "def"
-		if type_id == "e" then
-			DBG_mech_data_override = {
-				challenge = 4,
-				level_name = "content/levels/expeditions/start/world",
-				resistance = 4,
-				circumstance_name = "exps_dark",
-				backend_mission_id = "missionbrief_dbg_" .. type,
-				mission_giver_vo_override = "tech_priest_a",
-				mission_name = "exp_wastes",
-				side_mission = "default",
-				expedition_template_name = "wastes"
-			}
-
-			Managers.data_service.expedition:fetch_expedition_missions():next(function(expeditions_data)
-				local highest_modifiers = -1
-				mod.DBG_fetched_expeds = expeditions_data
-				for _, mission in ipairs(expeditions_data) do
-					if mission.modifiers then
-						local num_modifiers = #mission.modifiers
-						if num_modifiers > highest_modifiers then
-							highest_modifiers = num_modifiers
-							DBG_mech_data_override.node_id = _extract_and_validate_node_id(mission.flags)
-							DBG_mech_data_override.backend_mission_id = mission.id
-						end
-					end
-				end
-				Managers.ui:open_view(view_name)
-			end):catch(function(error)
-				mod:error(error)
-				Managers.ui:open_view(view_name)
-			end)
-		else
-			DBG_mech_data_override = {
-				challenge = 4,
-				level_name = "content/levels/transit/missions/mission_cm_habs",
-				resistance = 4,
-				circumstance_name = "darkness_hunting_grounds_01",
-				backend_mission_id = "missionbrief_dbg_" .. type_id,
-				mission_giver_vo_override = "sergeant_b",
-				mission_name = "fm_resurgence",
-				side_mission = "side_mission_tome",
-				havoc_data = type_id == "h"
-					and
-					"km_heresy;31;darkness;cultist;mutator_encroaching_garden:mutator_highest_difficulty:mutator_havoc_chaos_rituals:darkness_hunting_grounds_01;26.4:1.5:4.4:13.5:7.5:11.4:10.4:8.4:9.4:6.5:12.5:22.4:23.5:5.4:3.4:2.4:25.4:24.4;5;5"
-					or nil
-			}
-			Managers.ui:open_view(view_name)
-		end
-	end
-end
-
 mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 	local widgets = self._widgets_by_name
 	if widgets.display then
@@ -255,10 +180,9 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 	self._pass_draw = true
 	self:set_render_scale(mod:get("ui_scale") or 1.0)
 
-	local mech_data = DBG_mech_data_override or Managers.mechanism:mechanism_data()
+	local mech_data = mod.mech_data_override or Managers.mechanism:mechanism_data()
+	mod.mech_data_override = nil -- only used for debugging
 	local havoc_data = mech_data.havoc_data and Havoc.parse_data(mech_data.havoc_data)
-	DBG_mech_data_override = nil
-	mod.DBG_data = { mech = mech_data, havoc = havoc_data }
 
 	local show_mission = mod:get("show_mission")
 	widgets.mb_left_background.visible = show_mission
@@ -358,7 +282,7 @@ mod:hook_safe(CLASS.MissionIntroView, "on_enter", function(self)
 					end
 				end
 			end):catch(function(error)
-				mod:error(error)
+				mod:error(tostring(table.tostring(error, 1)))
 			end)
 		end
 
