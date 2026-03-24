@@ -238,6 +238,7 @@ mod.on_setting_changed("autoswitch_lunge_ogryn")
 mod.on_setting_changed("autoswitch_lunge_human")
 mod.on_setting_changed("autoswitch_act2_primary")
 mod.on_setting_changed("autoswitch_act2_secondary")
+mod.on_setting_changed("autoswitch_slab_plant")
 mod.apply_custom_viewpoint()
 
 mod.toggle_third_person = function()
@@ -479,6 +480,29 @@ mod:hook_safe(CLASS.CameraHandler, "_switch_follow_target", function(self, new_u
 		_autoswitch_from_event("spectate", "spectate", is_spectating)
 	end
 	mod.apply_perspective()
+end)
+
+-- Hook for detecting Ogryn slabshield block/plant
+local SLABSHIELD_TEMPLATE = "ogryn_powermaul_slabshield_p1_m1"
+local is_blocking_slabshield = false
+
+mod:hook_safe(CLASS.ActionBlock, "start", function(self, action_settings)
+	-- self._weapon_template is set in ActionWeaponBase.init from action_params.weapon
+	if action_settings.kind ~= "block_windup" then
+		local weapon_template = self._weapon_template
+		-- if action_settings.weapon_special is true then it's planting, not just blocking
+		if weapon_template and weapon_template.name == SLABSHIELD_TEMPLATE then
+			is_blocking_slabshield = true
+			_autoswitch_from_event("slab_plant", "slab_plant", true)
+		end
+	end
+end)
+
+mod:hook_safe(CLASS.ActionBlock, "finish", function()
+	if is_blocking_slabshield then
+		is_blocking_slabshield = false
+		_autoswitch_from_event("slab_plant", "slab_plant", false)
+	end
 end)
 
 mod:hook(CLASS.PlayerHuskFirstPersonExtension, "_update_first_person_mode", function(func, self, t)
