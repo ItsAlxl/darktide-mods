@@ -7,7 +7,7 @@ local MutatorTemplates = require("scripts/settings/mutator/mutator_templates")
 local force_packages = {
 	{ path = "packages/ui/hud/tactical_overlay/tactical_overlay" },
 	{ path = "packages/ui/views/mission_board_view/mission_board_view" },
-	{ path = "packages/ui/views/expedition_play_view/expedition_play_view" },
+	{ path = "packages/ui/views/expedition_view/expedition_view" },
 }
 
 local _load_packages = function()
@@ -161,13 +161,7 @@ mod:hook_safe(CLASS.LobbyView, "_setup_havoc_info", function(self)
 					for i = 1, #node_missions do
 						local mission = node_missions[i]
 						if mission.id == mech_data.backend_mission_id then
-							local widgets = self._widgets_by_name
 							_update_modifiers_list(self, mission.modifiers)
-							local node_name = expedition_node.ui and expedition_node.ui.display_name
-							if node_name then
-								widgets.mission_title.content.sub_title = Localize("loc_grid_point")
-									.. " " .. Localize(node_name)
-							end
 							break
 						end
 					end
@@ -178,3 +172,11 @@ mod:hook_safe(CLASS.LobbyView, "_setup_havoc_info", function(self)
 		end
 	end
 end)
+
+-- keep chat on the left side in lobby
+local constant_elements = Managers.ui:ui_constant_elements()
+local constant_vis_group_params = constant_elements and constant_elements._visibility_group_parameters
+local lobby_constant_params = constant_vis_group_params and constant_vis_group_params.mission_lobby
+if lobby_constant_params then
+	lobby_constant_params.ConstantElementChat = nil
+end
