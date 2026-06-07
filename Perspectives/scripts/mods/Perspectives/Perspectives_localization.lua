@@ -202,6 +202,14 @@ local loc = {
 	autoswitch_act2_secondary = {
 		en = Localize("loc_ingame_action_two") .. " - " .. Localize("loc_inventory_title_slot_secondary")
 	},
+	autoswitch_slab_plant = {
+		en = "Slabshield Block (Ogryn)",
+		["zh-cn"] = "板盾格挡（欧格林）",
+	},
+	autoswitch_slab_plant_description = {
+		en = "Triggered when blocking or planting the Ogryn slabshield.",
+		["zh-cn"] = "使用欧格林板盾格挡或插地时触发。",
+	},
 	autoswitch_to_none = {
 		en = "Don't Switch",
 		["zh-cn"] = "不切换",

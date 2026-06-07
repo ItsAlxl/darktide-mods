@@ -265,6 +265,12 @@ return {
 						default_value = 0,
 						options       = table.clone(autoswitch_options),
 					},
+					{
+						setting_id    = "autoswitch_slab_plant",
+						type          = "dropdown",
+						default_value = 0,
+						options       = table.clone(autoswitch_options),
+					},
 				},
 			},
 		}
