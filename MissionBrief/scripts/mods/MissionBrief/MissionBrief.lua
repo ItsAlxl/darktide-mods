@@ -19,7 +19,7 @@ local force_packages = {
 	{ path = "packages/ui/hud/mission_speaker_popup/mission_speaker_popup" },
 	{ path = "packages/ui/hud/tactical_overlay/tactical_overlay" },
 	{ path = "packages/ui/views/mission_board_view/mission_board_view" },
-	{ path = "packages/ui/views/expedition_play_view/expedition_play_view" },
+	{ path = "packages/ui/views/expedition_view/expedition_view" },
 }
 
 local _load_packages = function()
