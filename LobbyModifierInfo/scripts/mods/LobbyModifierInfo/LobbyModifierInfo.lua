@@ -147,8 +147,10 @@ mod:hook_safe(CLASS.LobbyView, "_setup_havoc_info", function(self)
 			mission_modifiers = { circumstance_id }
 			local circumstance_data = CircumstanceTemplates[circumstance_id]
 			local mutators = circumstance_data and circumstance_data.mutators
-			for i = 1, #mutators do
-				mission_modifiers[#mission_modifiers + 1] = mutators[i]
+			if mutators then
+				for i = 1, #mutators do
+					mission_modifiers[#mission_modifiers + 1] = mutators[i]
+				end
 			end
 		end
 
