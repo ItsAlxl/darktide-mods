@@ -19,4 +19,12 @@ return {
 		en = "If using a gamepad, this is the input threshold for axis movement to be considered a 'move' for the purposes of a double-move dodge.",
 		["zh-cn"] = "在使用手柄时，摇杆移动必须超过设定阈值才能触发双击闪避。",
 	},
+	dodge_while_running = {
+		en = "Dodge While Running",
+		["zh-cn"] = "奔跑时可闪避",
+	},
+	dodge_while_running_description = {
+		en = "Allow a double-tap dodge to fire while sprinting by briefly dropping out of the sprint.",
+		["zh-cn"] = "通过短暂退出冲刺，使双击闪避在奔跑时也能触发。",
+	},
 }

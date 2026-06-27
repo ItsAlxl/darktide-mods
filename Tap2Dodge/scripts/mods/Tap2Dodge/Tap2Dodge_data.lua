@@ -20,6 +20,11 @@ return {
 				range           = { 0.01, 1.0 },
 				decimals_number = 2
 			},
+			{
+				setting_id      = "dodge_while_running",
+				type            = "checkbox",
+				default_value   = true
+			},
 		}
 	}
 }
