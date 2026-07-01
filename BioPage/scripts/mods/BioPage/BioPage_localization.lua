@@ -1,5 +1,9 @@
 local mod = get_mod("BioPage")
 
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
+local CharacterAppearanceViewSettings = require(
+"scripts/ui/views/character_appearance_view/character_appearance_view_settings")
+
 local localization = {
 	mod_name = {
 		en = "BioPage",
@@ -29,15 +33,6 @@ mod.bio_choices = {
 		personality = "loc_character_create_title_personality",
 		summary = "loc_group_finder_category_story",
 	},
-	adamant = {
-		childhood = "loc_character_create_title_early_life",
-		growing_up = "loc_character_create_title_key_event",
-		formative_event = "loc_character_create_title_commendations",
-		crime = "loc_character_create_title_precinct",
-	},
-	broker = {
-		home_planet = "loc_character_create_title_gang",
-	},
 }
 
 mod.get_bio_title = function(id, archetype)
@@ -46,16 +41,34 @@ mod.get_bio_title = function(id, archetype)
 	return archetype_overrides and archetype_overrides[id] or choices.base[id]
 end
 
+local ARCHETYPE_PAGES = CharacterAppearanceViewSettings.archetype_pages
+for archetype_name, _ in pairs(ArchetypeSettings.archetype_names) do
+	local page = ARCHETYPE_PAGES[archetype_name]
+	for choice_name, choice_text in pairs(mod.bio_choices.base) do
+		local archetype_choice_text = page[choice_name] and page[choice_name].title
+		if archetype_choice_text and archetype_choice_text ~= choice_text then
+			local archetype_overrides = mod.bio_choices[archetype_name]
+			if not archetype_overrides then
+				archetype_overrides = {}
+				mod.bio_choices[archetype_name] = archetype_overrides
+			end
+			archetype_overrides[choice_name] = archetype_choice_text
+		end
+	end
+end
+
 for choice, loc in pairs(mod.bio_choices.base) do
 	local localized_list = { Localize(loc) }
-	local hash = { [localized_list[1]] = true }
+	local seen = { [localized_list[1]] = true }
 
 	for archetype, overrides in pairs(mod.bio_choices) do
-		local override = overrides[choice]
-		local localized = override and Localize(override)
-		if localized and archetype ~= "base" and not hash[localized] then
-			localized_list[#localized_list + 1] = localized
-			hash[localized] = true
+		if archetype ~= "base" then
+			local override = overrides[choice]
+			local localized = override and Localize(override)
+			if localized and not seen[localized] then
+				localized_list[#localized_list + 1] = localized
+				seen[localized] = true
+			end
 		end
 	end
 
