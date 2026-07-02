@@ -1,30 +1,20 @@
 local mod = get_mod("TagKeys")
 
-local ping_types = {
-	"thanks",
-	"need_health",
-	"enemy",
-	"location",
-	"attention",
-	"need_ammo",
-}
-
-local keybind_template = {
-	setting_id      = "",
-	type            = "keybind",
-	default_value   = {},
-	keybind_global  = false,
-	keybind_trigger = "pressed",
-	keybind_type    = "function_call",
-	function_name   = ""
-}
+local create_keybind_option = function(id)
+	return {
+		setting_id      = "key_" .. id,
+		type            = "keybind",
+		default_value   = {},
+		keybind_global  = false,
+		keybind_trigger = "pressed",
+		keybind_type    = "function_call",
+		function_name   = "_cb_" .. id
+	}
+end
 
 local widgets = {}
-
-for idx, t in pairs(ping_types) do
-	table.insert(widgets, table.clone(keybind_template))
-	widgets[idx].setting_id = "key_" .. t
-	widgets[idx].function_name = "tag_" .. t
+for id, _ in pairs(mod.tags) do
+	table.insert(widgets, create_keybind_option(id))
 end
 
 return {
