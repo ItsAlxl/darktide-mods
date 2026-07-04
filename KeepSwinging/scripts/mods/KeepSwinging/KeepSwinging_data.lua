@@ -29,6 +29,15 @@ return {
 						function_name   = "_toggle_swinging",
 					},
 					{
+						setting_id      = "burst_keybind",
+						type            = "keybind",
+						default_value   = {},
+						keybind_global  = false,
+						keybind_trigger = "pressed",
+						keybind_type    = "function_call",
+						function_name   = "_init_burst_swinging",
+					},
+					{
 						setting_id    = "default_mode",
 						type          = "checkbox",
 						default_value = false,
@@ -37,6 +46,12 @@ return {
 						setting_id    = "as_modifier",
 						type          = "checkbox",
 						default_value = false,
+					},
+					{
+						setting_id    = "burst_length",
+						type          = "numeric",
+						default_value = 6,
+						range         = { 3, 15 },
 					},
 				}
 			},
