@@ -28,7 +28,12 @@ local natural_autofire_aim = nil
 local autofire_delay_current = nil
 local natural_current = nil
 
-local is_firing = false
+local is_firing = nil
+local set_firing = function(f)
+	mod.is_firing, is_firing = f, f
+end
+set_firing(false)
+
 local shoot_for_me = mod:get("shoot_for_me")
 local next_autofire = -1.0
 local last_charge_level = 0.0
@@ -43,6 +48,7 @@ local chargeup_amt = 0.01 * mod:get("chargeup_autofire_amt")
 local time_scale = 1.0
 local is_sprinting = false
 
+local last_seen_weapon = nil
 local cached_default_autofires = {}
 local wep_template_name = nil
 local ignore_next_autofire_default = false
@@ -94,7 +100,7 @@ local _disable_autofire = function()
 
 	autofire_delay_current = nil
 	natural_current = nil
-	is_firing = false
+	set_firing(false)
 	shoot_charge_with_click = false
 	delayed_warp_end = false
 
@@ -140,13 +146,18 @@ local _get_player_unit = function()
 	return _get_player().player_unit
 end
 
-mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
-	if self._player == _get_player() then
+mod:hook(CLASS.PlayerUnitWeaponExtension, "_fill_action_params", function(func, self, weapon, ...)
+	if last_seen_weapon ~= weapon and self._player == _get_player() then
+		last_seen_weapon = weapon
+
 		_cache_current_wep_firemode()
 		_disable_autofire()
-		local wep_template = self._weapons[slot_name].weapon_template
+		local wep_template = weapon.weapon_template
 		wep_template_name = wep_template.name
-		autofire_delay_normal, autofire_delay_aim, natural_autofire_normal, natural_autofire_aim = mod.get_weapon_data(wep_template, include_psyker_bees)
+		autofire_delay_normal, autofire_delay_aim, natural_autofire_normal, natural_autofire_aim = mod.get_weapon_data(
+			wep_template,
+			include_psyker_bees
+		)
 
 		track_autofire = (autofire_delay_normal or autofire_delay_aim) and true or false
 		autofire_delay_current = autofire_delay_normal
@@ -164,6 +175,7 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
 			ignore_next_autofire_default = false
 		end
 	end
+	return func(self, weapon, ...)
 end)
 
 mod:hook_safe(CLASS.GameModeManager, "init", function(...)
@@ -178,7 +190,9 @@ mod:hook_safe(CLASS.GameModeManager, "init", function(...)
 	end
 end)
 
-mod:hook_safe(CLASS.ActionHandler, "start_action", function(self, id, ...)
+mod:hook(CLASS.ActionHandler, "start_action", function(func, self, id, ...)
+	func(self, id, ...)
+
 	if self._unit == _get_player_unit() then
 		if id == "weapon_action" then
 			time_scale = self._registered_components[id].component.time_scale
@@ -216,8 +230,8 @@ mod:hook_require("scripts/utilities/alternate_fire", function(AlternateFire)
 		end)
 
 	mod:hook_safe(AlternateFire, "stop",
-		function(alternate_fire_component, peeking_component, first_person_extension, weapon_tweak_templates_component,
-				 animation_extension, weapon_template, player_unit, ...)
+		function(alternate_fire_component, peeking_component, first_person_extension,
+				 weapon_tweak_templates_component, animation_extension, weapon_template, player_unit, ...)
 			if player_unit == _get_player_unit() then
 				_end_aim()
 			end
@@ -249,7 +263,9 @@ local _fire_chargeup = function()
 	end
 end
 
-mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "fixed_update", function(self, unit, ...)
+mod:hook(CLASS.PlayerUnitWeaponExtension, "fixed_update", function(func, self, unit, ...)
+	func(self, unit, ...)
+
 	if track_natural and chargeup_autofire and natural_current == NATURAL_MODE.chargeup and unit == _get_player_unit() then
 		local action_module_charge_component = self._action_module_charge_component
 		local charge_level = action_module_charge_component.charge_level
@@ -280,11 +296,11 @@ local _input_action_hook = function(func, self, action_name)
 		-- track if the user is holding down LMB
 		if val and not shoot_for_me then
 			if is_lmb_action or (not is_firing and action_name == "action_one_hold") then
-				is_firing = true
+				set_firing(true)
 				next_autofire = -1
 			end
 			if action_name == "action_one_release" then
-				is_firing = false
+				set_firing(false)
 			end
 		end
 
@@ -319,7 +335,7 @@ local _input_action_hook = function(func, self, action_name)
 				end
 			elseif is_lmb_action and (is_firing or shoot_for_me) and autofire_delay_current then
 				-- the original core of the mod; signal LMB press every X seconds
-				local this_t = Managers.time and Managers.time:time("main")
+				local this_t = Managers.time:time("main")
 				if next_autofire < 0 or this_t >= next_autofire then
 					next_autofire = this_t
 						+ autofire_delay_current / time_scale

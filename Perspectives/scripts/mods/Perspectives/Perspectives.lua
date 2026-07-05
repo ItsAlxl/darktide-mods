@@ -14,14 +14,18 @@ local cycle_includes_center = mod:get("cycle_includes_center")
 local center_to_1p_human = mod:get("center_to_1p_human")
 local center_to_1p_ogryn = mod:get("center_to_1p_ogryn")
 
-local enable_reasons = {}
-local disable_reasons = {}
+local desire_3p = false
+local center_aim_override = false
+local switch_stack = {}
+local autoswitch_edges = {}
 local autoswitch_events = {}
 
+local current_wield_slot = nil
 local use_3p_freelook_node = false
 local holding_primary = false
 local holding_secondary = false
 local is_spectating = false
+local is_blocking_slabshield = false
 local is_in_hub = false
 local xhair_fallback = nil
 
@@ -88,35 +92,24 @@ mod.on_all_mods_loaded = function()
 	end
 end
 
-local _has_disable_reason = function()
-	for _, d in pairs(disable_reasons) do
-		if d then
-			return true
-		end
+local _apply_center_aim_override = function(override)
+	if center_aim_override ~= override then
+		center_aim_override = override
+		mod.apply_perspective()
 	end
-	return false
-end
-
-local _has_enable_reason = function()
-	for _, d in pairs(enable_reasons) do
-		if d then
-			return true
-		end
-	end
-	return false
 end
 
 mod.is_requesting_third_person = function()
-	local enable = false
-	local disable = false
-	if is_spectating then
-		enable = not not (enable_reasons["_base"] or enable_reasons["spectate"])
-		disable = disable_reasons["_base"] or disable_reasons["spectate"]
-	else
-		enable = _has_enable_reason()
-		disable = _has_disable_reason()
+	if center_aim_override then
+		return false
 	end
-	return enable and not disable
+
+	local stack_size = #switch_stack
+	if stack_size > 0 then
+		return switch_stack[stack_size].to_3p
+	end
+
+	return desire_3p
 end
 
 mod.apply_perspective = function()
@@ -129,69 +122,72 @@ mod.apply_perspective = function()
 	end
 end
 
-mod.disable_3p_due_to = function(reason, d, apply_if_different)
-	local prev = disable_reasons[reason]
-
-	if d then
-		disable_reasons[reason] = d
-	else
-		disable_reasons[reason] = nil
+mod.find_reason = function(reason)
+	for i = #switch_stack, 1, -1 do
+		if switch_stack[i].reason == reason then
+			return i
+		end
 	end
-
-	local diff = prev ~= disable_reasons[reason]
-	if (apply_if_different == nil or apply_if_different) and diff then
-		mod.apply_perspective()
-	end
-	return diff
-end
-
-mod.enable_3p_due_to = function(reason, e, apply_if_different)
-	local prev = enable_reasons[reason]
-
-	if e then
-		enable_reasons[reason] = true
-	else
-		enable_reasons[reason] = nil
-	end
-
-	local diff = prev ~= enable_reasons[reason]
-	if (apply_if_different == nil or apply_if_different) and diff then
-		mod.apply_perspective()
-	end
-	return diff
-end
-
-mod.mux_3p_due_to = function(reason, enable, disable)
-	local diff = mod.enable_3p_due_to(reason, enable, false)
-	diff = mod.disable_3p_due_to(reason, disable, false) or diff
-	if diff then
-		mod.apply_perspective()
-	end
-	return diff
+	return -1
 end
 
 mod.clear_reason = function(reason)
-	return mod.mux_3p_due_to(reason, false, false)
+	local idx = mod.find_reason(reason)
+	if idx > 0 then
+		local last = idx == #switch_stack
+		table.remove(switch_stack, idx)
+		if last then
+			mod.apply_perspective()
+		end
+	end
 end
 
-local _autoswitch_from_event = function(reason, event, condition)
-	if not event then
-		return mod.clear_reason(reason)
+mod.autoswitch = function(reason, to_3p, stack)
+	local at = mod.find_reason(reason)
+	if stack then
+		if at > 0 then
+			local si = switch_stack[at]
+			si.to_3p = to_3p
+
+			local last = at == #switch_stack
+			if not last then
+				table.remove(switch_stack, at)
+				switch_stack[#switch_stack + 1] = si
+			end
+		else
+			switch_stack[#switch_stack + 1] = {
+				reason = reason,
+				to_3p = to_3p,
+			}
+		end
+		mod.apply_perspective()
+	else
+		mod.set_third_person(to_3p)
+	end
+end
+
+local _autoswitch_from_event = function(category, event, condition)
+	if is_spectating and category ~= "spectate" then
+		return
 	end
 
-	local autoswitch_mode = 0
-	if autoswitch_events[event] and (condition == nil or condition) then
-		autoswitch_mode = autoswitch_events[event]
+	local auto_mode = autoswitch_events[event]
+	local clear = event == nil or (condition ~= nil and not condition) or auto_mode == 0
+	local result = clear and 0 or auto_mode
+	if autoswitch_edges[category] ~= result then
+		autoswitch_edges[category] = result
+		if clear then
+			mod.clear_reason(category)
+		elseif auto_mode then
+			mod.autoswitch(category, auto_mode == 2 or auto_mode == -2, auto_mode > 0)
+		end
 	end
-	return mod.mux_3p_due_to(reason, autoswitch_mode == 2, autoswitch_mode == 1)
 end
 
 mod.on_setting_changed = function(id)
 	local val = mod:get(id)
 
-	if id == "allow_switching" then
-		mod.disable_3p_due_to("_mod", not val)
-	elseif id == "xhair_fallback" then
+	if id == "xhair_fallback" then
 		xhair_fallback = val
 	elseif id == "cycle_includes_center" then
 		cycle_includes_center = val
@@ -214,7 +210,7 @@ mod.on_setting_changed = function(id)
 		or id == "custom_offset_zoom"
 		or id == "custom_distance_ogryn"
 		or id == "custom_offset_ogryn"
-		then
+	then
 		mod.apply_custom_viewpoint()
 	elseif string.find(id, OPT_PREFIX_AUTOSWITCH) then
 		local key = string.sub(id, string.len(OPT_PREFIX_AUTOSWITCH))
@@ -238,15 +234,17 @@ mod.on_setting_changed("autoswitch_lunge_ogryn")
 mod.on_setting_changed("autoswitch_lunge_human")
 mod.on_setting_changed("autoswitch_act2_primary")
 mod.on_setting_changed("autoswitch_act2_secondary")
+mod.on_setting_changed("autoswitch_slab_block")
 mod.apply_custom_viewpoint()
 
+mod.set_third_person = function(to_3p)
+	table.clear(switch_stack)
+	desire_3p = to_3p
+	mod.apply_perspective()
+end
+
 mod.toggle_third_person = function()
-	local prev = mod.is_requesting_third_person()
-	mod.clear_reason("slot")
-	mod.clear_reason("spectate")
-	if prev == mod.is_requesting_third_person() then
-		mod.enable_3p_due_to("_base", not prev)
-	end
+	mod.set_third_person(not mod.is_requesting_third_person())
 end
 
 mod.kb_toggle_third_person = function()
@@ -255,17 +253,34 @@ mod.kb_toggle_third_person = function()
 	end
 end
 
-mod.on_unload = function(quitting)
-	if not quitting then
-		mod.disable_3p_due_to("_unload", true)
+mod:hook_safe(CLASS.ActionBlock, "start", function(self, action_settings)
+	-- self._weapon_template is set in ActionWeaponBase.init from action_params.weapon
+	if action_settings.kind ~= "block_windup" and action_settings.weapon_special then
+		local weapon_template = self._weapon_template
+		-- if action_settings.weapon_special is true then it's planting, not just blocking
+		if weapon_template and weapon_template.name == "ogryn_powermaul_slabshield_p1_m1" then
+			is_blocking_slabshield = true
+			_autoswitch_from_event("slab_block", "slab_block", true)
+		end
 	end
-end
+end)
 
-mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
-	_autoswitch_from_event("slot", slot_name)
-	_autoswitch_from_event("act2", nil)
-	holding_primary = slot_name == "slot_primary"
-	holding_secondary = slot_name == "slot_secondary"
+mod:hook_safe(CLASS.ActionBlock, "finish", function()
+	if is_blocking_slabshield then
+		is_blocking_slabshield = false
+		_autoswitch_from_event("slab_block", "slab_block", false)
+	end
+end)
+
+mod:hook(CLASS.PlayerUnitWeaponExtension, "_fill_action_params", function(func, self, weapon, player_unit, wielded_slot)
+	if self._player == Managers.player:local_player(1) and current_wield_slot ~= wielded_slot then
+		current_wield_slot = wielded_slot
+		_autoswitch_from_event("slot", wielded_slot)
+		_autoswitch_from_event("act2", nil)
+		holding_primary = wielded_slot == "slot_primary"
+		holding_secondary = wielded_slot == "slot_secondary"
+	end
+	return func(self, weapon, player_unit, wielded_slot)
 end)
 
 local _input_action_hook = function(func, self, action_name)
@@ -294,7 +309,7 @@ mod:hook(CLASS.MissionManager, "force_third_person_mode", function(func, self)
 		request_3p = true
 	end
 
-	mod.enable_3p_due_to("_base", request_3p)
+	mod.set_third_person(request_3p)
 	return request_3p
 end)
 
@@ -344,7 +359,7 @@ mod:hook(CLASS.PlayerUnitCameraExtension, "_evaluate_camera_tree", function(func
 	local tree, node = nil, nil
 
 	local is_ogryn = self._breed.name == "ogryn"
-	mod.disable_3p_due_to("aim", _should_aim_to_1p(alternate_fire_is_active, is_ogryn))
+	_apply_center_aim_override(_should_aim_to_1p(alternate_fire_is_active, is_ogryn))
 
 	local wants_sprint_camera = sprint_character_state_component.wants_sprint_camera
 	local is_lunging = self._lunge_character_state_component.is_lunging
@@ -490,10 +505,13 @@ mod:hook(CLASS.PlayerHuskFirstPersonExtension, "_update_first_person_mode", func
 end)
 
 mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, game_mode_name, ...)
-    is_in_hub = game_mode_name == "hub"
+	is_in_hub = game_mode_name == "hub"
 end)
 
 mod:hook(CLASS.HudElementCrosshair, "_get_current_crosshair_type", function(func, self, crosshair_settings)
 	local type = func(self, crosshair_settings)
-	return crosshair_settings and xhair_fallback ~= "none" and (type == "none" or type == "ironsight") and not is_in_hub and mod.is_requesting_third_person() and xhair_fallback or type
+	return crosshair_settings and xhair_fallback ~= "none"
+		and (type == "none" or type == "ironsight")
+		and not is_in_hub and mod.is_requesting_third_person()
+		and xhair_fallback or type
 end)

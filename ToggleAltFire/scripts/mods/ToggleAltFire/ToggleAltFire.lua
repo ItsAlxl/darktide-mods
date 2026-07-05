@@ -90,6 +90,7 @@ mod.on_setting_changed = function(id)
 	end
 end
 
+local last_seen_weapon = nil
 local perform_toggle = false
 local toggle_state = false
 local prev_act = false
@@ -120,12 +121,15 @@ local function _is_toggleable_weapon(template)
 	return false
 end
 
-mod:hook_safe("PlayerUnitWeaponExtension", "on_slot_wielded", function(self, slot_name, ...)
-	local template = self._weapons[slot_name].weapon_template
-	_set_toggleable(
-		slot_name == "slot_secondary" and _is_toggleable_weapon(template)
-		or slot_name == "slot_grenade_ability" and _is_toggleable_blitz(template)
-	)
+mod:hook(CLASS.PlayerUnitWeaponExtension, "_fill_action_params", function(func, self, weapon, player_unit, wielded_slot)
+	if last_seen_weapon ~= weapon and self._player == Managers.player:local_player(1) then
+		last_seen_weapon = weapon
+
+		local template = weapon.weapon_template
+		_set_toggleable(wielded_slot == "slot_secondary" and _is_toggleable_weapon(template)
+			or wielded_slot == "slot_grenade_ability" and _is_toggleable_blitz(template))
+	end
+	return func(self, weapon, player_unit, wielded_slot)
 end)
 
 local _input_action_hook = function(func, self, action_name)
@@ -166,13 +170,14 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 	end
 end)
 
-mod:hook_require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint", function(instance)
-	mod:hook(instance, "sprint_input", function(func, input_source, is_sprinting, sprint_requires_press_to_interrupt)
-		if is_sprinting then
-			request_sprint = false
-		elseif request_sprint then
-			return true
-		end
-		return func(input_source, is_sprinting, sprint_requires_press_to_interrupt)
+mod:hook_require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint",
+	function(instance)
+		mod:hook(instance, "sprint_input", function(func, input_source, is_sprinting, sprint_requires_press_to_interrupt)
+			if is_sprinting then
+				request_sprint = false
+			elseif request_sprint then
+				return true
+			end
+			return func(input_source, is_sprinting, sprint_requires_press_to_interrupt)
+		end)
 	end)
-end)

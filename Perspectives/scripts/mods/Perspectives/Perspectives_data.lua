@@ -1,10 +1,14 @@
 local mod = get_mod("Perspectives")
 
-local autoswitch_options = {
-	{ text = "autoswitch_to_none",  value = 0 },
-	{ text = "autoswitch_to_first", value = 1 },
-	{ text = "autoswitch_to_third", value = 2 },
-}
+local _create_autoswitch_options = function()
+	return {
+		{ text = "autoswitch_to_none",         value = 0 },
+		{ text = "autoswitch_to_first_revert", value = 1 },
+		{ text = "autoswitch_to_third_revert", value = 2 },
+		{ text = "autoswitch_to_first_stay",   value = -1 },
+		{ text = "autoswitch_to_third_stay",   value = -2 },
+	}
+end
 
 local xhair_options = {}
 for _, type in ipairs(mod._xhair_types) do
@@ -20,11 +24,6 @@ return {
 	is_togglable = false,
 	options = {
 		widgets = {
-			{
-				setting_id    = "allow_switching",
-				type          = "checkbox",
-				default_value = true,
-			},
 			{
 				setting_id      = "third_person_toggle",
 				type            = "keybind",
@@ -185,85 +184,91 @@ return {
 						setting_id    = "autoswitch_slot_device",
 						type          = "dropdown",
 						default_value = 1,
-						options       = autoswitch_options,
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_spectate",
 						type          = "dropdown",
 						default_value = 2,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_slot_primary",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_slot_secondary",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_slot_grenade_ability",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_slot_pocketable",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_slot_pocketable_small",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_slot_luggable",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_slot_unarmed",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_sprint",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_lunge_ogryn",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_lunge_human",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_act2_primary",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
 					},
 					{
 						setting_id    = "autoswitch_act2_secondary",
 						type          = "dropdown",
 						default_value = 0,
-						options       = table.clone(autoswitch_options),
+						options       = _create_autoswitch_options(),
+					},
+					{
+						setting_id    = "autoswitch_slab_block",
+						type          = "dropdown",
+						default_value = 0,
+						options       = _create_autoswitch_options(),
 					},
 				},
 			},

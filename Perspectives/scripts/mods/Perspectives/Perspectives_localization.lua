@@ -5,14 +5,6 @@ local loc = {
 		en = "Switch between first and third person perspectives.",
 		["zh-cn"] = "在第一人称和第三人称视角之间切换。",
 	},
-	allow_switching = {
-		en = "Allow Perspective Switching",
-		["zh-cn"] = "允许视角切换",
-	},
-	allow_switching_description = {
-		en = "Turn off to effectively disable the mod.",
-		["zh-cn"] = "关闭此选项实际禁用此模组。",
-	},
 	third_person_toggle = {
 		en = "Switch Perspective (Toggle)",
 		["zh-cn"] = "切换视角（切换）",
@@ -193,7 +185,7 @@ local loc = {
 		["zh-cn"] = "冲锋（欧格林）",
 	},
 	autoswitch_lunge_human = {
-		en = "Charge (Zealot)",
+		en = "Charge (Human)",
 		["zh-cn"] = "冲锋（狂信徒）",
 	},
 	autoswitch_act2_primary = {
@@ -206,13 +198,25 @@ local loc = {
 		en = "Don't Switch",
 		["zh-cn"] = "不切换",
 	},
-	autoswitch_to_first = {
-		en = "1st Person",
-		["zh-cn"] = "第一人称",
+	autoswitch_to_first_revert = {
+		en = "1st Person, During",
+		["zh-cn"] = "第一人称 During",
 	},
-	autoswitch_to_third = {
-		en = "3rd Person",
-		["zh-cn"] = "第三人称",
+	autoswitch_to_third_revert = {
+		en = "3rd Person, During",
+		["zh-cn"] = "第三人称 During",
+	},
+	autoswitch_to_first_stay = {
+		en = "1st Person, During & After",
+		["zh-cn"] = "第一人称 During & After",
+	},
+	autoswitch_to_third_stay = {
+		en = "3rd Person, During & After",
+		["zh-cn"] = "第三人称 During & After",
+	},
+	autoswitch_slab_block = {
+		en = Localize("loc_weapon_special_defensive_stance")
+			.. " - " .. Localize("loc_weapon_family_ogryn_powermaul_slabshield_p1_m1"),
 	},
 }
 
@@ -228,7 +232,10 @@ else
 	mod._xhair_types = { "none", "cross", "assault", "bfg", "shotgun", "spray_n_pray", "dot" }
 	for _, type in ipairs(mod._xhair_types) do
 		loc["xhair_" .. type] = {
-			en = Localize(type == "none" and "loc_setting_notification_type_none" or ("loc_setting_crosshair_type_override_" .. (type ~= "cross" and type or "killshot"))),
+			en = Localize(
+				type == "none" and "loc_setting_notification_type_none"
+				or ("loc_setting_crosshair_type_override_" .. (type ~= "cross" and type or "killshot"))
+			),
 		}
 	end
 end

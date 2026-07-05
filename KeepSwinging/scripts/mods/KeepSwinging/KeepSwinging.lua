@@ -30,6 +30,7 @@ for act, _ in pairs(disable_actions) do
     }
 end
 
+local last_seen_weapon = nil
 local allow_swinging = false
 local allow_primary = false
 local allow_special = false
@@ -164,13 +165,15 @@ local _is_valid_ranged_special = function(special_attack)
     return table.contains(VALID_RANGED_SPECIAL_TYPES, special_attack.type)
 end
 
-mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self, slot_name, ...)
-    if self._player == Managers.player:local_player(1) then
-        local wep = self._weapons[slot_name].weapon_template
-        local keywords = wep and wep.keywords
+mod:hook(CLASS.PlayerUnitWeaponExtension, "_fill_action_params", function(func, self, weapon, ...)
+    if last_seen_weapon ~= weapon and self._player == Managers.player:local_player(1) then
+        last_seen_weapon = weapon
+
+        local wep_template = weapon.weapon_template
+        local keywords = wep_template and wep_template.keywords
         if keywords then
             local is_melee = keywords and table.contains(keywords, "melee")
-            local special_attack = wep.displayed_attacks and wep.displayed_attacks.special
+            local special_attack = wep_template.displayed_attacks and wep_template.displayed_attacks.special
 
             if is_melee then
                 allow_primary = include_melee_primary
@@ -186,6 +189,7 @@ mod:hook_safe(CLASS.PlayerUnitWeaponExtension, "on_slot_wielded", function(self,
         current_action = allow_primary and "action_one_hold" or "weapon_extra_hold"
         allow_swinging = allow_primary or allow_special
     end
+    return func(self, weapon, ...)
 end)
 
 mod._toggle_swinging = function(held)
