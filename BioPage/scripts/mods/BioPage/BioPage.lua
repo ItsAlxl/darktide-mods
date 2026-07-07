@@ -56,7 +56,7 @@ local show_bio_text_at_idx = function(idx)
 		text_anim_data.end_height = 0
 	else
 		text_anim_data.start_y = bio_text_widget.offset[2]
-		text_anim_data.end_y = vert_spacing * (idx + 1) - bg_y_pad - 10 -- -10 due to a gap in the material
+		text_anim_data.end_y = vert_spacing * idx - bg_y_pad - 10 -- -10 due to a gap in the material
 		text_anim_data.text = bio_btn_widgets[idx].content.bio_text or missing_text
 
 		text_height = 3 * bg_y_pad +
@@ -70,7 +70,7 @@ local show_bio_text_at_idx = function(idx)
 		local widget = bio_btn_widgets[btn_idx]
 		local anim_data = widget.accordion_anim_data
 		anim_data.start_y = widget.offset[2]
-		anim_data.end_y = vert_spacing * btn_idx + (btn_idx > idx and text_height or 0)
+		anim_data.end_y = vert_spacing * (btn_idx - 1) + (btn_idx > idx and text_height or 0)
 	end
 
 	if inv_view then
@@ -125,11 +125,18 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_content_bluepri
 		init = function(parent, widget, element, callback_name)
 			local content = widget.content
 			local bio_data = element.bio_data
-			content.text = element.bio_title .. (bio_data and (" - " .. Localize(bio_data.display_name)) or "")
+			content.text = element.bio_title .. (bio_data and (" · " .. Localize(bio_data.display_name)) or "")
 			content.bio_idx = element.bio_idx
-			content.bio_text = element.bio_text or get_bio_data_text(bio_data) or missing_text
 
-			local start_y = vert_spacing * element.bio_idx
+			local bio_text = element.bio_text or get_bio_data_text(bio_data) or missing_text
+			local addendum = element.bio_addendum
+			if addendum then
+				-- control trailing whitespace
+				bio_text = string.match(bio_text, "^%s*(.-)%s*$") .. "\n\n" .. addendum
+			end
+			content.bio_text = bio_text
+
+			local start_y = vert_spacing * (element.bio_idx - 1)
 			widget.accordion_anim_data = {
 				start_y = start_y,
 				end_y = start_y,
@@ -301,7 +308,8 @@ mod:hook_safe(CLASS.InventoryBackgroundView, "_setup_top_panel", function(self, 
 		local tuple = bio_tuples[i]
 		local bio_data = tuple.bio_data
 		local bio_text = tuple.bio_text
-		if mod:get(tuple.bio_key) and (bio_text or is_bio_data_valid(bio_data)) then
+		local bio_key = tuple.bio_key
+		if mod:get(bio_key) and (bio_text or is_bio_data_valid(bio_data)) then
 			local bio_entry = {
 				scenegraph_id = "bio_entry",
 				widget_type = "bio_button",
@@ -310,9 +318,27 @@ mod:hook_safe(CLASS.InventoryBackgroundView, "_setup_top_panel", function(self, 
 				bio_data = bio_data,
 				bio_text = bio_text,
 			}
-			if tuple.bio_key == "archetype" then
-				bio_entry.bio_title = profile.name .. " - " .. Localize(profile.archetype.archetype_name)
+
+			if bio_key == "archetype" then
+				local companion_name = profile.companion and profile.companion.name
+				bio_entry.bio_title = profile.name .. (companion_name and (" & " .. companion_name) or "")
+					.. " · " .. Localize(profile.archetype.archetype_name)
+			elseif bio_key == "personality" then
+				local voice_effects = profile.voice_effects
+				if voice_effects and voice_effects.vox_effect_01 and voice_effects.vox_effect_02 and voice_effects.vox_effect_03 then
+					bio_entry.bio_addendum = string.format(
+						"%s\n%s: %.2f index\n%s: %.1f mm\n%s: %d%%",
+						Localize("loc_character_create_title_voice"),
+						Localize("loc_cryptic_voice_effect_01"),
+						voice_effects.vox_effect_01 / 100,
+						Localize("loc_cryptic_voice_effect_02"),
+						voice_effects.vox_effect_02 / 10,
+						Localize("loc_cryptic_voice_effect_03"),
+						voice_effects.vox_effect_03
+					)
+				end
 			end
+
 			layout_data[num_layouts] = bio_entry
 			num_layouts = num_layouts + 1
 		end
