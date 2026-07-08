@@ -29,6 +29,14 @@ local is_blocking_slabshield = false
 local is_in_hub = false
 local xhair_fallback = nil
 
+local _cache_hub = function(game_mode_name)
+	if game_mode_name == nil then
+		local gm = Managers and Managers.state and Managers.state.game_mode
+		game_mode_name = gm and gm:game_mode_name()
+	end
+	is_in_hub = game_mode_name == "hub" or game_mode_name == "prologue_hub"
+end
+
 local _get_followed_unit = function()
 	local camera_handler = mod.get_camera_handler()
 	return camera_handler and camera_handler:camera_follow_unit()
@@ -235,12 +243,19 @@ mod.on_setting_changed("autoswitch_lunge_human")
 mod.on_setting_changed("autoswitch_act2_primary")
 mod.on_setting_changed("autoswitch_act2_secondary")
 mod.on_setting_changed("autoswitch_slab_block")
-mod.apply_custom_viewpoint()
 
 mod.set_third_person = function(to_3p)
 	table.clear(switch_stack)
 	desire_3p = to_3p
 	mod.apply_perspective()
+
+	if is_in_hub and not to_3p then
+		local player_unit = mod.get_player_unit()
+		local unit_1p = player_unit and ScriptUnit.extension(player_unit, "first_person_system"):first_person_unit()
+		if unit_1p then
+			Unit.set_scalar_for_materials(unit_1p, "inv_jitter_alpha", mod:get("show_hub_hands") and 0 or 1, true)
+		end
+	end
 end
 
 mod.toggle_third_person = function()
@@ -504,10 +519,6 @@ mod:hook(CLASS.PlayerHuskFirstPersonExtension, "_update_first_person_mode", func
 	return func(self, t)
 end)
 
-mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, game_mode_name, ...)
-	is_in_hub = game_mode_name == "hub"
-end)
-
 mod:hook(CLASS.HudElementCrosshair, "_get_current_crosshair_type", function(func, self, crosshair_settings)
 	local type = func(self, crosshair_settings)
 	return crosshair_settings and xhair_fallback ~= "none"
@@ -515,3 +526,10 @@ mod:hook(CLASS.HudElementCrosshair, "_get_current_crosshair_type", function(func
 		and not is_in_hub and mod.is_requesting_third_person()
 		and xhair_fallback or type
 end)
+
+mod:hook_safe(CLASS.GameModeManager, "init", function(self, game_mode_context, game_mode_name, ...)
+	_cache_hub(game_mode_name)
+end)
+
+_cache_hub()
+mod.apply_custom_viewpoint()

@@ -61,6 +61,11 @@ return {
 				},
 			},
 			{
+				setting_id    = "show_hub_hands",
+				type          = "checkbox",
+				default_value = false,
+			},
+			{
 				setting_id  = "group_3p_behavior",
 				type        = "group",
 				sub_widgets = {

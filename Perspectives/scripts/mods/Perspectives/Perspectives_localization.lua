@@ -218,6 +218,9 @@ local loc = {
 		en = Localize("loc_weapon_special_defensive_stance")
 			.. " - " .. Localize("loc_weapon_family_ogryn_powermaul_slabshield_p1_m1"),
 	},
+	show_hub_hands = {
+		en = "Show Hands in Hub",
+	},
 }
 
 local crosshair_remap = get_mod("crosshair_remap")
