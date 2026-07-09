@@ -7,6 +7,7 @@ return {
 	},
 	mod_description = {
 		en = "Options to auto-accept matchmaking, lobbies, and party invites.",
+		["zh-cn"] = "提供选项自动接受匹配、任务准备和小队邀请。",
 		["zh-tw"] = "提供自動接受配對、大廳和小隊邀請的選項。",
 		ru = "Born Ready - Опции автовыбора в подборе, лобби и при приглашениях в группу.",
 	},
@@ -73,18 +74,22 @@ return {
 	},
 	eom_skip_now_kb = {
 		en = "Skip Now",
+		["zh-cn"] = "立即跳过",
 		["zh-tw"] = "立即跳過",
 	},
 	eom_cancel_chat = {
 		en = "Chat cancels skip",
+		["zh-cn"] = "聊天取消跳过",
 		["zh-tw"] = "聊天時取消跳過",
 	},
 	eom_cancel_kb = {
 		en = "Cancel Current Skip",
+		["zh-cn"] = "取消这次跳过",
 		["zh-tw"] = "取消目前的跳過",
 	},
 	msg_eom_cancel = {
 		en = "End-of-mission autoskip cancelled",
+		["zh-cn"] = "已取消任务结束自动跳过",
 		["zh-tw"] = "任務結束自動跳過已取消",
 	},
 }
