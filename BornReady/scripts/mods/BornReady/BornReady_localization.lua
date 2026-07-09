@@ -22,15 +22,15 @@ return {
 	},
 	autoskip = {
 		en = "Automatically skip",
-		["zh-cn"] = "跳过任务结束界面",
+		["zh-cn"] = "自动跳过",
+		ru = "Пропускать экран наград",
 		["zh-tw"] = "自動跳過任務結算",
-		ru = "Пропустить экран окончания миссии",
 	},
 	end_skip_time = {
 		en = "Delay (seconds)",
-		["zh-cn"] = "跳过任务结束延迟（秒）",
+		["zh-cn"] = "延迟（秒）",
+		ru = "Задержка перед пропуском экрана наград (сек)",
 		["zh-tw"] = "延遲（秒）",
-		ru = "Задержка перед пропуском экрана окончания миссии (сек)",
 	},
 	automatch = {
 		en = "Accept mission prompt",
@@ -65,16 +65,18 @@ return {
 	auto_no = {
 		en = "Automatically Decline",
 		["zh-cn"] = "自动拒绝",
+		ru = "Пропустить сейчас",
 		["zh-tw"] = "自動拒絕",
-		ru = "Автоматически отклонять",
 	},
 	eom_skip = {
 		en = Localize("loc_item_type_end_of_round"),
+		ru = "Чат отменяет пропуск экрана наград",
 		["zh-tw"] = "回合結束",
 	},
 	eom_skip_now_kb = {
 		en = "Skip Now",
 		["zh-cn"] = "立即跳过",
+		ru = "Отменить текущий пропуск",
 		["zh-tw"] = "立即跳過",
 	},
 	eom_cancel_chat = {
