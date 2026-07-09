@@ -65,33 +65,35 @@ return {
 	auto_no = {
 		en = "Automatically Decline",
 		["zh-cn"] = "自动拒绝",
-		ru = "Пропустить сейчас",
+		ru = "Автоматически отклонять",
 		["zh-tw"] = "自動拒絕",
 	},
 	eom_skip = {
 		en = Localize("loc_item_type_end_of_round"),
-		ru = "Чат отменяет пропуск экрана наград",
 		["zh-tw"] = "回合結束",
 	},
 	eom_skip_now_kb = {
 		en = "Skip Now",
 		["zh-cn"] = "立即跳过",
-		ru = "Отменить текущий пропуск",
+		ru = "Пропустить сейчас",
 		["zh-tw"] = "立即跳過",
 	},
 	eom_cancel_chat = {
 		en = "Chat cancels skip",
 		["zh-cn"] = "聊天取消跳过",
+		ru = "Чат отменяет пропуск экрана наград",
 		["zh-tw"] = "聊天時取消跳過",
 	},
 	eom_cancel_kb = {
 		en = "Cancel Current Skip",
 		["zh-cn"] = "取消这次跳过",
+		ru = "Отменить текущий пропуск",
 		["zh-tw"] = "取消目前的跳過",
 	},
 	msg_eom_cancel = {
 		en = "End-of-mission autoskip cancelled",
 		["zh-cn"] = "已取消任务结束自动跳过",
+		ru = "Автопропуск экрана наград отменён",
 		["zh-tw"] = "任務結束自動跳過已取消",
 	},
 }
