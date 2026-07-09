@@ -3,19 +3,19 @@ return {
 		en = "Character Screen Contracts",
 		["zh-cn"] = "梅尔克协议优化",
 		ru = "Индикатор контрактов",
-		["zh-tw"] = "梅爾克協議改善",
+		["zh-tw"] = "改善梅爾克契約",
 	},
 	mod_description = {
 		en = "Displays contract progress on character select.",
 		["zh-cn"] = "在角色选择界面显示每周协议进度。",
 		ru = "Character Screen Contracts - Показывает индикатор контрактов на экране выбора персонажей.",
-		["zh-tw"] = "在角色選擇界面顯示每周協議進度。",
+		["zh-tw"] = "在角色選擇畫面顯示契約進度。",
 	},
 	corner = {
 		en = "Corner",
 		["zh-cn"] = "对齐角",
 		ru = "Угол",
-		["zh-tw"] = "對齊",
+		["zh-tw"] = "角落",
 	},
 	corner_tl = {
 		en = "Top-Left",
@@ -57,6 +57,6 @@ return {
 		en = "Unable to fetch weekly contracts",
 		["zh-cn"] = "无法拉取每周协议",
 		ru = "Не удалось получить еженедельные контракты",
-		["zh-tw"] = "無法取得每周協議",
+		["zh-tw"] = "無法取得每週契約",
 	},
 }
