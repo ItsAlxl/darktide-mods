@@ -81,7 +81,6 @@ local function _is_toggleable_weapon(template)
 		untoggle_actions.action_sprint = mod:get("_sprint_base")
 	end
 
-	mod:echo("Looking for %s: %s", mod.weapon_to_family(template.name), mod:get(mod.weapon_to_family(template.name)))
 	return mod:get(mod.weapon_to_family(template.name))
 end
 
