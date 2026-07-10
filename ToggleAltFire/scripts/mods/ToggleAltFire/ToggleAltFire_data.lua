@@ -1,5 +1,29 @@
 local mod = get_mod("ToggleAltFire")
 
+local blitz_options = {}
+for k, b in pairs(mod.blitz_data) do
+	blitz_options[#blitz_options + 1] = {
+		setting_id    = k,
+		type          = "checkbox",
+		default_value = b.default == nil or b.default,
+	}
+end
+
+local weapon_options = {}
+for k, w in pairs(mod.weapon_family_data) do
+	weapon_options[#weapon_options + 1] = {
+		setting_id    = k,
+		type          = "checkbox",
+		default_value = w.default == nil or w.default,
+	}
+end
+
+local sort_options = function(a, b)
+	return mod:localize(a.setting_id) < mod:localize(b.setting_id)
+end
+table.sort(blitz_options, sort_options)
+table.sort(weapon_options, sort_options)
+
 return {
 	name = "ToggleAltFire",
 	description = mod:localize("mod_description"),
@@ -65,164 +89,12 @@ return {
 			{
 				setting_id  = "optgroup_blitzes",
 				type        = "group",
-				sub_widgets = {
-					{
-						setting_id    = "psyker_smite",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "psyker_chain_lightning",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "psyker_throwing_knives",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "frag_grenade",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "krak_grenade",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "smoke_grenade",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "shock_grenade",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "fire_grenade",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "zealot_throwing_knives",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "ogryn_grenade_box",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "ogryn_grenade_box_cluster",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "ogryn_grenade_frag",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "ogryn_grenade_friend_rock",
-						type          = "checkbox",
-						default_value = true,
-					},
-				}
+				sub_widgets = blitz_options
 			},
 			{
 				setting_id  = "optgroup_weps",
 				type        = "group",
-				sub_widgets = {
-					{
-						setting_id    = "autogun",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "autopistol",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "lasgun",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "laspistol",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "stub_rifle",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "stub_pistol",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "shotgun",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "rippergun",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "bolter",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "boltpistol",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "shotpistol_shield",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "heavystubber",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "grenadier_gauntlet",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "shotgun_grenade",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "plasma_rifle",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "flamer",
-						type          = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id    = "force_staff",
-						type          = "checkbox",
-						default_value = true,
-					},
-				}
+				sub_widgets = weapon_options
 			},
 		}
 	}

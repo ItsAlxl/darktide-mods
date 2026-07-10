@@ -39,48 +39,8 @@ for _, act in pairs(MELEE_EXTRAS) do
 	untoggle_actions[act] = mod:get("action_melee_extra")
 end
 
-local toggleable_weapon_categories = {
-	autogun = mod:get("autogun"),
-	autopistol = mod:get("autopistol"),
-	lasgun = mod:get("lasgun"),
-	laspistol = mod:get("laspistol"),
-	stub_rifle = mod:get("stub_rifle"),
-	stub_pistol = mod:get("stub_pistol"),
-	shotgun = mod:get("shotgun"),
-	rippergun = mod:get("rippergun"),
-	bolter = mod:get("bolter"),
-	boltpistol = mod:get("boltpistol"),
-	shotpistol_shield = mod:get("shotpistol_shield"),
-	heavystubber = mod:get("heavystubber"),
-	grenadier_gauntlet = mod:get("grenadier_gauntlet"),
-	shotgun_grenade = mod:get("shotgun_grenade"),
-	plasma_rifle = mod:get("plasma_rifle"),
-	flamer = mod:get("flamer"),
-	force_staff = mod:get("force_staff")
-}
-
-local toggleable_blitzes = {
-	psyker_smite = mod:get("psyker_smite"),
-	psyker_chain_lightning = mod:get("psyker_chain_lightning"),
-	psyker_throwing_knives = mod:get("psyker_throwing_knives"),
-	frag_grenade = mod:get("frag_grenade"),
-	krak_grenade = mod:get("krak_grenade"),
-	smoke_grenade = mod:get("smoke_grenade"),
-	shock_grenade = mod:get("shock_grenade"),
-	fire_grenade = mod:get("fire_grenade"),
-	zealot_throwing_knives = mod:get("zealot_throwing_knives"),
-	ogryn_grenade_box = mod:get("ogryn_grenade_box"),
-	ogryn_grenade_box_cluster = mod:get("ogryn_grenade_box_cluster"),
-	ogryn_grenade_frag = mod:get("ogryn_grenade_frag"),
-	ogryn_grenade_friend_rock = mod:get("ogryn_grenade_friend_rock"),
-}
-
 mod.on_setting_changed = function(id)
 	local val = mod:get(id)
-	if toggleable_weapon_categories[id] ~= nil then
-		toggleable_weapon_categories[id] = val
-	end
-
 	if id == "action_melee_extra" then
 		for _, act in pairs(MELEE_EXTRAS) do
 			untoggle_actions[act] = val
@@ -104,21 +64,25 @@ end
 
 local function _is_toggleable_blitz(template)
 	untoggle_actions.action_sprint = mod:get("_sprint_blitz")
-	return toggleable_blitzes[template.name]
+	return mod:get(template.name)
 end
 
 local function _is_toggleable_weapon(template)
-	for _, k in pairs(template.keywords) do
-		if toggleable_weapon_categories[k] then
-			if k == "force_staff" then
-				untoggle_actions.action_sprint = mod:get("_sprint_staff")
-			else
-				untoggle_actions.action_sprint = mod:get("_sprint_base")
-			end
-			return true
+	local keywords = template.keywords
+	local is_staff = false
+	for i = 1, #keywords do
+		if keywords[i] == "force_staff" then
+			is_staff = true
 		end
 	end
-	return false
+	if is_staff then
+		untoggle_actions.action_sprint = mod:get("_sprint_staff")
+	else
+		untoggle_actions.action_sprint = mod:get("_sprint_base")
+	end
+
+	mod:echo("Looking for %s: %s", mod.weapon_to_family(template.name), mod:get(mod.weapon_to_family(template.name)))
+	return mod:get(mod.weapon_to_family(template.name))
 end
 
 mod:hook(CLASS.PlayerUnitWeaponExtension, "_fill_action_params", function(func, self, weapon, player_unit, wielded_slot)
