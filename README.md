@@ -177,6 +177,11 @@ Allows you to reorder your characters on the character select screen.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/75).
 
+## ServoSkullNametag
+Name your servo skulls!
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/1039).
+
 ## Shirtless
 Takes your shirt off (client-side only).
 
