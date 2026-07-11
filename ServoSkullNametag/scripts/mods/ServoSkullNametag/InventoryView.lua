@@ -123,11 +123,14 @@ end)
 mod:hook(CLASS.InventoryView, "_switch_active_layout", function(func, self, tab_context)
 	func(self, tab_context)
 
-	local is_cosmetics = tab_context.telemetry_name == "inventory_view_cosmetics"
+	local player = self._preview_player
+	local profile = player and player:profile()
+	local archetype_name = profile and profile.archetype.name
+	local show = tab_context.telemetry_name == "inventory_view_cosmetics" and archetype_name == "cryptic"
 	for _, tbox in pairs(tboxes) do
 		local w = tbox.widget
 		if w then
-			w.content.visible = is_cosmetics
+			w.content.visible = show
 		end
 	end
 	end_typing()
