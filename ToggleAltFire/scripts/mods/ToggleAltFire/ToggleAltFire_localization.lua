@@ -1,7 +1,6 @@
 local mod = get_mod("ToggleAltFire")
 
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
-local MasterItems = require("scripts/backend/master_items")
 local UiWeaponPatternSettings = require("scripts/settings/ui/ui_weapon_pattern_settings")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 
@@ -9,21 +8,68 @@ mod.weapon_to_family = function(weapon_id)
 	return string.sub(weapon_id, 1, string.len(weapon_id) - 3) or nil
 end
 
-mod.blitz_data = {}
-for player_archetype, archetype_talents in pairs(ArchetypeTalents) do
-	for _, definition in pairs(archetype_talents) do
+-- unfortunately, this doesn't exist in the base game
+-- the closest is a fetched list; but by the time it's fetched, it's too late
+local blitz_to_template = {
+	adamant_grenade = "adamant_grenade",
+	adamant_grenade_improved = "adamant_grenade",
+	adamant_shock_mine = "shock_mine",
+	broker_blitz_flash_grenade = "quick_flash_grenade",
+	broker_blitz_flash_grenade_improved = "quick_flash_grenade",
+	broker_blitz_tox_grenade = "tox_grenade",
+	cryptic_grenade_ability_arc_grenade = "arc_grenade",
+	ogryn_box_explodes = "ogryn_grenade_box_cluster",
+	ogryn_grenade_box = "ogryn_grenade_box",
+	ogryn_grenade_frag = "ogryn_grenade_frag",
+	ogryn_grenade_friend_rock = "ogryn_grenade_friend_rock",
+	veteran_frag_grenade = "frag_grenade",
+	veteran_krak_grenade = "krak_grenade",
+	veteran_smoke_grenade = "smoke_grenade",
+	zealot_flame_grenade = "fire_grenade",
+	zealot_shock_grenade = "shock_grenade",
+}
+
+--[[ Use this to find missing blitzes; only works after initial load
+local MasterItems = require("scripts/backend/master_items")
+local missing_blitzes = {}
+local any_missing = false
+for _, archetype_talents in pairs(ArchetypeTalents) do
+	for talent_id, definition in pairs(archetype_talents) do
 		local ability = definition.player_ability and definition.player_ability.ability
 		if ability and ability.ability_type == "grenade_ability" then
 			local blitz_item = MasterItems.get_item(ability.inventory_item_name)
 			local template_id = blitz_item and blitz_item.weapon_template
-			if template_id and not mod.blitz_data[template_id] then
+			if template_id and (not blitz_to_template[talent_id] or blitz_to_template[talent_id] ~= template_id) then
 				local template = WeaponTemplates[template_id]
 				if template and template.actions and template.actions.action_aim then
-					mod.blitz_data[template_id] = {
-						loc = Localize("loc_class_" .. player_archetype .. "_name")
-							.. " - " .. Localize(definition.display_name)
-					}
+					missing_blitzes[talent_id] = template_id
+					any_missing = true
 				end
+			end
+		end
+	end
+end
+if any_missing then
+	mod:echo("Add the following blitzes to ToggleAltFire's blitz_to_template:")
+	for talent_id, template_id in pairs(missing_blitzes) do
+		mod:echo("%s = \"%s\"", talent_id, template_id)
+	end
+else
+	mod:echo("No blitzes missing for ToggleAltFire")
+end
+--]]
+
+mod.blitz_data = {}
+for player_archetype, archetype_talents in pairs(ArchetypeTalents) do
+	for talent_id, definition in pairs(archetype_talents) do
+		local ability = definition.player_ability and definition.player_ability.ability
+		if ability and ability.ability_type == "grenade_ability" then
+			local template_id = blitz_to_template[talent_id]
+			if template_id and not mod.blitz_data[template_id] then
+				mod.blitz_data[template_id] = {
+					loc = Localize("loc_class_" .. player_archetype .. "_name")
+						.. " - " .. Localize(definition.display_name)
+				}
 			end
 		end
 	end
