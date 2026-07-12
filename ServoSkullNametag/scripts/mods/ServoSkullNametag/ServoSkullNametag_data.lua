@@ -41,18 +41,21 @@ return {
 			},
 			{
 				setting_id = "icon_base",
+				title = "skull_base",
 				type = "dropdown",
 				default_value = "",
 				options = create_skull_icon_options(),
 			},
 			{
 				setting_id = "icon_flame",
+				title = "skull_flame",
 				type = "dropdown",
 				default_value = "",
 				options = create_skull_icon_options(),
 			},
 			{
 				setting_id = "icon_med",
+				title = "skull_med",
 				type = "dropdown",
 				default_value = "",
 				options = create_skull_icon_options(),

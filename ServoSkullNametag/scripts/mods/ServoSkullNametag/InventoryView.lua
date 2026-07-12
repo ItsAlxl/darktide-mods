@@ -36,7 +36,7 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_definitions", f
 		widgets[widget_id] = UIWidget.create_definition(
 			table.clone(TextInputPassTemplates.simple_input_field),
 			scenegraph_id, {
-				placeholder_text = placeholder,
+				placeholder_text = mod:localize("skull_" .. id),
 				hide_baseline = true,
 			}
 		)
@@ -46,9 +46,9 @@ mod:hook_require("scripts/ui/views/inventory_view/inventory_view_definitions", f
 		}
 	end
 
-	create_textbox("base", 0, Localize("loc_talent_cryptic_servo_skull"))
-	create_textbox("flame", 50, Localize("loc_talent_cryptic_servo_skull_flamethrower"))
-	create_textbox("med", 100, Localize("loc_talent_cryptic_servo_skull_inject_ally"))
+	create_textbox("base", 0)
+	create_textbox("flame", 50)
+	create_textbox("med", 100)
 end)
 
 local set_is_typing = function(tbox, typing)
@@ -83,7 +83,7 @@ local set_focused_tbox = function(focused_id)
 			local next_tbox = tboxes[focused_id]
 			set_is_typing(next_tbox, true)
 		end
-		Views["inventory_background_view"].close_on_hotkey_pressed = focused_id ~= nil
+		Views["inventory_background_view"].close_on_hotkey_pressed = focused_id == nil
 	end
 end
 

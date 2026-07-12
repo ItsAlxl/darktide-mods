@@ -1,7 +1,7 @@
 local mod = get_mod("ServoSkullNametag")
 
 local SpecialRules = require("scripts/settings/ability/special_rules_settings").special_rules
-local Nameplate = mod:io_dofile("ServoSkullNametag/scripts/mods/ServoSkullNametag/Nameplate")
+local Nameplates = mod:io_dofile("ServoSkullNametag/scripts/mods/ServoSkullNametag/Nameplates")
 
 mod:io_dofile("ServoSkullNametag/scripts/mods/ServoSkullNametag/InventoryView")
 
@@ -11,8 +11,9 @@ local remote_skull_names = {}
 mod:hook(CLASS.HudElementWorldMarkers, "init", function(func, self, ...)
 	func(self, ...)
 	local marker_templates = self._marker_templates
-	if marker_templates and not marker_templates.servoskull_nametag then
-		marker_templates.servoskull_nametag = Nameplate
+	if marker_templates and not marker_templates.servoskull_nametag_hub then
+		marker_templates.servoskull_nametag_hub = Nameplates.servoskull_nametag_hub
+		marker_templates.servoskull_nametag_mission = Nameplates.servoskull_nametag_mission
 	end
 end)
 
@@ -31,7 +32,7 @@ local create_skull_nameplate = function(HudElementNameplates, companion_unit, pl
 	if skull_id then
 		Managers.event:trigger(
 			"add_world_marker_unit",
-			"servoskull_nametag",
+			HudElementNameplates._is_mission_hub and "servoskull_nametag_hub" or "servoskull_nametag_mission",
 			companion_unit,
 			function(id)
 				HudElementNameplates:_on_companion_nameplate_marker_spawned(companion_unit, id)
@@ -125,12 +126,12 @@ local set_name_from_cmd = function(type, ...)
 	mod.set_my_skull_name(type, table.concat({ ... }, " "))
 end
 
-mod:command("name_base_skull", mod:localize("cmd_name_base_skull"), function(...)
+mod:command("name_base_skull", mod:localize("skull_base"), function(...)
 	set_name_from_cmd("base", ...)
 end)
-mod:command("name_flame_skull", mod:localize("cmd_name_flame_skull"), function(...)
+mod:command("name_flame_skull", mod:localize("skull_flame"), function(...)
 	set_name_from_cmd("flame", ...)
 end)
-mod:command("name_med_skull", mod:localize("cmd_name_med_skull"), function(...)
+mod:command("name_med_skull", mod:localize("skull_med"), function(...)
 	set_name_from_cmd("med", ...)
 end)

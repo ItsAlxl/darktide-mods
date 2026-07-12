@@ -5,13 +5,13 @@ return {
 	mod_description = {
 		en = "Name your servo skulls!",
 	},
-	icon_base = {
+	skull_base = {
 		en = Localize("loc_talent_cryptic_servo_skull"),
 	},
-	icon_flame = {
+	skull_flame = {
 		en = Localize("loc_talent_cryptic_servo_skull_flamethrower"),
 	},
-	icon_med = {
+	skull_med = {
 		en = Localize("loc_talent_cryptic_servo_skull_inject_ally"),
 	},
 	icon_choice_blank = {
