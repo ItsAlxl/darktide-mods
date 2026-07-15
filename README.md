@@ -162,8 +162,8 @@ Easily randomize your current loadout.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/66).
 
-## PlaystationPrompts
-Replaces X-Box BYXA button prompts with Playstation O▲■X button prompts.
+## PlaystationPrompts aka Custom Gamepad Symbols
+Sets the symbols used for gamepad input prompts.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/153).
 
