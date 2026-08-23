@@ -1,0 +1,11 @@
+{
+	"name": "Tap2Dodge",
+	"description": "Double-tap movement keys to dodge.",
+	"version": "1.3",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/78",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/Tap2Dodge",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

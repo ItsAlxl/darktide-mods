@@ -1,0 +1,11 @@
+{
+	"name": "LookAround",
+	"description": "Provides the ability to freelook.",
+	"version": "1.7",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/115",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/LookAround",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

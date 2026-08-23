@@ -1,0 +1,11 @@
+{
+	"name": "LobbyModifierInfo",
+	"description": "Displays mission modifier information in the lobby screen.",
+	"version": "1.3",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/788",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/LobbyModifierInfo",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

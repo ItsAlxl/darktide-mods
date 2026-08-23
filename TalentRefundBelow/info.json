@@ -1,0 +1,11 @@
+{
+	"name": "Talent Tree UX Improvements",
+	"description": "Remove any talent with right-click, remove a talent and all dependent talents with a double right-click, and swap talents with a double left-click",
+	"version": "1.10",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/216",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/TalentRefundBelow",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

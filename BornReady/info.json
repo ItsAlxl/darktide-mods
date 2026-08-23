@@ -1,0 +1,11 @@
+{
+	"name": "BornReady",
+	"description": "Configurably automate readying up when joining a lobby, skipping the end-of-mission screen, accepting mission prompts, and accepting/declining party invites and join requests.",
+	"version": "1.7",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/96",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/BornReady",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

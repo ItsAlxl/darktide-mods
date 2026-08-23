@@ -1,0 +1,11 @@
+{
+	"name": "LoadoutNames",
+	"description": "Adds the ability to name your loadouts.",
+	"version": "1.7",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/286",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/LoadoutNames",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

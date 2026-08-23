@@ -1,7 +1,11 @@
 {
 	"name": "Quick-Inject Stimms",
+	"description": "Adds a button to switch to your Stimm and instantly inject. Also allows you to dictate what you equip after injection.",
+	"version": "1.6",
 	"author": "alxl",
-	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/PanicStimm",
-	"nexusId": "266",
-	"version": "1.5"
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/266",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/PanicStimm",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
 }

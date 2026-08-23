@@ -1,0 +1,11 @@
+{
+	"name": "PickForMe Loadout and Cosmetic Randomizer",
+	"description": "Easily randomize your current equipment and cosmetics.",
+	"version": "1.8",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/66",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/PickForMe",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

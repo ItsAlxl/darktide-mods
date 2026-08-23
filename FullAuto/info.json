@@ -1,7 +1,11 @@
 {
 	"name": "FullAuto",
+	"description": "Make all possible ranged weapons fully automatic.",
+	"version": "1.19",
 	"author": "alxl",
-	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/FullAuto",
-	"nexusId": "87",
-	"version": "1.18"
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/87",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/FullAuto",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
 }

@@ -1,0 +1,11 @@
+{
+	"name": "InventoryStats",
+	"description": "Displays some character stats in the inventory screen",
+	"version": "1.10",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/152",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/InventoryStats",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

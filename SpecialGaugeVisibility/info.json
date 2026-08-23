@@ -1,0 +1,11 @@
+{
+	"name": "SpecialGaugeVisibility",
+	"description": "Set whether or not special weapon gauges should be visible when unequipped",
+	"version": "1.1",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/442",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/SpecialGaugeVisibility",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

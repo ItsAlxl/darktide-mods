@@ -1,0 +1,11 @@
+{
+	"name": "PerilGauge",
+	"description": "Adds a configurable HUD bar for your current peril/heat.",
+	"version": "1.11",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/243",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/PerilGauge",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

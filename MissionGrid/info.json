@@ -1,0 +1,11 @@
+{
+	"name": "MissionGrid",
+	"description": "Organizes the mission board into a grid.",
+	"version": "1.5",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/570",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/MissionGrid",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

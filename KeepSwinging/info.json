@@ -1,7 +1,11 @@
 {
 	"name": "KeepSwinging",
+	"description": "Adds keybinds to spam light melee attacks for you.",
+	"version": "1.13",
 	"author": "alxl",
-	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/KeepSwinging",
-	"nexusId": "88",
-	"version": "1.12"
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/88",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/KeepSwinging",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
 }

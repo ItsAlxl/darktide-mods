@@ -1,0 +1,11 @@
+{
+	"name": "Character Screen Contracts",
+	"description": "Displays your current contract progress in character select.",
+	"version": "1.14",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/71",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/BetterMelk",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

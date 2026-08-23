@@ -1,0 +1,11 @@
+{
+	"name": "StickySprint",
+	"description": "Changes sprint to only toggle on, i.e. pressing the sprint key while sprinting doesn't stop sprinting.",
+	"version": "1.6",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/62",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/StickySprint",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

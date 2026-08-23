@@ -1,0 +1,11 @@
+{
+	"name": "Stamina Visibility",
+	"description": "Allows you to tweak the stamina bar's visibility.",
+	"version": "1.11",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/57",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/StaminaVis",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}
