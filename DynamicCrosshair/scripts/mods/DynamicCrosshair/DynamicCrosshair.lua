@@ -1,14 +1,10 @@
 local mod = get_mod("DynamicCrosshair")
+
 local Breed = require("scripts/utilities/breed")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local Recoil = require("scripts/utilities/recoil")
 local Sway = require("scripts/utilities/sway")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-
-local OPT_PREFIX_VILLAINS = "^villains_"
-local OPT_PREFIX_HEROES = "^heroes_"
-local OPT_PREFIX_PROPS = "^props_"
-local OPT_PREFIX_GHOST = "^ghost_"
 
 local CROSSHAIR_POSITION_LERP_SPEED = 35
 local HIT_MARKER_PREFIX = "hit_"
@@ -19,30 +15,10 @@ local HIT_IDX_DISTANCE = 2
 local HIT_IDX_ACTOR = 4
 
 local color_types = {
-	villains = {
-		mod:get("villains_alpha"),
-		mod:get("villains_red"),
-		mod:get("villains_green"),
-		mod:get("villains_blue"),
-	},
-	heroes = {
-		mod:get("heroes_alpha"),
-		mod:get("heroes_red"),
-		mod:get("heroes_green"),
-		mod:get("heroes_blue"),
-	},
-	props = {
-		mod:get("props_alpha"),
-		mod:get("props_red"),
-		mod:get("props_green"),
-		mod:get("props_blue"),
-	},
-	ghost = {
-		mod:get("ghost_alpha"),
-		mod:get("ghost_red"),
-		mod:get("ghost_green"),
-		mod:get("ghost_blue"),
-	},
+	color_villains = mod:get("color_villains"),
+	color_heroes = mod:get("color_heroes"),
+	color_props = mod:get("color_props"),
+	color_ghost = mod:get("color_ghost"),
 }
 
 local custom_color_mod = nil
@@ -65,22 +41,6 @@ local update_ghost_crosshair = false
 local crosshair_ui_hud = nil
 local latest_color_type = nil
 local latest_range = MAX_DISTANCE
-
-local _rgba_to_idx = function(rgba)
-	if rgba == "alpha" then
-		return 1
-	end
-	if rgba == "red" then
-		return 2
-	end
-	if rgba == "green" then
-		return 3
-	end
-	if rgba == "blue" then
-		return 4
-	end
-	return -1
-end
 
 local _is_hitmarker = function(part_name)
 	return string.sub(part_name, 1, string.len(HIT_MARKER_PREFIX)) == HIT_MARKER_PREFIX
@@ -105,8 +65,9 @@ local _set_ghost_base_color = function()
 		return
 	end
 	for part_name, style in pairs(ghost_crosshair_widget.style) do
-		ColorUtilities.color_copy(color_types.ghost, style.color)
-		style.color[1] = update_ghost_crosshair and not _is_hitmarker(part_name) and color_types.ghost[1] or 0
+		local target_color = style.color or style.text_color
+		ColorUtilities.color_copy(color_types.color_ghost, target_color)
+		target_color[1] = update_ghost_crosshair and not _is_hitmarker(part_name) and color_types.color_ghost[1] or 0
 	end
 end
 
@@ -118,21 +79,8 @@ mod.on_setting_changed = function(id)
 		_apply_perspective_reposition()
 	elseif id == "show_ghost_crosshair" then
 		ghost_crosshair_visible = val
-	elseif string.find(id, OPT_PREFIX_VILLAINS) then
-		local key = string.sub(id, string.len(OPT_PREFIX_VILLAINS))
-		color_types.villains[_rgba_to_idx(key)] = val
-	elseif string.find(id, OPT_PREFIX_HEROES) then
-		local key = string.sub(id, string.len(OPT_PREFIX_HEROES))
-		color_types.heroes[_rgba_to_idx(key)] = val
-	elseif string.find(id, OPT_PREFIX_PROPS) then
-		local key = string.sub(id, string.len(OPT_PREFIX_PROPS))
-		color_types.props[_rgba_to_idx(key)] = val
-	elseif string.find(id, OPT_PREFIX_GHOST) then
-		local key = string.sub(id, string.len(OPT_PREFIX_GHOST))
-		color_types.ghost[_rgba_to_idx(key)] = val
-		if key ~= "alpha" then
-			_set_ghost_base_color()
-		end
+	elseif color_types[id] then
+		ColorUtilities.color_copy(val, color_types[id])
 	end
 end
 
@@ -264,9 +212,9 @@ mod:hook_safe(CLASS.PlayerUnitFirstPersonExtension, "fixed_update", function(sel
 					local breed = target_unit_data_extension and target_unit_data_extension:breed()
 
 					color_type = breed and (
-						Breed.is_minion(breed) and "villains"
-						or Breed.is_player(breed) and "heroes"
-						or Breed.is_prop(breed) and "props"
+						Breed.is_minion(breed) and "color_villains"
+						or Breed.is_player(breed) and "color_heroes"
+						or Breed.is_prop(breed) and "color_props"
 					) or nil
 				end
 			end
@@ -364,13 +312,13 @@ mod:hook_safe(CLASS.HudElementCrosshair, "update", function(self, dt, t, ui_rend
 		local color = latest_color_type and color_types[latest_color_type] or custom_color
 		for part_name, style in pairs(widget.style) do
 			if not _is_hitmarker(part_name) then
-				ColorUtilities.color_copy(color or base_def.style[part_name].color, style.color)
+				ColorUtilities.color_copy(color or base_def.style[part_name].color, style.color or style.text_color)
 			end
 
 			local ghost_style = ghost_crosshair_widget and ghost_crosshair_widget.style
 				and ghost_crosshair_widget.style[part_name]
 			if ghost_style then
-				ghost_style.color[1] = update_ghost_crosshair and not _is_hitmarker(part_name) and color_types.ghost[1]
+				ghost_style.color[1] = update_ghost_crosshair and not _is_hitmarker(part_name) and color_types.color_ghost[1]
 					or 0
 				if update_ghost_crosshair then
 					ghost_style.angle = style.angle

@@ -11,23 +11,14 @@ local localization = {
 		en = "Symbol",
 		["zh-cn"] = "图案",
 	},
+	color = {
+		en = Localize("loc_item_type_metal_color")
+	},
+	blank = {
+		en = ""
+	},
 	reset = {
-		en = Localize("loc_settings_menu_reset_to_default"),
-	},
-	reset_none = {
-		en = "",
-	},
-	red = {
-		en = "Red",
-		["zh-cn"] = "红色",
-	},
-	green = {
-		en = "Green",
-		["zh-cn"] = "绿色",
-	},
-	blue = {
-		en = "Blue",
-		["zh-cn"] = "蓝色",
+		en = Localize("loc_stimm_lab_reset_title")
 	},
 	syringe_corruption_pocketable = {
 		en = Localize("loc_pickup_pocketable_01")
