@@ -1,0 +1,11 @@
+{
+	"name": "AnonPlayers",
+	"description": "Anonymizes player names.",
+	"version": "1.6",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/117",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/AnonPlayers",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}
