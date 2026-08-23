@@ -1,7 +1,11 @@
 {
-	"name": "Custom Gamepad Symbols",
+	"name": "Custom Gamepad Symbols (including Playstation)",
+	"description": "Sets the symbols used for gamepad input prompts",
+	"version": "1.3",
 	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/153",
 	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/PlaystationPrompts",
-	"nexusId": "153",
-	"version": "1.2"
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
 }

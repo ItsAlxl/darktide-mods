@@ -1,7 +1,11 @@
 {
 	"name": "ServoSkullNametag",
+	"description": "Name your servo skulls!",
+	"version": "1.3",
 	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/1039",
 	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/ServoSkullNametag",
-	"nexusId": "1039",
-	"version": "1.2"
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
 }

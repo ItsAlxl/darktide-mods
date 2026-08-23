@@ -1,7 +1,11 @@
 {
 	"name": "BioPage",
+	"description": "Adds a bio page that lists out the choices you made during character creation. Also works when inspecting other players.",
+	"version": "1.6",
 	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/341",
 	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/BioPage",
-	"nexusId": "341",
-	"version": "1.5"
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
 }

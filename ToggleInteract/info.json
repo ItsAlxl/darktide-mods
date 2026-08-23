@@ -1,0 +1,11 @@
+{
+	"name": "ToggleInteract",
+	"description": "Held interactions become toggled interactions.",
+	"version": "1.5",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/120",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/ToggleInteract",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

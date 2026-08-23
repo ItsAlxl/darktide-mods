@@ -1,0 +1,11 @@
+{
+	"name": "Sort Mastery",
+	"description": "Sorts Brunt's Armory and Mastery lists to keep similar items together.",
+	"version": "1.5",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/109",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/SortBrunt",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

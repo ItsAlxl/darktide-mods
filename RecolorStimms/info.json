@@ -1,0 +1,11 @@
+{
+	"name": "RecolorStimms",
+	"description": "Customize the color of stimms and their cases, and swap the syringe stickers.",
+	"version": "1.5",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/267",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/RecolorStimms",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

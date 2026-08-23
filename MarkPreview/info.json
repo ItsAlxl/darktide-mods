@@ -1,0 +1,11 @@
+{
+	"name": "MarkPreview",
+	"description": "See the weapon details when switching marks.",
+	"version": "1.3",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/362",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/MarkPreview",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

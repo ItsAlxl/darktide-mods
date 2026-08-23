@@ -33,16 +33,20 @@ mod.set_stimm_color = function(stimm_name, color)
 	local custom_color = stimm_data.custom_color
 	if color then
 		local math_floor = math.floor
-		mod:set(stimm_name .. "_red", math_floor(color[1] * 255))
-		mod:set(stimm_name .. "_green", math_floor(color[2] * 255))
-		mod:set(stimm_name .. "_blue", math_floor(color[3] * 255))
+		mod:set(stimm_name .. "_color", {
+			255,
+			math_floor(color[1] * 255),
+			math_floor(color[2] * 255),
+			math_floor(color[3] * 255),
+		})
 		custom_color[1] = color[1]
 		custom_color[2] = color[2]
 		custom_color[3] = color[3]
 	else
-		custom_color[1] = mod:get(stimm_name .. "_red") / 255
-		custom_color[2] = mod:get(stimm_name .. "_green") / 255
-		custom_color[3] = mod:get(stimm_name .. "_blue") / 255
+		local c = mod:get(stimm_name .. "_color")
+		custom_color[1] = c[2] / 255
+		custom_color[2] = c[3] / 255
+		custom_color[3] = c[4] / 255
 	end
 	stimm_data.custom_rgb_255 = nil
 end
@@ -98,16 +102,7 @@ end
 _refresh_all()
 
 mod.on_setting_changed = function(id)
-	if id == "reset" then
-		local stimm_to_reset = mod:get(id)
-		if mod.stimm_data[stimm_to_reset] then
-			mod.reset_stimm_color_to_default(stimm_to_reset)
-			mod.reset_stimm_decal_index_to_default(stimm_to_reset)
-		end
-		mod:set(id, "")
-	else
-		_refresh_all()
-	end
+	_refresh_all()
 end
 
 mod:hook(CLASS.SyringeEffects, "_set_color", function(func, self)

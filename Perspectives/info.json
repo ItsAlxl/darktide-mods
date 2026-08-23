@@ -1,7 +1,11 @@
 {
-	"name": "Perspectives",
+	"name": "Perspectives Mod",
+	"description": "Switch between first and third person perspectives.",
+	"version": "1.14",
 	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/111",
 	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/Perspectives",
-	"nexusId": "111",
-	"version": "1.13"
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
 }

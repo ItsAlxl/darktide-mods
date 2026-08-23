@@ -1,0 +1,11 @@
+{
+	"name": "GoToMastery",
+	"description": "Adds a Mastery button to the inventory screen and re-bless menu. Adds buttons in the inventory to go to the crafting menu.",
+	"version": "1.9",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/361",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/GoToMastery",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

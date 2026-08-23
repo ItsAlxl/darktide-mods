@@ -1,0 +1,11 @@
+{
+	"name": "MissionBrief",
+	"description": "Shows mission details in the loading screen.",
+	"version": "1.12",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/387",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/MissionBrief",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

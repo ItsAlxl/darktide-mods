@@ -1,0 +1,11 @@
+{
+	"name": "TagKeys",
+	"description": "Bind the tagging wheel options to individual keys.",
+	"version": "1.5",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/79",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/TagKeys",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

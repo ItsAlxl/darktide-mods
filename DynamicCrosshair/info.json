@@ -1,0 +1,11 @@
+{
+	"name": "DynamicCrosshair",
+	"description": "Changes your crosshair's color when aiming over an enemy, ally, or barrel and dynamically adjusts its position in 3rd person.",
+	"version": "1.8",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/110",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/DynamicCrosshair",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

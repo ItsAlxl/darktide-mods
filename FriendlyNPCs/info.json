@@ -1,0 +1,11 @@
+{
+	"name": "Friendly Vendors",
+	"description": "Force all vendors to like you. Or to dislike you, if you're into that.",
+	"version": "1.3",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/59",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/FriendlyNPCs",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

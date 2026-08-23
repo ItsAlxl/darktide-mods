@@ -1,0 +1,11 @@
+{
+	"name": "ConstantFov",
+	"description": "Tweak or disable FOV-changing effects.",
+	"version": "1.10",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/91",
+	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/ConstantFov",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"name": "AfterBlitz",
+	"description": "Choose what your character does when unequipping their blitz.",
+	"version": "1.11",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/80",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/AfterGrenade",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

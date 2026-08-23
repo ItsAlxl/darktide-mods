@@ -1,0 +1,11 @@
+{
+	"name": "ToggleQuell",
+	"description": "Makes quelling peril a toggled action.",
+	"version": "1.2",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/228",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/ToggleQuell",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}
