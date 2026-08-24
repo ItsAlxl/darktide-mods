@@ -17,7 +17,9 @@ jobs:
     name: Get changed mods
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.changed-mods.outputs.all_changed_files }}
+      # only modified cuz new mods need to be setup & uploaded on Nexus before CI/CD
+      modified_info: ${{ steps.changed-mods.outputs.modified_files }}
+      modified_count: ${{ steps.changed-mods.outputs.modified_files_count }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -35,9 +37,10 @@ jobs:
     name: Publish updated mods
     runs-on: ubuntu-latest
     needs: [get-changed-mods]
+    if: needs.get-changed-mods.outputs.modified_count > 0
     strategy:
       matrix:
-        mod: ${{ fromJSON(needs.get-changed-mods.outputs.matrix) }}
+        mod: ${{ fromJSON(needs.get-changed-mods.outputs.modified_info) }}
       max-parallel: 4
       fail-fast: false
     steps:
@@ -48,21 +51,21 @@ jobs:
       - name: Get mod info
         id: mod-info
         run: |
-          echo "::set-output name=metadata::$(jq -c . < ${{ matrix.mod }})"
-          echo "::set-output name=dir::$(dirname ${{ matrix.mod }})"
+          echo "metadata=$(jq -c . < ${{ matrix.mod }})" >> $GITHUB_OUTPUT
+          echo "dir=$(dirname ${{ matrix.mod }})" >> $GITHUB_OUTPUT
       - name: Fetch mod ident
         id: mod-ident
         run: |
           scopedId=$(basename ${{ fromJSON(steps.mod-info.outputs.metadata).homepage }})
-          echo "::set-output name=scopedId::$scopedId"
+          echo "scopedId=$scopedId" >> $GITHUB_OUTPUT
           modId=$(curl -s "$API_BASE/games/$GAME_DOMAIN/mods/$scopedId"\
             -H "apikey:${{ secrets.NEXUSMODS_API_KEY }}"\
             | jq -r ".data.id")
-          echo "::set-output name=modId::$modId"
+          echo "modId=$modId" >> $GITHUB_OUTPUT
           fileId=$(curl -s "$API_BASE/mods/$modId/files/"\
             -H "apikey:${{ secrets.NEXUSMODS_API_KEY }}"\
             | jq -r ".data.mod_files[0].id")
-          echo "::set-output name=fileId::$fileId"
+          echo "fileId=$fileId" >> $GITHUB_OUTPUT
       - name: Zip files
         run: zip -r ${{ steps.mod-info.outputs.dir }}.zip ${{ steps.mod-info.outputs.dir }}/
       - name: Upload to NexusMods
