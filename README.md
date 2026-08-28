@@ -172,6 +172,11 @@ Recolor stimms and their cases, and swap the syringe stickers.
 
 Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/267).
 
+## RememberTheRealWorld
+Reminds you to take a break from the game every once in a while.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/1240).
+
 ## ReorderChars aka Reorder Characters
 Allows you to reorder your characters on the character select screen.
 

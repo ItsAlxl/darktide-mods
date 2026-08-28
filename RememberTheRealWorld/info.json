@@ -1,0 +1,11 @@
+{
+	"name": "RememberTheRealWorld",
+	"description": "Reminds you to take a break from the game every once in a while.",
+	"version": "1.0",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/RememberTheRealWorld",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}
