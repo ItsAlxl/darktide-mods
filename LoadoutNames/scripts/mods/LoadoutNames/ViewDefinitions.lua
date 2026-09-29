@@ -16,20 +16,27 @@ tooltip_text_style.offset = {
 	2
 }
 
+mod.tbox_position = {
+	mod:get("tbox_x"),
+	mod:get("tbox_y"),
+	50
+}
+mod.tooltip_position = {
+	mod:get("tooltip_x"),
+	mod:get("tooltip_y"),
+	50
+}
+
 mod:hook_require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_definitions", function(defs)
 	defs.scenegraph_definition.loadout_name_tbox_area = {
-		vertical_alignment = "center",
-		parent = "screen",
+		vertical_alignment = "top",
 		horizontal_alignment = "right",
+		parent = "screen",
 		size = {
 			300,
 			40
 		},
-		position = {
-			-75,
-			-360,
-			0
-		}
+		position = mod.tbox_position
 	}
 
 	defs.widget_definitions.loadout_name_tbox = UIWidget.create_definition(
@@ -53,42 +60,41 @@ mod:hook_require("scripts/ui/view_elements/view_element_profile_presets/view_ele
 
 	defs.scenegraph_definition.loadout_name_tooltip_area = {
 		vertical_alignment = "top",
-		parent = "screen",
 		horizontal_alignment = "right",
+		parent = "screen",
 		size = {
 			450,
 			40
 		},
-		position = {
-			-75,
-			50,
-			50
-		}
+		position = mod.tooltip_position
 	}
-	defs.widget_definitions.loadout_name_tooltip = UIWidget.create_definition({
+	defs.widget_definitions.loadout_name_tooltip = UIWidget.create_definition(
 		{
-			pass_type = "rect",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				offset = {
-					0,
-					0,
-					1
-				},
-				color = Color.black(192, true),
-				size_addition = {
-					0,
-					10
+			{
+				pass_type = "rect",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					offset = {
+						0,
+						0,
+						1
+					},
+					color = Color.black(192, true),
+					size_addition = {
+						0,
+						10
+					}
 				}
+			},
+			{
+				value_id = "text",
+				style_id = "text",
+				pass_type = "text",
+				value = "Loadout Name",
+				style = tooltip_text_style
 			}
 		},
-		{
-			value_id = "text",
-			style_id = "text",
-			pass_type = "text",
-			value = "Loadout Name",
-			style = tooltip_text_style
-		}
-	}, "loadout_name_tooltip_area")
+		"loadout_name_tooltip_area"
+	)
 end)
