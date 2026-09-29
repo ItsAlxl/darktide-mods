@@ -9,6 +9,18 @@ local is_typing = false
 local tooltip_widget = nil
 local tbox_widget = nil
 
+mod.on_setting_changed = function(id)
+	if id == "tbox_x" then
+		mod.tbox_position[1] = mod:get(id)
+	elseif id == "tbox_y" then
+		mod.tbox_position[2] = mod:get(id)
+	elseif id == "tooltip_x" then
+		mod.tooltip_position[1] = mod:get(id)
+	elseif id == "tooltip_y" then
+		mod.tooltip_position[2] = mod:get(id)
+	end
+end
+
 mod.set_loadout_name = function(loadout_id, name)
 	if loadout_id then
 		mod:set(loadout_id, name and name ~= "" and string.sub(name, 1, MAX_NAME_LENGTH) or nil)
@@ -61,8 +73,11 @@ local _set_loadout_name_from_iv = function(inv_view, deletion)
 end
 
 local _display_loadout_name_to_iv = function(inv_view)
-	tbox_widget = tbox_widget or (inv_view._profile_presets_element and inv_view._profile_presets_element._widgets_by_name.loadout_name_tbox)
-	tooltip_widget = tooltip_widget or (inv_view._profile_presets_element and inv_view._profile_presets_element._widgets_by_name.loadout_name_tooltip)
+	local presets_element = inv_view._profile_presets_element
+	local presets_element_widgets = presets_element and presets_element._widgets_by_name
+
+	tbox_widget = tbox_widget or (presets_element_widgets and presets_element_widgets.loadout_name_tbox)
+	tooltip_widget = tooltip_widget or (presets_element_widgets and presets_element_widgets.loadout_name_tooltip)
 
 	local widget_content = tbox_widget and tbox_widget.content
 	if widget_content then
@@ -72,15 +87,15 @@ local _display_loadout_name_to_iv = function(inv_view)
 	end
 end
 
-mod:hook(CLASS.InventoryBackgroundView, "_setup_profile_presets", function(func, self)
+mod:hook(CLASS.InventoryBackgroundView, "_validate_active_preset_with_server_items", function(func, self)
 	func(self)
 	_display_loadout_name_to_iv(self)
 end)
 
-mod:hook(CLASS.InventoryBackgroundView, "event_on_profile_preset_changed", function(func, self, profile_preset, on_preset_deleted)
+mod:hook(CLASS.InventoryBackgroundView, "event_on_profile_preset_changed", function(func, self, _, on_preset_deleted)
 	_set_loadout_name_from_iv(self, on_preset_deleted)
 	mod.end_typing()
-	func(self, profile_preset, on_preset_deleted)
+	func(self, _, on_preset_deleted)
 	_display_loadout_name_to_iv(self)
 end)
 
@@ -131,4 +146,5 @@ local _restrict_cb = function(func, ...)
 end
 mod:hook(CLASS.InventoryBackgroundView, "cb_on_weapon_swap_pressed", _restrict_cb)
 mod:hook(CLASS.InventoryBackgroundView, "cb_on_clear_all_talents_pressed", _restrict_cb)
+mod:hook(CLASS.ViewElementPlayerStats, "_handle_input", _restrict_cb)
 mod:hook(CLASS.ViewElementMenuPanel, "_select_next_tab", _restrict_cb)
