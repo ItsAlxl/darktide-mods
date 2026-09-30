@@ -1,0 +1,11 @@
+{
+	"name": "ShowStats",
+	"description": "Expand more than one category of inventory stats at once.",
+	"version": "1.0",
+	"author": "alxl",
+	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/1372",
+	"source": "https://github.com/ItsAlxl/darktide-mods/tree/main/ShowStats",
+	"funding": {
+		"kofi": "https://ko-fi.com/itsalxl"
+	}
+}

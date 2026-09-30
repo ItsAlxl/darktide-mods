@@ -192,6 +192,11 @@ Takes your shirt off (client-side only).
 
 This mod is no longer available on Nexus because it was bugged and I didn't feel like fixing/maintaining it. I do not recall the nature of the bug, but the code is available here regardless.
 
+## ShowStats
+Expand more than one category of inventory stats at once.
+
+Get it on [Nexus](https://www.nexusmods.com/warhammer40kdarktide/mods/1372).
+
 ## SortBrunt aka Sort Mastery
 Sorts Brunt's Armory and Mastery lists to keep similar items together.
 
