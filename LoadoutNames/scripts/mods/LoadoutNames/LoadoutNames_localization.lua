@@ -30,4 +30,24 @@ return {
 	group_tooltip = {
 		en = "Tooltip",
 	},
+	generic_x = {
+		en = "Horizontal Position",
+		["zh-cn"] = "水平位置",
+		ru = "Горизонтальная позиция",
+		["zh-tw"] = "水平位置",
+	},
+	generic_y = {
+		en = "Vertical Position",
+		["zh-cn"] = "垂直位置",
+		ru = "Вертикальная позиция",
+		["zh-tw"] = "垂直位置",
+	},
+	group_tbox = {
+		en = "Textbox",
+		["zh-tw"] = "文字輸入框",
+	},
+	group_tooltip = {
+		en = "Tooltip",
+		["zh-tw"] = "工具提示",
+	},
 }
