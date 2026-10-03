@@ -22,7 +22,7 @@ local _commit_loadout_slot = function(profile_preset_id, gear_id, slot)
 	end
 end
 
-local _equip_item_from_pool = function(profile_preset_id, loadout, pools, pool_slot, equip_slot)
+local _equip_item_from_pool = function(result, pools, pool_slot, equip_slot)
 	local item = math.random_array_entry(pools[pool_slot])
 	if item then
 		for _, p in pairs(pools) do
@@ -32,21 +32,7 @@ local _equip_item_from_pool = function(profile_preset_id, loadout, pools, pool_s
 			end
 		end
 
-		if not equip_slot then
-			equip_slot = pool_slot
-		end
-
-		-- Equip item
-		return ItemUtils.equip_item_in_slot(equip_slot, item):next(function(success)
-			if success then
-				local item_gear_id = item and item.gear_id
-				loadout[equip_slot] = item
-				_commit_loadout_slot(profile_preset_id, item_gear_id, equip_slot)
-
-				-- Update inventory view, in case it's open
-				Managers.event:trigger("event_inventory_view_equip_item", equip_slot, item)
-			end
-		end)
+		result[equip_slot or pool_slot] = item
 	end
 end
 
@@ -123,29 +109,32 @@ local _randomize_slots = function(profile_preset_id, slot_filter, player)
 			end
 			mod.DBG_last_pool = gear_pools
 
-			local equip_promises = {}
+			local slot_items = {}
 			for slot, _ in pairs(gear_pools) do
-				local equip_promise = nil
 				if slot == "slot_curio" then
 					if plr_level >= PlayerProgressionUnlocks.gadget_slot_1 then
-						equip_promise = _equip_item_from_pool(profile_preset_id, loadout, gear_pools, slot,
-							"slot_attachment_1")
+						_equip_item_from_pool(slot_items, gear_pools, slot, "slot_attachment_1")
 					end
 					if plr_level >= PlayerProgressionUnlocks.gadget_slot_2 then
-						equip_promise = _equip_item_from_pool(profile_preset_id, loadout, gear_pools, slot,
-							"slot_attachment_2")
+						_equip_item_from_pool(slot_items, gear_pools, slot, "slot_attachment_2")
 					end
 					if plr_level >= PlayerProgressionUnlocks.gadget_slot_3 then
-						equip_promise = _equip_item_from_pool(profile_preset_id, loadout, gear_pools, slot,
-							"slot_attachment_3")
+						_equip_item_from_pool(slot_items, gear_pools, slot, "slot_attachment_3")
 					end
 				else
-					equip_promise = _equip_item_from_pool(profile_preset_id, loadout, gear_pools, slot)
+					_equip_item_from_pool(slot_items, gear_pools, slot)
 				end
-				table.insert(equip_promises, equip_promise)
 			end
 
-			return Promise.all(unpack(equip_promises))
+			return ItemUtils.equip_slot_items(slot_items):next(function()
+				for slot, item in pairs(slot_items) do
+					loadout[slot] = item
+					_commit_loadout_slot(profile_preset_id, item.gear_id, slot)
+
+					-- Update inventory view, in case it's open
+					Managers.event:trigger("event_inventory_view_equip_item", slot, item)
+				end
+			end)
 		end)
 	end
 	return Promise.resolved()
