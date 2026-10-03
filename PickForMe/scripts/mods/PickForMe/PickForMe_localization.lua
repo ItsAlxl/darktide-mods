@@ -1,15 +1,29 @@
 local mod = get_mod("PickForMe")
 
-mod.slot_data = {
+mod.target_data = {
 	primary = {
 		slot = "slot_primary",
 		loc = "loc_inventory_title_slot_primary",
 		default = true,
 	},
+	primary_mark = {
+		mark = "slot_primary",
+		loc = "loc_inventory_weapon_marks_title",
+		loc_context = {
+			pattern_name = Localize("loc_inventory_title_slot_primary"),
+		},
+	},
 	secondary = {
 		slot = "slot_secondary",
 		loc = "loc_inventory_title_slot_secondary",
 		default = true,
+	},
+	secondary_mark = {
+		mark = "slot_secondary",
+		loc = "loc_inventory_weapon_marks_title",
+		loc_context = {
+			pattern_name = Localize("loc_inventory_title_slot_secondary"),
+		},
 	},
 	curios = {
 		slot = "slot_curio",
@@ -51,7 +65,7 @@ mod.slot_data = {
 	},
 	pet = {
 		slot = "slot_companion_gear_full",
-		loc = "loc_inventory_title_slot_companion_gear_full",
+		loc = "loc_inventory_title_slot_companion_gear_full_new",
 	},
 }
 
@@ -81,6 +95,7 @@ mod.arg_order = {
 
 mod.arg_aliases = {
 	all = { "gear", "cosmetics", "marks" },
+	marks = { "primary_mark", "secondary_mark" },
 	cosmetics = { "clothes", "portrait", "pose", "pet" },
 	portrait = { "frame", "insignia", "title" },
 	clothes = { "hat", "shirt", "pants", "back" },
@@ -114,6 +129,9 @@ local localization = {
 		en = "/pickforme [args...]\nArgs can include " .. build_arg_list(", ", "'", ", or ") .. ". For example, '/pickforme secondary curios' will randomize your secondary weapon and curios. '/pickforme' without arguments is equivalent to the Quick Randomize configured in the mod settings.",
 		["zh-cn"] = "/pickforme [参数...]\n参数可以是 " .. build_arg_list(", ", "'", " 或者 ") .. "。例如，'/pickforme secondary curios' 会随机选择副武器和珍品。不带任何参数的 '/pickforme' 命令效果等同于模组选项中设置的快速随机。",
 	},
+	msg_success = {
+		en = "Notify on success",
+	},
 	msg_invalid = {
 		en = "Notify on invalid use",
 		["zh-cn"] = "用法错误时发送消息",
@@ -130,6 +148,9 @@ local localization = {
 		en = "Loadout randomization failed",
 		["zh-cn"] = "配装随机失败",
 	},
+	randomize_finished = {
+		en = "Loadout randomization finished",
+	},
 	random_character = {
 		en = "Start on a random character in character select",
 		["zh-cn"] = "在角色选择界面选择随机角色",
@@ -144,7 +165,7 @@ local localization = {
 	},
 }
 
-for key, data in pairs(mod.slot_data) do
+for key, data in pairs(mod.target_data) do
 	local loc_context = data.loc_context
 	localization[key] = {
 		en = loc_context and Localize(data.loc, true, loc_context) or Localize(data.loc)
