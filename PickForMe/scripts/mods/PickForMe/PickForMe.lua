@@ -61,14 +61,24 @@ end
 
 local add_to_slot_filter = function(filter, key)
 	local slot_data = mod.slot_data[key]
-	if slot_data then
-		table.insert(filter, slot_data.filter_slot or slot_data.slot)
+	local slot = slot_data and (slot_data.filter_slot or slot_data.slot)
+	if slot then
+		table.insert(filter, slot)
 	end
 end
 
-local add_to_slot_filter_from_args = function(filter, args, key)
-	if table.contains(args, key) then
-		add_to_slot_filter(filter, key)
+local function add_aliasable_slot(filter, uniques, slot)
+	if not uniques[slot] then
+		uniques[slot] = true
+
+		local aliases = mod.arg_aliases[slot]
+		if aliases then
+			for i = 1, #aliases do
+				add_aliasable_slot(filter, uniques, aliases[i])
+			end
+		else
+			add_to_slot_filter(filter, slot)
+		end
 	end
 end
 
@@ -149,76 +159,17 @@ mod:command("pickforme", mod:localize("cmd_desc"), function(...)
 	local slot_filter = nil
 
 	local args = { ... }
-	if #args > 0 then
+	local arg_count = #args
+	if arg_count > 0 then
 		if table.contains(args, "help") then
 			mod:echo(mod:localize("cmd_help"))
 			return
 		end
 
 		slot_filter = {}
-		if table.contains(args, "all") then
-			add_to_slot_filter(slot_filter, "primary")
-			add_to_slot_filter(slot_filter, "secondary")
-			add_to_slot_filter(slot_filter, "curios")
-			add_to_slot_filter(slot_filter, "hat")
-			add_to_slot_filter(slot_filter, "shirt")
-			add_to_slot_filter(slot_filter, "pants")
-			add_to_slot_filter(slot_filter, "back")
-			add_to_slot_filter(slot_filter, "frame")
-			add_to_slot_filter(slot_filter, "insignia")
-			add_to_slot_filter(slot_filter, "pose")
-			add_to_slot_filter(slot_filter, "dog")
-		else
-			if table.contains(args, "gear") then
-				add_to_slot_filter(slot_filter, "primary")
-				add_to_slot_filter(slot_filter, "secondary")
-				add_to_slot_filter(slot_filter, "curios")
-			else
-				if table.contains(args, "weapons") then
-					add_to_slot_filter(slot_filter, "primary")
-					add_to_slot_filter(slot_filter, "secondary")
-				else
-					add_to_slot_filter_from_args(slot_filter, args, "primary")
-					add_to_slot_filter_from_args(slot_filter, args, "secondary")
-				end
-				add_to_slot_filter_from_args(slot_filter, args, "curios")
-			end
-
-			if table.contains(args, "cosmetics") then
-				add_to_slot_filter(slot_filter, "hat")
-				add_to_slot_filter(slot_filter, "shirt")
-				add_to_slot_filter(slot_filter, "pants")
-				add_to_slot_filter(slot_filter, "back")
-				add_to_slot_filter(slot_filter, "frame")
-				add_to_slot_filter(slot_filter, "insignia")
-				add_to_slot_filter(slot_filter, "pose")
-				add_to_slot_filter(slot_filter, "dog")
-			else
-				if table.contains(args, "clothes") then
-					add_to_slot_filter(slot_filter, "hat")
-					add_to_slot_filter(slot_filter, "shirt")
-					add_to_slot_filter(slot_filter, "pants")
-					add_to_slot_filter(slot_filter, "back")
-				else
-					add_to_slot_filter_from_args(slot_filter, args, "hat")
-					add_to_slot_filter_from_args(slot_filter, args, "shirt")
-					add_to_slot_filter_from_args(slot_filter, args, "pants")
-					add_to_slot_filter_from_args(slot_filter, args, "back")
-				end
-
-				if table.contains(args, "portrait") then
-					add_to_slot_filter(slot_filter, "frame")
-					add_to_slot_filter(slot_filter, "insignia")
-					add_to_slot_filter(slot_filter, "title")
-				else
-					add_to_slot_filter_from_args(slot_filter, args, "frame")
-					add_to_slot_filter_from_args(slot_filter, args, "insignia")
-					add_to_slot_filter_from_args(slot_filter, args, "title")
-				end
-
-				add_to_slot_filter_from_args(slot_filter, args, "pose")
-				add_to_slot_filter_from_args(slot_filter, args, "dog")
-			end
+		local args_unique = {}
+		for i = 1, arg_count do
+			add_aliasable_slot(slot_filter, args_unique, args[i])
 		end
 	end
 

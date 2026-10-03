@@ -8,7 +8,7 @@ mod.slot_data = {
 	},
 	secondary = {
 		slot = "slot_secondary",
-		loc = "loc_inventory_title_slot_primary",
+		loc = "loc_inventory_title_slot_secondary",
 		default = true,
 	},
 	curios = {
@@ -49,11 +49,12 @@ mod.slot_data = {
 		slot = "slot_animation_end_of_round",
 		loc = "loc_inventory_title_slot_animation_end_of_round",
 	},
-	dog = {
+	pet = {
 		slot = "slot_companion_gear_full",
 		loc = "loc_inventory_title_slot_companion_gear_full",
 	},
 }
+
 mod.arg_order = {
 	"primary",
 	"secondary",
@@ -70,9 +71,21 @@ mod.arg_order = {
 	"insignia",
 	"portrait",
 	"pose",
-	"dog",
+	"pet",
 	"cosmetics",
+	"primary_mark",
+	"secondary_mark",
+	"marks",
 	"all",
+}
+
+mod.arg_aliases = {
+	all = { "gear", "cosmetics", "marks" },
+	cosmetics = { "clothes", "portrait", "pose", "pet" },
+	portrait = { "frame", "insignia", "title" },
+	clothes = { "hat", "shirt", "pants", "back" },
+	gear = { "weapons", "curios" },
+	weapons = { "primary", "secondary" },
 }
 
 local build_arg_list = function(separator, quote, final_separator)
@@ -132,8 +145,9 @@ local localization = {
 }
 
 for key, data in pairs(mod.slot_data) do
+	local loc_context = data.loc_context
 	localization[key] = {
-		en = Localize(data.loc)
+		en = loc_context and Localize(data.loc, true, loc_context) or Localize(data.loc)
 	}
 end
 

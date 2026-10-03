@@ -12,7 +12,9 @@ local quick_randomize_subwidgets = {
 	},
 }
 
-for _, arg in ipairs(mod.arg_order) do
+local arg_order = mod.arg_order
+for i = 1, #arg_order do
+	local arg = arg_order[i]
 	if mod.slot_data[arg] then
 		table.insert(quick_randomize_subwidgets, {
 			setting_id    = arg,
