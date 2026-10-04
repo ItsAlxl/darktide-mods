@@ -12,6 +12,11 @@ return {
 				default_value = true,
 			},
 			{
+				setting_id    = "auto_hide_talents",
+				type          = "checkbox",
+				default_value = true,
+			},
+			{
 				setting_id    = "auto_expand",
 				type          = "checkbox",
 				default_value = true,
