@@ -87,6 +87,7 @@ mod.arg_order = {
 	"pose",
 	"pet",
 	"cosmetics",
+	"slots",
 	"primary_mark",
 	"secondary_mark",
 	"marks",
@@ -94,8 +95,9 @@ mod.arg_order = {
 }
 
 mod.arg_aliases = {
-	all = { "gear", "cosmetics", "marks" },
+	all = { "slots", "marks" },
 	marks = { "primary_mark", "secondary_mark" },
+	slots = { "gear", "cosmetics" },
 	cosmetics = { "clothes", "portrait", "pose", "pet" },
 	portrait = { "frame", "insignia", "title" },
 	clothes = { "hat", "shirt", "pants", "back" },

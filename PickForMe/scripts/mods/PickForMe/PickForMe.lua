@@ -107,7 +107,6 @@ local _randomize_slots = function(profile_preset_id, slot_filter, player)
 					end
 				end
 			end
-			mod.DBG_last_pool = gear_pools
 
 			local slot_items = {}
 			for slot, _ in pairs(gear_pools) do
