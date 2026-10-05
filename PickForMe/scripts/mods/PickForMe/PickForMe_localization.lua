@@ -127,9 +127,15 @@ local localization = {
 		en = "Randomize your current loadout",
 		["zh-cn"] = "随机选择当前配装",
 	},
+	cmd_desc_talents = {
+		en = "Randomize your current talent tree",
+	},
 	cmd_help = {
-		en = "/pickforme [args...]\nArgs can include " .. build_arg_list(", ", "'", ", or ") .. ". For example, '/pickforme secondary curios' will randomize your secondary weapon and curios. '/pickforme' without arguments is equivalent to the Quick Randomize configured in the mod settings.",
+		en = "/pickforme [args...]\nArgs can include " .. build_arg_list(", ", "'", ", or ") .. ". For example, '/pickforme secondary curios' will randomize your secondary weapon and curios. '/pickforme' without arguments is equivalent to the Quick Randomize configured in the mod options.",
 		["zh-cn"] = "/pickforme [参数...]\n参数可以是 " .. build_arg_list(", ", "'", " 或者 ") .. "。例如，'/pickforme secondary curios' 会随机选择副武器和珍品。不带任何参数的 '/pickforme' 命令效果等同于模组选项中设置的快速随机。",
+	},
+	cmd_help_talents = {
+		en = "/pickforme_talents [strategy] [min] [max]\nThe strategy can be either 'major' (randomly pick an ability, blitz, etc and derive the tree from there), 'spread' (randomly pick talents that move away from the start), or 'random' (purely random). The min and max args define a range of talent points to spend. Any missing arguments use the Quick Randomize values configured in the mod options.",
 	},
 	msg_success = {
 		en = "Notify on success",
@@ -145,6 +151,9 @@ local localization = {
 	bad_circumstance = {
 		en = "You can't use PickForMe during a mission",
 		["zh-cn"] = "你不能在任务中随机配装",
+	},
+	needs_talent_view = {
+		en = "You have to have your tree menu open to randomize it",
 	},
 	catch_error = {
 		en = "Loadout randomization failed",
@@ -164,6 +173,27 @@ local localization = {
 	quick_randomize_keybind = {
 		en = "Keybind",
 		["zh-cn"] = "快捷键",
+	},
+	talents = {
+		en = Localize("loc_talent_view_display_name"),
+	},
+	talents_min = {
+		en = "Minimum Points",
+	},
+	talents_max = {
+		en = "Maximum Points",
+	},
+	talents_strategy = {
+		en = "Build Strategy",
+	},
+	talents_strategy_major = {
+		en = "Randomly pick major talents, then fill",
+	},
+	talents_strategy_spread = {
+		en = "Randomly spread from the start",
+	},
+	talents_strategy_random = {
+		en = "Purely random (very top-heavy)",
 	},
 }
 

@@ -6,6 +6,8 @@ local Mastery = require("scripts/utilities/mastery")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 
+mod:io_dofile("PickForMe/scripts/mods/PickForMe/TalentRandomizer")
+
 local SPAM_BUFFER_TIME = 1.5
 local next_valid_time = nil
 

@@ -50,6 +50,34 @@ return {
 				type        = "group",
 				sub_widgets = quick_randomize_subwidgets
 			},
+			{
+				setting_id  = "talents",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "talents_min",
+						type          = "numeric",
+						default_value = 30,
+						range         = { 0, 30 },
+					},
+					{
+						setting_id    = "talents_max",
+						type          = "numeric",
+						default_value = 30,
+						range         = { 0, 30 },
+					},
+					{
+						setting_id    = "talents_strategy",
+						type          = "dropdown",
+						default_value = "major",
+						options       = {
+							{ text = "talents_strategy_major", value = "major" },
+							{ text = "talents_strategy_spread", value = "spread" },
+							{ text = "talents_strategy_random", value = "random" },
+						},
+					}
+				}
+			},
 		}
 	}
 }
