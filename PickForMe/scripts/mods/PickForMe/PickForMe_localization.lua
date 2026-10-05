@@ -1,15 +1,29 @@
 local mod = get_mod("PickForMe")
 
-mod.slot_data = {
+mod.target_data = {
 	primary = {
 		slot = "slot_primary",
 		loc = "loc_inventory_title_slot_primary",
 		default = true,
 	},
+	primary_mark = {
+		mark = "slot_primary",
+		loc = "loc_inventory_weapon_marks_title",
+		loc_context = {
+			pattern_name = Localize("loc_inventory_title_slot_primary"),
+		},
+	},
 	secondary = {
 		slot = "slot_secondary",
-		loc = "loc_inventory_title_slot_primary",
+		loc = "loc_inventory_title_slot_secondary",
 		default = true,
+	},
+	secondary_mark = {
+		mark = "slot_secondary",
+		loc = "loc_inventory_weapon_marks_title",
+		loc_context = {
+			pattern_name = Localize("loc_inventory_title_slot_secondary"),
+		},
 	},
 	curios = {
 		slot = "slot_curio",
@@ -49,11 +63,12 @@ mod.slot_data = {
 		slot = "slot_animation_end_of_round",
 		loc = "loc_inventory_title_slot_animation_end_of_round",
 	},
-	dog = {
+	pet = {
 		slot = "slot_companion_gear_full",
-		loc = "loc_inventory_title_slot_companion_gear_full",
+		loc = "loc_inventory_title_slot_companion_gear_full_new",
 	},
 }
+
 mod.arg_order = {
 	"primary",
 	"secondary",
@@ -70,9 +85,24 @@ mod.arg_order = {
 	"insignia",
 	"portrait",
 	"pose",
-	"dog",
+	"pet",
 	"cosmetics",
+	"slots",
+	"primary_mark",
+	"secondary_mark",
+	"marks",
 	"all",
+}
+
+mod.arg_aliases = {
+	all = { "slots", "marks" },
+	marks = { "primary_mark", "secondary_mark" },
+	slots = { "gear", "cosmetics" },
+	cosmetics = { "clothes", "portrait", "pose", "pet" },
+	portrait = { "frame", "insignia", "title" },
+	clothes = { "hat", "shirt", "pants", "back" },
+	gear = { "weapons", "curios" },
+	weapons = { "primary", "secondary" },
 }
 
 local build_arg_list = function(separator, quote, final_separator)
@@ -97,9 +127,18 @@ local localization = {
 		en = "Randomize your current loadout",
 		["zh-cn"] = "随机选择当前配装",
 	},
+	cmd_desc_talents = {
+		en = "Randomize your current talent tree",
+	},
 	cmd_help = {
-		en = "/pickforme [args...]\nArgs can include " .. build_arg_list(", ", "'", ", or ") .. ". For example, '/pickforme secondary curios' will randomize your secondary weapon and curios. '/pickforme' without arguments is equivalent to the Quick Randomize configured in the mod settings.",
+		en = "/pickforme [args...]\nArgs can include " .. build_arg_list(", ", "'", ", or ") .. ". For example, '/pickforme secondary curios' will randomize your secondary weapon and curios. '/pickforme' without arguments is equivalent to the Quick Randomize configured in the mod options.",
 		["zh-cn"] = "/pickforme [参数...]\n参数可以是 " .. build_arg_list(", ", "'", " 或者 ") .. "。例如，'/pickforme secondary curios' 会随机选择副武器和珍品。不带任何参数的 '/pickforme' 命令效果等同于模组选项中设置的快速随机。",
+	},
+	cmd_help_talents = {
+		en = "/pickforme_talents [strategy] [min] [max]\nThe strategy can be either 'major' (randomly pick an ability, blitz, etc and derive the tree from there), 'spread' (randomly pick talents that move away from the start), or 'random' (purely random). The min and max args define a range of talent points to spend. Any missing arguments use the Quick Randomize values configured in the mod options.",
+	},
+	msg_success = {
+		en = "Notify on success",
 	},
 	msg_invalid = {
 		en = "Notify on invalid use",
@@ -113,9 +152,15 @@ local localization = {
 		en = "You can't use PickForMe during a mission",
 		["zh-cn"] = "你不能在任务中随机配装",
 	},
+	needs_talent_view = {
+		en = "You have to have your tree menu open to randomize it",
+	},
 	catch_error = {
 		en = "Loadout randomization failed",
 		["zh-cn"] = "配装随机失败",
+	},
+	randomize_finished = {
+		en = "Loadout randomization finished",
 	},
 	random_character = {
 		en = "Start on a random character in character select",
@@ -129,11 +174,33 @@ local localization = {
 		en = "Keybind",
 		["zh-cn"] = "快捷键",
 	},
+	talents = {
+		en = Localize("loc_talent_view_display_name"),
+	},
+	talents_min = {
+		en = "Minimum Points",
+	},
+	talents_max = {
+		en = "Maximum Points",
+	},
+	talents_strategy = {
+		en = "Build Strategy",
+	},
+	talents_strategy_major = {
+		en = "Randomly pick major talents, then fill",
+	},
+	talents_strategy_spread = {
+		en = "Randomly spread from the start",
+	},
+	talents_strategy_random = {
+		en = "Purely random (very top-heavy)",
+	},
 }
 
-for key, data in pairs(mod.slot_data) do
+for key, data in pairs(mod.target_data) do
+	local loc_context = data.loc_context
 	localization[key] = {
-		en = Localize(data.loc)
+		en = loc_context and Localize(data.loc, true, loc_context) or Localize(data.loc)
 	}
 end
 

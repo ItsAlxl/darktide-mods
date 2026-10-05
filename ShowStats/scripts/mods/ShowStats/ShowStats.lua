@@ -12,6 +12,19 @@ mod:hook(CLASS.ViewElementPlayerStats, "_generate_shortcut_keys", function(func,
 	end
 end)
 
+mod:hook(CLASS.InventoryBackgroundView, "_switch_active_view", function(func, self, view_name, ...)
+	local stats = self._player_stats
+	if stats and mod:get("auto_hide_talents") then
+		if view_name == "talent_builder_view" and mod:get("auto_hide_talents") then
+			stats:_toggle_stats(false)
+		end
+		if view_name == "inventory_view" and mod:get("auto_show") then
+			stats:_toggle_stats(true)
+		end
+	end
+	func(self, view_name, ...)
+end)
+
 mod:hook(CLASS.ViewElementPlayerStats, "_generate_stats", function(func, self, ...)
 	if mod:get("sort_subs") then
 		local ordered_stats, stats_data_by_id = func(self, ...)

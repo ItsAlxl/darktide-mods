@@ -12,12 +12,14 @@ local quick_randomize_subwidgets = {
 	},
 }
 
-for _, arg in ipairs(mod.arg_order) do
-	if mod.slot_data[arg] then
+local arg_order = mod.arg_order
+for i = 1, #arg_order do
+	local arg = arg_order[i]
+	if mod.target_data[arg] then
 		table.insert(quick_randomize_subwidgets, {
 			setting_id    = arg,
 			type          = "checkbox",
-			default_value = mod.slot_data[arg].default or false,
+			default_value = mod.target_data[arg].default or false,
 		})
 	end
 end
@@ -28,6 +30,11 @@ return {
 	is_togglable = true,
 	options = {
 		widgets = {
+			{
+				setting_id    = "msg_success",
+				type          = "checkbox",
+				default_value = true,
+			},
 			{
 				setting_id    = "msg_invalid",
 				type          = "checkbox",
@@ -42,6 +49,34 @@ return {
 				setting_id  = "quick_randomize",
 				type        = "group",
 				sub_widgets = quick_randomize_subwidgets
+			},
+			{
+				setting_id  = "talents",
+				type        = "group",
+				sub_widgets = {
+					{
+						setting_id    = "talents_min",
+						type          = "numeric",
+						default_value = 30,
+						range         = { 0, 30 },
+					},
+					{
+						setting_id    = "talents_max",
+						type          = "numeric",
+						default_value = 30,
+						range         = { 0, 30 },
+					},
+					{
+						setting_id    = "talents_strategy",
+						type          = "dropdown",
+						default_value = "major",
+						options       = {
+							{ text = "talents_strategy_major", value = "major" },
+							{ text = "talents_strategy_spread", value = "spread" },
+							{ text = "talents_strategy_random", value = "random" },
+						},
+					}
+				}
 			},
 		}
 	}

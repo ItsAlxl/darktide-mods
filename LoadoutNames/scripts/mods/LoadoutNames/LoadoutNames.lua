@@ -67,8 +67,8 @@ end
 -- set and get loadout names as needed
 
 local _set_loadout_name_from_iv = function(inv_view, deletion)
-	if tbox_widget and tbox_widget.content then
-		mod.set_loadout_name(inv_view._active_profile_preset_id, not deletion and tbox_widget.content.input_text or nil)
+	if not deletion and tbox_widget and tbox_widget.content then
+		mod.set_loadout_name(inv_view._active_profile_preset_id, tbox_widget.content.input_text)
 	end
 end
 
@@ -87,17 +87,27 @@ local _display_loadout_name_to_iv = function(inv_view)
 	end
 end
 
-mod:hook(CLASS.InventoryBackgroundView, "_validate_active_preset_with_server_items", function(func, self)
-	func(self)
-	_display_loadout_name_to_iv(self)
+mod:hook_require("scripts/utilities/profile_utils", function(ProfileUtils)
+	mod:hook(ProfileUtils, "remove_profile_preset", function(func, id)
+		mod.set_loadout_name(id, nil)
+		func(id)
+	end)
 end)
 
-mod:hook(CLASS.InventoryBackgroundView, "event_on_profile_preset_changed", function(func, self, _, on_preset_deleted)
-	_set_loadout_name_from_iv(self, on_preset_deleted)
-	mod.end_typing()
-	func(self, _, on_preset_deleted)
+local _on_create = function(func, self, ...)
+	func(self, ...)
 	_display_loadout_name_to_iv(self)
-end)
+end
+mod:hook(CLASS.InventoryBackgroundView, "_validate_active_preset_with_server_items", _on_create)
+mod:hook(CLASS.InventoryBackgroundView, "_setup_profile_presets", _on_create)
+
+mod:hook(CLASS.InventoryBackgroundView, "event_on_profile_preset_changed",
+	function(func, self, _, on_preset_deleted)
+		_set_loadout_name_from_iv(self, on_preset_deleted)
+		mod.end_typing()
+		func(self, _, on_preset_deleted)
+		_display_loadout_name_to_iv(self)
+	end)
 
 local _on_cleanup = function(func, self, ...)
 	_set_loadout_name_from_iv(self)
