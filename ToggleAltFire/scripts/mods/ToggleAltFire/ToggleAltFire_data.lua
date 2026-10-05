@@ -1,28 +1,21 @@
 local mod = get_mod("ToggleAltFire")
 
-local blitz_options = {}
-for k, b in pairs(mod.blitz_data) do
-	blitz_options[#blitz_options + 1] = {
-		setting_id    = k,
-		type          = "checkbox",
-		default_value = b.default == nil or b.default,
-	}
-end
-
-local weapon_options = {}
-for k, w in pairs(mod.weapon_family_data) do
-	weapon_options[#weapon_options + 1] = {
-		setting_id    = k,
-		type          = "checkbox",
-		default_value = w.default == nil or w.default,
-	}
-end
-
 local sort_options = function(a, b)
 	return mod:localize(a.setting_id) < mod:localize(b.setting_id)
 end
-table.sort(blitz_options, sort_options)
-table.sort(weapon_options, sort_options)
+
+local create_toggles = function(id_list)
+	local toggles = {}
+	for i = 1, #id_list do
+		toggles[i] = {
+			setting_id    = id_list[i],
+			type          = "checkbox",
+			default_value = true,
+		}
+	end
+	table.sort(toggles, sort_options)
+	return toggles
+end
 
 return {
 	name = "ToggleAltFire",
@@ -70,6 +63,11 @@ return {
 						default_value = false,
 					},
 					{
+						setting_id    = "_sprint_pickup",
+						type          = "checkbox",
+						default_value = false,
+					},
+					{
 						setting_id    = "action_melee_extra",
 						type          = "checkbox",
 						default_value = true,
@@ -89,12 +87,17 @@ return {
 			{
 				setting_id  = "optgroup_blitzes",
 				type        = "group",
-				sub_widgets = blitz_options
+				sub_widgets = create_toggles(mod.blitzes)
+			},
+			{
+				setting_id  = "optgroup_pickups",
+				type        = "group",
+				sub_widgets = create_toggles(mod.pickups)
 			},
 			{
 				setting_id  = "optgroup_weps",
 				type        = "group",
-				sub_widgets = weapon_options
+				sub_widgets = create_toggles(mod.weapon_families)
 			},
 		}
 	}

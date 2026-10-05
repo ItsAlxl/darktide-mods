@@ -62,20 +62,18 @@ local function _set_toggleable(t)
 	prev_act = false
 end
 
+local function _is_toggleable_pickup(template)
+	untoggle_actions.action_sprint = mod:get("_sprint_pickup")
+	return mod:get(template.name)
+end
+
 local function _is_toggleable_blitz(template)
 	untoggle_actions.action_sprint = mod:get("_sprint_blitz")
 	return mod:get(template.name)
 end
 
 local function _is_toggleable_weapon(template)
-	local keywords = template.keywords
-	local is_staff = false
-	for i = 1, #keywords do
-		if keywords[i] == "force_staff" then
-			is_staff = true
-		end
-	end
-	if is_staff then
+	if table.contains(template.keywords, "force_staff") then
 		untoggle_actions.action_sprint = mod:get("_sprint_staff")
 	else
 		untoggle_actions.action_sprint = mod:get("_sprint_base")
@@ -90,7 +88,8 @@ mod:hook(CLASS.PlayerUnitWeaponExtension, "_fill_action_params", function(func, 
 
 		local template = weapon.weapon_template
 		_set_toggleable(wielded_slot == "slot_secondary" and _is_toggleable_weapon(template)
-			or wielded_slot == "slot_grenade_ability" and _is_toggleable_blitz(template))
+			or wielded_slot == "slot_grenade_ability" and _is_toggleable_blitz(template)
+			or wielded_slot == "slot_pocketable_small" and _is_toggleable_pickup(template))
 	end
 	return func(self, weapon, player_unit, wielded_slot)
 end)
