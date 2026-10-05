@@ -146,7 +146,15 @@ return function(node_has_points, is_valid_selection)
 						local leg = major.leg
 						local leg_length = #leg
 						if leg and leg_length > 0 and (leg[1] == start_node or table.contains(chain, leg[1])) then
-							for i = 2, leg_length do
+							local start = 1
+							for i = leg_length, 1, -1 do
+								if table.contains(chain, leg[i]) then
+									start = i
+									break
+								end
+							end
+
+							for i = start, leg_length do
 								table.insert(chain, leg[i])
 							end
 							major.spent = true
