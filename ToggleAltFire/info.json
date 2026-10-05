@@ -1,7 +1,7 @@
 {
 	"name": "Toggle Alt Fire",
 	"description": "Toggle aim-down-sights (and other ranged weapon alt-fires). Highly configurable.",
-	"version": "1.13",
+	"version": "1.14",
 	"author": "alxl",
 	"homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/60",
 	"source": "https://github.com/ItsAlxl/DarktideMods/tree/main/ToggleAltFire",
