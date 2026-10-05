@@ -18,22 +18,6 @@ return {
 		en = "Horizontal Position",
 		["zh-cn"] = "水平位置",
 		ru = "Горизонтальная позиция",
-	},
-	generic_y = {
-		en = "Vertical Position",
-		["zh-cn"] = "垂直位置",
-		ru = "Вертикальная позиция",
-	},
-	group_tbox = {
-		en = "Textbox",
-	},
-	group_tooltip = {
-		en = "Tooltip",
-	},
-	generic_x = {
-		en = "Horizontal Position",
-		["zh-cn"] = "水平位置",
-		ru = "Горизонтальная позиция",
 		["zh-tw"] = "水平位置",
 	},
 	generic_y = {
