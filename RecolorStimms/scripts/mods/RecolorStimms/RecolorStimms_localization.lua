@@ -12,7 +12,7 @@ local localization = {
 		["zh-cn"] = "图案",
 	},
 	color = {
-		en = Localize("loc_item_type_metal_color")
+		en = Localize("loc_weapon_cosmetics_title_skins")
 	},
 	blank = {
 		en = ""
